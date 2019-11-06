@@ -6,6 +6,13 @@
 
 # Description
 
+From the Gnome documentation;
+
+GIO is striving to provide a modern, easy-to-use VFS API that sits at the right level in the library stack, as well as other generally useful APIs for desktop applications (such as networking and D-Bus support). The goal is to overcome the shortcomings of GnomeVFS and provide an API that is so good that developers prefer it over raw POSIX calls. Among other things that means using GObject. It also means not cloning the POSIX API, but providing higher-level, document-centric interfaces.
+
+That being said, the Raku implementation is not implementing all of it, only those parts interesting to the other packages like Menu handling or DBus I/O.
+
+
 # Documentation
 ## Release notes
 * [Release notes][changes]
