@@ -177,7 +177,6 @@ method _fallback ( $native-sub is copy --> Callable ) {
   $s;
 }
 
-
 #-------------------------------------------------------------------------------
 #TM:1:g_application_id_is_valid:
 =begin pod
@@ -185,48 +184,26 @@ method _fallback ( $native-sub is copy --> Callable ) {
 
 Checks if I<application_id> is a valid application identifier.
 
-A valid ID is required for calls to C<g_application_new()> and
-C<g_application_set_application_id()>.
+A valid ID is required for calls to C<g_application_new()> and C<g_application_set_application_id()>.
 
-Application identifiers follow the same format as
-[D-Bus well-known bus names](https://dbus.freedesktop.org/doc/dbus-specification.htmlB<message>-protocol-names-bus).
-For convenience, the restrictions on application identifiers are
-reproduced here:
-=item Application identifiers are composed of 1 or more elements separated by a
-period (`.`) character. All elements must contain at least one character.
+Application identifiers follow the same format as [D-Bus well-known bus names](https://dbus.freedesktop.org/doc/dbus-specification.htmlB<message>-protocol-names-bus).
 
-=item Each element must only contain the ASCII characters `[A-Z][a-z][0-9]_-`,
-with `-` discouraged in new application identifiers. Each element must not
-begin with a digit.
+For convenience, the restrictions on application identifiers are reproduced here:
+=item Application identifiers are composed of 1 or more elements separated by a period (`.`) character. All elements must contain at least one character.
 
-=item Application identifiers must contain at least one `.` (period) character
-(and thus at least two elements).
+=item Each element must only contain the ASCII characters `[A-Z][a-z][0-9]_-`, with `-` discouraged in new application identifiers. Each element must not begin with a digit.
+
+=item Application identifiers must contain at least one `.` (period) character (and thus at least two elements).
 
 =item Application identifiers must not begin with a `.` (period) character.
 
 =item Application identifiers must not exceed 255 characters.
 
-Note that the hyphen (`-`) character is allowed in application identifiers,
-but is problematic or not allowed in various specifications and APIs that
-refer to D-Bus, such as
-[Flatpak application IDs](http://docs.flatpak.org/en/latest/introduction.htmlB<identifiers>),
-the
-[`DBusActivatable` interface in the Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.htmlB<dbus>),
-and the convention that an application's "main" interface and object path
-resemble its application identifier and bus name. To avoid situations that
-require special-case handling, it is recommended that new application
-identifiers consistently replace hyphens with underscores.
+Note that the hyphen (`-`) character is allowed in application identifiers, but is problematic or not allowed in various specifications and APIs that refer to D-Bus, such as [Flatpak application IDs](http://docs.flatpak.org/en/latest/introduction.html#identifiers), the [DBusActivatable interface in the Desktop Entry Specification](https://specifications.freedesktop.org/desktop-entry-spec/desktop-entry-spec-latest.htmlB<dbus>), and the convention that an application's "main" interface and object path resemble its application identifier and bus name. To avoid situations that require special-case handling, it is recommended that new application identifiers consistently replace hyphens with underscores.
 
-Like D-Bus interface names, application identifiers should start with the
-reversed DNS domain name of the author of the interface (in lower-case), and
-it is conventional for the rest of the application identifier to consist of
-words run together, with initial capital letters.
+Like D-Bus interface names, application identifiers should start with the reversed DNS domain name of the author of the interface (in lower-case), and it is conventional for the rest of the application identifier to consist of words run together, with initial capital letters.
 
-As with D-Bus interface names, if the author's DNS domain name contains
-hyphen/minus characters they should be replaced by underscores, and if it
-contains leading digits they should be escaped by prepending an underscore.
-For example, if the owner of 7-zip.org used an application identifier for an
-archiving application, it might be named `org._7_zip.Archiver`.
+As with D-Bus interface names, if the author's DNS domain name contains hyphen/minus characters they should be replaced by underscores, and if it contains leading digits they should be escaped by prepending an underscore. For example, if the owner of 7-zip.org used an application identifier for an archiving application, it might be named `org._7_zip.Archiver`.
 
 Returns: C<1> if I<application_id> is valid
 
@@ -242,7 +219,7 @@ sub g_application_id_is_valid ( Str $application_id )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_new:
+#TM:2:g_application_new:new(:app-id)
 =begin pod
 =head2 g_application_new
 
@@ -271,7 +248,7 @@ sub g_application_new ( Str $application_id, int32 $flags )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_get_application_id:
+#TM:1:g_application_get_application_id:
 =begin pod
 =head2 [g_application_] get_application_id
 
@@ -292,7 +269,7 @@ sub g_application_get_application_id ( N-GObject $application )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_set_application_id:
+#TM:1:g_application_set_application_id:
 =begin pod
 =head2 [g_application_] set_application_id
 
@@ -434,7 +411,7 @@ sub g_application_set_inactivity_timeout ( N-GObject $application, uint32 $inact
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_get_flags:
+#TM:1:g_application_get_flags:
 =begin pod
 =head2 [g_application_] get_flags
 
@@ -455,7 +432,7 @@ sub g_application_get_flags ( N-GObject $application )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_set_flags:
+#TM:1:g_application_set_flags:
 =begin pod
 =head2 [g_application_] set_flags
 
