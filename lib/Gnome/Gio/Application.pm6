@@ -12,74 +12,19 @@ Core application class
 
 =head1 Description
 
-I<include>: gio/gio.h
+A B<Gnome::Gio::Application> is the foundation of an application.  It wraps some low-level platform-specific services and is intended to act as the foundation for higher-level application classes such as B<Gnome::Gtk3::Application> or B<MxApplication>.  In general, you should not use this class outside of a higher level framework.
 
-A B<Gnome::Gio::Application> is the foundation of an application.  It wraps some
-low-level platform-specific services and is intended to act as the
-foundation for higher-level application classes such as
-B<Gnome::Gtk3::Application> or B<MxApplication>.  In general, you should not use
-this class outside of a higher level framework.
+Gnome::Gio::Application provides convenient life cycle management by maintaining a "use count" for the primary application instance. The use count can be changed using C<g_application_hold()> and C<g_application_release()>. If it drops to zero, the application exits. Higher-level classes such as B<Gnome::Gtk3::Application> employ the use count to ensure that the application stays alive as long as it has any opened windows.
 
-Gnome::Gio::Application provides convenient life cycle management by maintaining
-a "use count" for the primary application instance. The use count can
-be changed using C<g_application_hold()> and C<g_application_release()>. If
-it drops to zero, the application exits. Higher-level classes such as
-B<Gnome::Gtk3::Application> employ the use count to ensure that the application
-stays alive as long as it has any opened windows.
+Another feature that Gnome::Gio::Application (optionally) provides is process uniqueness. Applications can make use of this functionality by providing a unique application ID. If given, only one application with this ID can be running at a time per session. The session concept is platform-dependent, but corresponds roughly to a graphical desktop login. When your application is launched again, its arguments are passed through platform communication to the already running program. The already running instance of the program is called the "primary instance"; for non-unique applications this is the always the current instance. On Linux, the D-Bus session bus is used for communication.
 
-Another feature that Gnome::Gio::Application (optionally) provides is process
-uniqueness. Applications can make use of this functionality by
-providing a unique application ID. If given, only one application
-with this ID can be running at a time per session. The session
-concept is platform-dependent, but corresponds roughly to a graphical
-desktop login. When your application is launched again, its
-arguments are passed through platform communication to the already
-running program. The already running instance of the program is
-called the "primary instance"; for non-unique applications this is
-the always the current instance. On Linux, the D-Bus session bus
-is used for communication.
+The use of B<Gnome::Gio::Application> differs from some other commonly-used uniqueness libraries (such as libunique) in important ways. The application is not expected to manually register itself and check if it is the primary instance. Instead, the C<main()> function of a B<Gnome::Gio::Application> should do very little more than instantiating the application instance, possibly connecting signal handlers, then calling C<g_application_run()>. All checks for uniqueness are done internally. If the application is the primary instance then the startup signal is emitted and the mainloop runs. If the application is not the primary instance then a signal is sent to the primary instance and C<g_application_run()> promptly returns. See the code examples below.
 
-The use of B<Gnome::Gio::Application> differs from some other commonly-used
-uniqueness libraries (such as libunique) in important ways. The
-application is not expected to manually register itself and check
-if it is the primary instance. Instead, the C<main()> function of a
-B<Gnome::Gio::Application> should do very little more than instantiating the
-application instance, possibly connecting signal handlers, then
-calling C<g_application_run()>. All checks for uniqueness are done
-internally. If the application is the primary instance then the
-startup signal is emitted and the mainloop runs. If the application
-is not the primary instance then a signal is sent to the primary
-instance and C<g_application_run()> promptly returns. See the code
-examples below.
+If used, the expected form of an application identifier is the same as that of of a [D-Bus well-known bus name](https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus). Examples include: `com.example.MyApp`, `org.example.internal_apps.Calculator`, `org._7_zip.Archiver`. For details on valid application identifiers, see C<g_application_id_is_valid()>.
 
-If used, the expected form of an application identifier is the same as
-that of of a
-[D-Bus well-known bus name](https://dbus.freedesktop.org/doc/dbus-specification.htmlB<message>-protocol-names-bus).
-Examples include: `com.example.MyApp`, `org.example.internal_apps.Calculator`,
-`org._7_zip.Archiver`.
-For details on valid application identifiers, see C<g_application_id_is_valid()>.
+On Linux, the application identifier is claimed as a well-known bus name on the user's session bus.  This means that the uniqueness of your application is scoped to the current session.  It also means that your application may provide additional services (through registration of other object paths) at that bus name.  The registration of these object paths should be done with the shared GDBus session bus.  Note that due to the internal architecture of GDBus, method calls can be dispatched at any time (even if a main loop is not running).  For this reason, you must ensure that any object paths that you wish to register are registered before B<Gnome::Gio::Application> attempts to acquire the bus name of your application (which happens in C<g_application_register()>).  Unfortunately, this means that you cannot use C<g_application_get_is_remote()> to decide if you want to register object paths.
 
-On Linux, the application identifier is claimed as a well-known bus name
-on the user's session bus.  This means that the uniqueness of your
-application is scoped to the current session.  It also means that your
-application may provide additional services (through registration of other
-object paths) at that bus name.  The registration of these object paths
-should be done with the shared GDBus session bus.  Note that due to the
-internal architecture of GDBus, method calls can be dispatched at any time
-(even if a main loop is not running).  For this reason, you must ensure that
-any object paths that you wish to register are registered before B<Gnome::Gio::Application>
-attempts to acquire the bus name of your application (which happens in
-C<g_application_register()>).  Unfortunately, this means that you cannot use
-C<g_application_get_is_remote()> to decide if you want to register object paths.
-
-Gnome::Gio::Application also implements the B<GActionGroup> and B<GActionMap>
-interfaces and lets you easily export actions by adding them with
-C<g_action_map_add_action()>. When invoking an action by calling
-C<g_action_group_activate_action()> on the application, it is always
-invoked in the primary instance. The actions are also exported on
-the session bus, and GIO provides the B<GDBusActionGroup> wrapper to
-conveniently access them remotely. GIO provides a B<GDBusMenuModel> wrapper
-for remote access to exported B<GMenuModels>.
+Gnome::Gio::Application also implements the B<GActionGroup> and B<GActionMap> interfaces and lets you easily export actions by adding them with C<g_action_map_add_action()>. When invoking an action by calling C<g_action_group_activate_action()> on the application, it is always invoked in the primary instance. The actions are also exported on the session bus, and GIO provides the B<GDBusActionGroup> wrapper to conveniently access them remotely. GIO provides a B<GDBusMenuModel> wrapper for remote access to exported B<GMenuModels>.
 
 There is a number of different entry points into a Gnome::Gio::Application:
 
@@ -91,55 +36,26 @@ There is a number of different entry points into a Gnome::Gio::Application:
 
 - via activating an action
 
-The  I<startup> signal lets you handle the application
-initialization for all of these in a single place.
+The  I<startup> signal lets you handle the application initialization for all of these in a single place.
 
-Regardless of which of these entry points is used to start the
-application, Gnome::Gio::Application passes some "platform data from the
-launching instance to the primary instance, in the form of a
-B<GVariant> dictionary mapping strings to variants. To use platform
-data, override the I<before_emit> or I<after_emit> virtual functions
-in your B<Gnome::Gio::Application> subclass. When dealing with
-B<Gnome::Gio::ApplicationCommandLine> objects, the platform data is
-directly available via C<g_application_command_line_get_cwd()>,
-C<g_application_command_line_get_environ()> and
-C<g_application_command_line_get_platform_data()>.
+Regardless of which of these entry points is used to start the application, Gnome::Gio::Application passes some "platform data from the launching instance to the primary instance, in the form of a B<GVariant> dictionary mapping strings to variants. To use platform data, override the I<before_emit> or I<after_emit> virtual functions in your B<Gnome::Gio::Application> subclass. When dealing with B<Gnome::Gio::ApplicationCommandLine> objects, the platform data is directly available via C<g_application_command_line_get_cwd()>, C<g_application_command_line_get_environ()> and C<g_application_command_line_get_platform_data()>.
 
-As the name indicates, the platform data may vary depending on the
-operating system, but it always includes the current directory (key
-"cwd"), and optionally the environment (ie the set of environment
-variables and their values) of the calling process (key "environ").
-The environment is only added to the platform data if the
-C<G_APPLICATION_SEND_ENVIRONMENT> flag is set. B<Gnome::Gio::Application> subclasses
-can add their own platform data by overriding the I<add_platform_data>
-virtual function. For instance, B<Gnome::Gtk3::Application> adds startup notification
-data in this way.
+As the name indicates, the platform data may vary depending on the operating system, but it always includes the current directory (key "cwd"), and optionally the environment (ie the set of environment variables and their values) of the calling process (key "environ"). The environment is only added to the platform data if the C<G_APPLICATION_SEND_ENVIRONMENT> flag is set. B<Gnome::Gio::Application> subclasses can add their own platform data by overriding the I<add_platform_data> virtual function. For instance, B<Gnome::Gtk3::Application> adds startup notification data in this way.
 
-To parse commandline arguments you may handle the
- I<command-line> signal or override the C<local_command_line()>
-vfunc, to parse them in either the primary instance or the local instance,
-respectively.
+To parse commandline arguments you may handle the I<command-line> signal or override the C<local_command_line()> vfunc, to parse them in either the primary instance or the local instance, respectively.
 
-For an example of opening files with a Gnome::Gio::Application, see
-[Gnome::Gio::Application-example-open.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-open.c).
+For an example of opening files with a Gnome::Gio::Application, see [Gnome::Gio::Application-example-open.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-open.c).
 
-For an example of using actions with Gnome::Gio::Application, see
-[Gnome::Gio::Application-example-actions.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-actions.c).
+For an example of using actions with Gnome::Gio::Application, see [Gnome::Gio::Application-example-actions.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-actions.c).
 
-For an example of using extra D-Bus hooks with Gnome::Gio::Application, see
-[Gnome::Gio::Application-example-dbushooks.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-dbushooks.c).
+For an example of using extra D-Bus hooks with Gnome::Gio::Application, see [Gnome::Gio::Application-example-dbushooks.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-dbushooks.c).
 
 
-
-=begin comment
 =head2 Implemented Interfaces
 
 Gnome::Gio::Application implements
-=comment item Gnome::Gio::ActionGroup
-=comment item Gnome::Gio::ActionMap
-
-=end comment
-
+=item Gnome::Gio::ActionGroup
+=item Gnome::Gio::ActionMap
 
 
 =head1 Synopsis
@@ -169,8 +85,7 @@ use Gnome::Gio::Enums;
 #use Gnome::Gio::ActionMap;
 
 #-------------------------------------------------------------------------------
-# /usr/include/gtk-3.0/gtk/INCLUDE
-# https://developer.gnome.org/WWW
+# https://developer.gnome.org/gio/stable/GApplication.html
 unit class Gnome::Gio::Application:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
@@ -188,7 +103,7 @@ my Bool $signals-added = False;
 Create a new object with a valid application id and application flags.
 
   multi method new (
-    Bool :$app-id!, Gnome::Gio::ApplicationFlags :$flags = G_APPLICATION_FLAGS_NONE
+    Bool :$app-id!, GApplicationFlags :$flags = G_APPLICATION_FLAGS_NONE
   )
 
 Create an object using a native object from elsewhere.
@@ -197,9 +112,8 @@ Create an object using a native object from elsewhere.
 
 =end pod
 
-#TM:0:new(:app-id):
-#TM:0:new(:object):
-
+#TM:1:new(:app-id):
+#TM:0:new(:native-object):
 submethod BUILD ( *%options ) {
 
   # add signal info in the form of group<signal-name>.
@@ -217,8 +131,9 @@ submethod BUILD ( *%options ) {
   # process all named arguments
   if ? %options<app-id> {
     if g_application_id_is_valid(%options<app-id>) {
-      my Gnome::Gio::ApplicationFlags $f = %options<flags> // G_APPLICATION_FLAGS_NONE;
-      self.native-gobject(g_application_new( %options<app-id>, $f));
+      my GApplicationFlags $f = %options<flags> // G_APPLICATION_FLAGS_NONE;
+      self.set-native-object(g_application_new(
+        %options<app-id>, $f));
     }
 
     else {
@@ -229,7 +144,7 @@ submethod BUILD ( *%options ) {
   }
 
   elsif ? %options<object> {
-    self.native-gobject(%options<object>);
+    self.set-native-object(%options<object>);
   }
 
   elsif %options.keys.elems {
@@ -341,10 +256,12 @@ If no application ID is given then some features of B<Gnome::Gio::Application>
 
 Returns: a new B<Gnome::Gio::Application> instance
 
-  method g_application_new ( Str $application_id, Gnome::Gio::ApplicationFlags $flags --> N-GObject  )
+  method g_application_new (
+    Str $application_id, GApplicationFlags $flags --> N-GObject
+  )
 
 =item Str $application_id; (nullable): the application id
-=item Gnome::Gio::ApplicationFlags $flags; the application flags
+=item GApplicationFlags $flags; the application flags
 
 =end pod
 
@@ -523,13 +440,11 @@ sub g_application_set_inactivity_timeout ( N-GObject $application, uint32 $inact
 
 Gets the flags for I<application>.
 
-See B<Gnome::Gio::ApplicationFlags>.
-
-Returns: the flags for I<application>
+See B<GApplicationFlags>.
 
 Since: 2.28
 
-  method g_application_get_flags ( --> Gnome::Gio::ApplicationFlags  )
+  method g_application_get_flags ( --> Int )
 
 
 =end pod
@@ -549,13 +464,13 @@ Sets the flags for I<application>.
 The flags can only be modified if I<application> has not yet been
 registered.
 
-See B<Gnome::Gio::ApplicationFlags>.
+See B<GApplicationFlags>.
 
 Since: 2.28
 
-  method g_application_set_flags ( Gnome::Gio::ApplicationFlags $flags )
+  method g_application_set_flags ( GApplicationFlags $flags )
 
-=item Gnome::Gio::ApplicationFlags $flags; the flags for I<application>
+=item GApplicationFlags $flags; the flags for I<application>
 
 =end pod
 
