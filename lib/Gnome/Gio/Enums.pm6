@@ -8,6 +8,7 @@ use v6;
 
 =head1 Description
 
+All enummerations and flags used for Gio are defined here.
 
 =head1 Synopsis
 =head2 Declaration
@@ -25,8 +26,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 
 #-------------------------------------------------------------------------------
-# /usr/include/gtk-3.0/gtk/INCLUDE
-# https://developer.gnome.org/WWW
 unit class Gnome::Gio::Enums:auth<github:MARTIMM>;
 
 #-------------------------------------------------------------------------------
@@ -1494,7 +1493,7 @@ Since: 2.28
 
 =end pod
 
-#TE:0:GApplicationFlags:
+#TE:1:GApplicationFlags:
 enum GApplicationFlags is export (
   'G_APPLICATION_FLAGS_NONE',
   'G_APPLICATION_IS_SERVICE'  =>          (1 +< 0),
