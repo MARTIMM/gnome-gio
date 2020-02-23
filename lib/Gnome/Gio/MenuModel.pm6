@@ -161,7 +161,7 @@ Create an object using a native object from a builder. See also B<Gnome::GObject
 
 #TM:0:new():inheriting
 #TM:0:new(:widget):
-#TM:0:new(:build-id):
+#TM:1:new(:build-id):
 
 submethod BUILD ( *%options ) {
 

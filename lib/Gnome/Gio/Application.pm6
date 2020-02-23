@@ -112,6 +112,7 @@ Create an object using a native object from elsewhere.
 
 =end pod
 
+#TM:2:new():inheriting:Gnome::Gtk3::Application
 #TM:1:new(:app-id):
 #TM:0:new(:native-object):
 submethod BUILD ( *%options ) {
@@ -132,8 +133,7 @@ submethod BUILD ( *%options ) {
   if ? %options<app-id> {
     if g_application_id_is_valid(%options<app-id>) {
       my GApplicationFlags $f = %options<flags> // G_APPLICATION_FLAGS_NONE;
-      self.set-native-object(g_application_new(
-        %options<app-id>, $f));
+      self.set-native-object(g_application_new( %options<app-id>, $f));
     }
 
     else {
@@ -156,7 +156,7 @@ submethod BUILD ( *%options ) {
   }
 
   # only after creating the widget, the gtype is known
-  self.set-class-info('Gnome::Gio::Application');
+  self.set-class-info('GApplication');
 }
 
 #-------------------------------------------------------------------------------
@@ -164,14 +164,15 @@ submethod BUILD ( *%options ) {
 method _fallback ( $native-sub is copy --> Callable ) {
 
   my Callable $s;
-  try { $s = &::($native-sub); }
   try { $s = &::("g_application_$native-sub"); } unless ?$s;
+  try { $s = &::("g_$native-sub"); } unless ?$s;
+  try { $s = &::($native-sub); }
 #  $s = self._buildable_interface($native-sub) unless ?$s;
 #  $s = self._orientable_interface($native-sub) unless ?$s;
 #also does Gnome::Gio::ActionGroup;
 #also does Gnome::Gio::ActionMap;
 
-  self.set-class-name-of-sub('Gnome::Gio::Application');
+  self.set-class-name-of-sub('GApplication');
   $s = callsame unless ?$s;
 
   $s;
