@@ -151,7 +151,7 @@ my Bool $signals-added = False;
 
 Create an object using a native object from elsewhere. See also B<Gnome::GObject::Object>.
 
-  multi method new ( N-GObject :$widget! )
+  multi method new ( N-GObject :$native-object! )
 
 Create an object using a native object from a builder. See also B<Gnome::GObject::Object>.
 
@@ -161,7 +161,7 @@ Create an object using a native object from a builder. See also B<Gnome::GObject
 
 #TM:0:new():inheriting
 #TM:0:new(:widget):
-#TM:0:new(:build-id):
+#TM:1:new(:build-id):
 
 submethod BUILD ( *%options ) {
 
@@ -176,7 +176,7 @@ submethod BUILD ( *%options ) {
   return unless self.^name eq 'Gnome::Gio::MenuModel';
 
   # process all named arguments
-  if ? %options<widget> || %options<build-id> {
+  if ? %options<native-object> || %options<build-id> {
     # provided in Gnome::GObject::Object
   }
 
