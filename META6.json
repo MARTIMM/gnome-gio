@@ -14,7 +14,7 @@
     "Gnome::Gio::MenuModel": "lib/Gnome/Gio/MenuModel.pm6"
   },
 
-  "source-url": "git://github.com/MARTIMM/raku-gnome-gio.git",
+  "source-url": "git://github.com/MARTIMM/gnome-gio.git",
 
   "depends": [ "Gnome::N", "Gnome::Glib", "Gnome::GObject"],
   "test-depends": [ ],
