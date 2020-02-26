@@ -113,6 +113,7 @@ Create an object using a native object from elsewhere.
 =end pod
 
 #TM:2:new():inheriting:Gnome::Gtk3::Application
+#TM:1:new():
 #TM:1:new(:app-id):
 #TM:0:new(:native-object):
 submethod BUILD ( *%options ) {
@@ -153,6 +154,10 @@ submethod BUILD ( *%options ) {
                ': ' ~ %options.keys.join(', ')
               )
     );
+  }
+
+  else {
+    self.set-native-object(g_application_new( '', G_APPLICATION_FLAGS_NONE));
   }
 
   # only after creating the widget, the gtype is known
@@ -226,11 +231,9 @@ sub g_application_id_is_valid ( Str $application_id )
 
 Creates a new B<Gnome::Gio::Application> instance.
 
-If non-C<Any>, the application id must be valid.  See
-C<g_application_id_is_valid()>.
+If defined, the application id must be valid.  See C<g_application_id_is_valid()>.
 
-If no application ID is given then some features of B<Gnome::Gio::Application>
-(most notably application uniqueness) will be disabled.
+If no application ID is given then some features of B<Gnome::Gio::Application> (most notably application uniqueness) will be disabled.
 
 Returns: a new B<Gnome::Gio::Application> instance
 
@@ -257,8 +260,6 @@ Gets the unique identifier for I<application>.
 
 Returns: the identifier for I<application>, owned by I<application>
 
-Since: 2.28
-
   method g_application_get_application_id ( --> Str  )
 
 
@@ -274,15 +275,7 @@ sub g_application_get_application_id ( N-GObject $application )
 =begin pod
 =head2 [g_application_] set_application_id
 
-Sets the unique identifier for I<application>.
-
-The application id can only be modified if I<application> has not yet
-been registered.
-
-If non-C<Any>, the application id must be valid.  See
-C<g_application_id_is_valid()>.
-
-Since: 2.28
+Sets the unique identifier for I<application>. The application id can only be modified if I<application> has not yet been registered. The application id must be valid, see C<g_application_id_is_valid()>.
 
   method g_application_set_application_id ( Str $application_id )
 
@@ -314,8 +307,6 @@ This function must not be called before the application has been
 registered.  See C<g_application_get_is_registered()>.
 
 Returns: (transfer none): a B<GDBusConnection>, or C<Any>
-
-Since: 2.34
 
   method g_application_get_dbus_connection ( --> N-GObject  )
 
@@ -349,8 +340,6 @@ registered.  See C<g_application_get_is_registered()>.
 
 Returns: the object path, or C<Any>
 
-Since: 2.34
-
   method g_application_get_dbus_object_path ( --> Str  )
 
 
@@ -372,8 +361,6 @@ This is the amount of time (in milliseconds) after the last call to
 C<g_application_release()> before the application stops running.
 
 Returns: the timeout, in milliseconds
-
-Since: 2.28
 
   method g_application_get_inactivity_timeout ( --> UInt  )
 
@@ -399,8 +386,6 @@ This call has no side effects of its own.  The value set here is only
 used for next time C<g_application_release()> drops the use count to
 zero.  Any timeouts currently in progress are not impacted.
 
-Since: 2.28
-
   method g_application_set_inactivity_timeout ( UInt $inactivity_timeout )
 
 =item UInt $inactivity_timeout; the timeout, in milliseconds
@@ -420,8 +405,6 @@ Gets the flags for I<application>.
 
 See B<GApplicationFlags>.
 
-Since: 2.28
-
   method g_application_get_flags ( --> Int )
 
 
@@ -437,14 +420,9 @@ sub g_application_get_flags ( N-GObject $application )
 =begin pod
 =head2 [g_application_] set_flags
 
-Sets the flags for I<application>.
-
-The flags can only be modified if I<application> has not yet been
-registered.
+Sets the flags for I<application>. The flags can only be modified if I<application> has not yet been registered.
 
 See B<GApplicationFlags>.
-
-Since: 2.28
 
   method g_application_set_flags ( GApplicationFlags $flags )
 
@@ -466,8 +444,6 @@ Gets the resource base path of I<application>.
 See C<g_application_set_resource_base_path()> for more information.
 
 Returns: (nullable): the base resource path, if one is set
-
-Since: 2.42
 
   method g_application_get_resource_base_path ( --> Str  )
 
@@ -517,8 +493,6 @@ a sub-class of B<Gnome::Gio::Application> you should either set the
 this function during the instance initialization. Alternatively, you
 can call this function in the B<Gnome::Gio::ApplicationClass>.startup virtual function,
 before chaining up to the parent implementation.
-
-Since: 2.42
 
   method g_application_set_resource_base_path ( Str $resource_path )
 
@@ -590,8 +564,6 @@ the options with C<g_variant_dict_lookup()>:
 - for C<G_OPTION_ARG_STRING_ARRAY>, use &as
 - for C<G_OPTION_ARG_FILENAME_ARRAY>, use ^aay
 
-Since: 2.40
-
   method g_application_add_main_option_entries ( N-GOptionEntry $entries )
 
 =item N-GOptionEntry $entries; (array zero-terminated=1) (element-type N-GOptionEntry) a C<Any>-terminated list of B<N-GOptionEntrys>
@@ -614,8 +586,6 @@ Calling this function is the equivalent of calling C<g_application_add_main_opti
 The parsed arguments will be packed into a B<GVariantDict> which is passed to  I<handle-local-options>. If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then it will also be sent to the primary instance. See C<g_application_add_main_option_entries()> for more details.
 
 See B<N-GOptionEntry> for more documentation of the arguments.
-
-Since: 2.42
 
   method g_application_add_main_option (
     Str $long_name, char $short_name, GOptionFlags $flags,
@@ -666,8 +636,6 @@ group to be parsed, but it does not cause you to be "opted in" to the
 new functionality whereby unrecognised options are rejected even if
 C<G_APPLICATION_HANDLES_COMMAND_LINE> was given.
 
-Since: 2.40
-
   method g_application_add_option_group ( N-GOptionGroup $group )
 
 =item N-GOptionGroup $group; (transfer full): a B<N-GOptionGroup>
@@ -683,18 +651,13 @@ sub g_application_add_option_group ( N-GObject $application, N-GOptionGroup $gro
 =begin pod
 =head2 [g_application_] set_option_context_parameter_string
 
-Sets the parameter string to be used by the commandline handling of I<application>.
+Sets the parameter string to be used by the commandline handling of I<application>. This function registers the argument to be passed to C<g_option_context_new()> when the internal B<GOptionContext> of I<application> is created. See C<g_option_context_new()> for more information about I<parameter_string>.
 
-This function registers the argument to be passed to C<g_option_context_new()>
-when the internal B<GOptionContext> of I<application> is created.
+  method g_application_set_option_context_parameter_string (
+    Str $parameter_string
+  )
 
-See C<g_option_context_new()> for more information about I<parameter_string>.
-
-Since: 2.56
-
-  method g_application_set_option_context_parameter_string ( Str $parameter_string )
-
-=item Str $parameter_string; (nullable): a string which is displayed in the first line of `--help` output, after the usage summary `programname [OPTION...]`.
+=item Str $parameter_string; a string which is displayed in the first line of `--help` output, after the usage summary `programname [OPTION...]`.
 
 =end pod
 
@@ -710,8 +673,6 @@ sub g_application_set_option_context_parameter_string ( N-GObject $application, 
 Adds a summary to the I<application> option context.
 
 See C<g_option_context_set_summary()> for more information.
-
-Since: 2.56
 
   method g_application_set_option_context_summary ( Str $summary )
 
@@ -732,8 +693,6 @@ Adds a description to the I<application> option context.
 
 See C<g_option_context_set_description()> for more information.
 
-Since: 2.56
-
   method g_application_set_option_context_description ( Str $description )
 
 =item Str $description; (nullable): a string to be shown in `--help` output after the list of options, or C<Any>
@@ -745,18 +704,11 @@ sub g_application_set_option_context_description ( N-GObject $application, Str $
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_get_is_registered:
+#TM:4:g_application_get_is_registered:ex-application.pl6
 =begin pod
 =head2 [g_application_] get_is_registered
 
-Checks if I<application> is registered.
-
-An application is registered if C<g_application_register()> has been
-successfully called.
-
-Returns: C<1> if I<application> is registered
-
-Since: 2.28
+Checks if I<application> is registered. An application is registered if C<g_application_register()> has been successfully called. Returns: C<1> if I<application> is registered.
 
   method g_application_get_is_registered ( --> Int  )
 
@@ -786,8 +738,6 @@ C<g_application_get_is_registered()>.
 
 Returns: C<1> if I<application> is remote
 
-Since: 2.28
-
   method g_application_get_is_remote ( --> Int  )
 
 
@@ -799,55 +749,55 @@ sub g_application_get_is_remote ( N-GObject $application )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_register:
+#TM:4:g_application_register:ex-application.pl6
 =begin pod
 =head2 g_application_register
 
 Attempts registration of the application.
 
-This is the point at which the application discovers if it is the
-primary instance or merely acting as a remote for an already-existing
-primary instance.  This is implemented by attempting to acquire the
-application identifier as a unique bus name on the session bus using
-GDBus.
+This is the point at which the application discovers if it is the primary instance or merely acting as a remote for an already-existing primary instance.  This is implemented by attempting to acquire the application identifier as a unique bus name on the session bus using GDBus.
 
-If there is no application ID or if C<G_APPLICATION_NON_UNIQUE> was
-given, then this process will always become the primary instance.
+If there is no application ID or if C<G_APPLICATION_NON_UNIQUE> was given, then this process will always become the primary instance.
 
-Due to the internal architecture of GDBus, method calls can be
-dispatched at any time (even if a main loop is not running).  For
-this reason, you must ensure that any object paths that you wish to
-register are registered before calling this function.
+Due to the internal architecture of GDBus, method calls can be dispatched at any time (even if a main loop is not running).  For this reason, you must ensure that any object paths that you wish to register are registered before calling this function.
 
-If the application has already been registered then C<1> is
-returned with no work performed.
+If the application has already been registered then C<1> is returned with no work performed.
 
-The  I<startup> signal is emitted if registration succeeds
-and I<application> is the primary instance (including the non-unique
-case).
+The  I<startup> signal is emitted if registration succeeds and I<application> is the primary instance (including the non-unique case).
 
-In the event of an error (such as I<cancellable> being cancelled, or a
-failure to connect to the session bus), C<0> is returned and I<error>
-is set appropriately.
+In the event of an error (such as I<cancellable> being cancelled, or a failure to connect to the session bus), C<0> is returned and I<error> is set appropriately.
 
-Note: the return value of this function is not an indicator that this
-instance is or is not the primary instance of the application.  See
-C<g_application_get_is_remote()> for that.
+Note: the return value of this function is not an indicator that this instance is or is not the primary instance of the application.  See C<g_application_get_is_remote()> for that.
 
-Returns: C<1> if registration succeeded
+Returns a valid error object if registration didn't succeed.
 
-Since: 2.28
-
-  method g_application_register ( N-GObject $cancellable, N-GError $error --> Int  )
+  method g_application_register (
+    N-GObject :$cancellable
+    --> Gnome::Glib::Error
+  )
 
 =item N-GObject $cancellable; (nullable): a B<GCancellable>, or C<Any>
-=item N-GError $error; a pointer to a NULL B<GError>, or C<Any>
 
 =end pod
+sub g_application_register (
+  N-GObject $application, N-GObject :$cancellable,
+  --> Gnome::Glib::Error
+) {
+  my N-GError $error .= new;
+  if _g_application_register( $application, $cancellable, $error) {
+    Gnome::Glib::Error.new(:native-object(N-GError))
+  }
 
-sub g_application_register ( N-GObject $application, N-GObject $cancellable, N-GError $error )
-  returns int32
-  is native(&gio-lib)
+  else {
+    Gnome::Glib::Error.new(:native-object($error))
+  }
+}
+
+sub _g_application_register (
+  N-GObject $application, N-GObject $cancellable, N-GError $error is rw
+  --> int32
+) is native(&gio-lib)
+  is symbol('g_application_register')
   { * }
 
 #-------------------------------------------------------------------------------
@@ -905,8 +855,6 @@ emitted in the primary instance.
 
 The application must be registered before calling this function.
 
-Since: 2.28
-
   method g_application_activate ( )
 
 
@@ -935,8 +883,6 @@ for this functionality, you should use "".
 
 The application must be registered before calling this function
 and it must have the C<G_APPLICATION_HANDLES_OPEN> flag set.
-
-Since: 2.28
 
   method g_application_open ( N-GObject $files, Int $n_files, Str $hint )
 
@@ -1033,8 +979,6 @@ what their exit status will be.
 
 Returns: the exit status
 
-Since: 2.28
-
   method g_application_run ( int32 $argc, CArray[Str] $argv --> int32  )
 
 =item int32 $argc; the argc from C<main()> (or 0 if I<argv> is C<Any>)
@@ -1066,8 +1010,6 @@ through C<gtk_application_add_window()>.)
 The result of calling C<g_application_run()> again after it returns is
 unspecified.
 
-Since: 2.32
-
   method g_application_quit ( )
 
 
@@ -1092,8 +1034,6 @@ If there is no default application then C<Any> is returned.
 
 Returns: (transfer none): the default application for this process, or C<Any>
 
-Since: 2.32
-
   method g_application_get_default ( --> N-GObject  )
 
 
@@ -1115,8 +1055,6 @@ by C<g_application_get_default()>.
 This function does not take its own reference on I<application>.  If
 I<application> is destroyed then the default application will revert
 back to C<Any>.
-
-Since: 2.32
 
   method g_application_set_default ( )
 
@@ -1143,8 +1081,6 @@ spinner).
 
 To cancel the busy indication, use C<g_application_unmark_busy()>.
 
-Since: 2.38
-
   method g_application_mark_busy ( )
 
 
@@ -1167,8 +1103,6 @@ to other processes.
 This function must only be called to cancel the effect of a previous
 call to C<g_application_mark_busy()>.
 
-Since: 2.38
-
   method g_application_unmark_busy ( )
 
 
@@ -1187,8 +1121,6 @@ Gets the application's current busy state, as set through
 C<g_application_mark_busy()> or C<g_application_bind_busy_property()>.
 
 Returns: C<1> if I<application> is currenty marked as busy
-
-Since: 2.44
 
   method g_application_get_is_busy ( --> Int  )
 
@@ -1232,8 +1164,6 @@ notifications without an id.
 If I<notification> is no longer relevant, it can be withdrawn with
 C<g_application_withdraw_notification()>.
 
-Since: 2.40
-
   method g_application_send_notification ( Str $id, N-GObject $notification )
 
 =item Str $id; (nullable): id of the notification, or C<Any>
@@ -1264,8 +1194,6 @@ Note that notifications are dismissed when the user clicks on one
 of the buttons in a notification or triggers its default action, so
 there is no need to explicitly withdraw the notification in that case.
 
-Since: 2.40
-
   method g_application_withdraw_notification ( Str $id )
 
 =item Str $id; id of a previously sent notification
@@ -1288,8 +1216,6 @@ The binding holds a reference to I<application> while it is active, but
 not to I<object>. Instead, the binding is destroyed when I<object> is
 finalized.
 
-Since: 2.44
-
   method g_application_bind_busy_property ( Pointer $object, Str $property )
 
 =item Pointer $object; (type GObject.Object): a B<GObject>
@@ -1309,8 +1235,6 @@ sub g_application_bind_busy_property ( N-GObject $application, Pointer $object, 
 Destroys a binding between I<property> and the busy state of
 I<application> that was previously created with
 C<g_application_bind_busy_property()>.
-
-Since: 2.44
 
   method g_application_unbind_busy_property ( Pointer $object, Str $property )
 
@@ -1493,8 +1417,6 @@ to exit the process, return a non-negative option, 0 for success,
 and a positive value for failure. To continue, return -1 to let
 the default option processing continue.
 
-Since: 2.40
-
   method handler (
     Unknown type G_TYPE_VARIANT_DICT $options,
     Gnome::GObject::Object :widget($application),
@@ -1517,8 +1439,6 @@ is using the C<G_APPLICATION_ALLOW_REPLACEMENT> flag.
 The default handler for this signal calls C<g_application_quit()>.
 
 Returns: C<1> if the signal has been handled
-
-Since: 2.60
 
   method handler (
     Gnome::GObject::Object :widget($application),
@@ -1610,7 +1530,5 @@ The B<Gnome::GObject::Value> type of property I<action-group> is C<G_TYPE_OBJECT
 
 Whether the application is currently marked as busy through
 C<g_application_mark_busy()> or C<g_application_bind_busy_property()>.
-Since: 2.44
-
 The B<Gnome::GObject::Value> type of property I<is-busy> is C<G_TYPE_BOOLEAN>.
 =end pod
