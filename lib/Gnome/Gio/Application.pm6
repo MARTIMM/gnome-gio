@@ -100,10 +100,10 @@ my Bool $signals-added = False;
 =head1 Methods
 =head2 new
 
-Create a new object with a valid application id and application flags.
+Create a new object with a valid application id and a mask of GApplicationFlags values.
 
   multi method new (
-    Bool :$app-id!, GApplicationFlags :$flags = G_APPLICATION_FLAGS_NONE
+    Bool :$app-id!, Int :$flags = G_APPLICATION_FLAGS_NONE
   )
 
 Create an object using a native object from elsewhere.
@@ -258,8 +258,6 @@ sub g_application_new ( Str $application_id, int32 $flags )
 
 Gets the unique identifier for I<application>.
 
-Returns: the identifier for I<application>, owned by I<application>
-
   method g_application_get_application_id ( --> Str  )
 
 
@@ -287,6 +285,7 @@ sub g_application_set_application_id ( N-GObject $application, Str $application_
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_application_get_dbus_connection:
 =begin pod
@@ -349,6 +348,7 @@ sub g_application_get_dbus_object_path ( N-GObject $application )
   returns Str
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:0:g_application_get_inactivity_timeout:
@@ -357,8 +357,7 @@ sub g_application_get_dbus_object_path ( N-GObject $application )
 
 Gets the current inactivity timeout for the application.
 
-This is the amount of time (in milliseconds) after the last call to
-C<g_application_release()> before the application stops running.
+This is the amount of time (in milliseconds) after the last call to C<g_application_release()> before the application stops running.
 
 Returns: the timeout, in milliseconds
 
@@ -379,12 +378,9 @@ sub g_application_get_inactivity_timeout ( N-GObject $application )
 
 Sets the current inactivity timeout for the application.
 
-This is the amount of time (in milliseconds) after the last call to
-C<g_application_release()> before the application stops running.
+This is the amount of time (in milliseconds) after the last call to C<g_application_release()> before the application stops running.
 
-This call has no side effects of its own.  The value set here is only
-used for next time C<g_application_release()> drops the use count to
-zero.  Any timeouts currently in progress are not impacted.
+This call has no side effects of its own.  The value set here is only used for next time C<g_application_release()> drops the use count to zero.  Any timeouts currently in progress are not impacted.
 
   method g_application_set_inactivity_timeout ( UInt $inactivity_timeout )
 
@@ -424,9 +420,9 @@ Sets the flags for I<application>. The flags can only be modified if I<applicati
 
 See B<GApplicationFlags>.
 
-  method g_application_set_flags ( GApplicationFlags $flags )
+  method g_application_set_flags ( Int $flags )
 
-=item GApplicationFlags $flags; the flags for I<application>
+=item Int $flags; a mask of GApplicationFlags values
 
 =end pod
 
@@ -435,7 +431,7 @@ sub g_application_set_flags ( N-GObject $application, int32 $flags )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_get_resource_base_path:
+#TM:4:g_application_get_resource_base_path:ex-application.pl6
 =begin pod
 =head2 [g_application_] get_resource_base_path
 
@@ -462,37 +458,17 @@ sub g_application_get_resource_base_path ( N-GObject $application )
 
 Sets (or unsets) the base resource path of I<application>.
 
-The path is used to automatically load various [application
-resources][gresource] such as menu layouts and action descriptions.
-The various types of resources will be found at fixed names relative
-to the given base path.
+The path is used to automatically load various application resources such as menu layouts and action descriptions. The various types of resources will be found at fixed names relative to the given base path.
 
-By default, the resource base path is determined from the application
-ID by prefixing '/' and replacing each '.' with '/'.  This is done at
-the time that the B<Gnome::Gio::Application> object is constructed.  Changes to
-the application ID after that point will not have an impact on the
-resource base path.
+By default, the resource base path is determined from the application ID by prefixing '/' and replacing each '.' with '/'.  This is done at the time that the B<Gnome::Gio::Application> object is constructed.  Changes to the application ID after that point will not have an impact on the resource base path.
 
-As an example, if the application has an ID of "org.example.app" then
-the default resource base path will be "/org/example/app".  If this
-is a B<Gnome::Gtk3::Application> (and you have not manually changed the path)
-then B<Gnome::Gtk3:: will> then search for the menus of the application at
-"/org/example/app/gtk/menus.ui".
+As an example, if the application has an ID of "org.example.app" then the default resource base path will be "/org/example/app".  If this is a B<Gnome::Gtk3::Application> (and you have not manually changed the path) then the object will then search for the menus of the application at "/org/example/app/gtk/menus.ui".
 
-See B<GResource> for more information about adding resources to your
-application.
+See B<Gnome::Gio::Resource> for more information about adding resources to your application.
 
-You can disable automatic resource loading functionality by setting
-the path to C<Any>.
+You can disable automatic resource loading functionality by setting the path to C<Any>.
 
-Changing the resource base path once the application is running is
-not recommended.  The point at which the resource path is consulted
-for forming paths for various purposes is unspecified.  When writing
-a sub-class of B<Gnome::Gio::Application> you should either set the
- I<resource-base-path> property at construction time, or call
-this function during the instance initialization. Alternatively, you
-can call this function in the B<Gnome::Gio::ApplicationClass>.startup virtual function,
-before chaining up to the parent implementation.
+Changing the resource base path once the application is running is not recommended.  The point at which the resource path is consulted for forming paths for various purposes is unspecified.  When writing a sub-class of B<Gnome::Gio::Application> you should either set the  I<resource-base-path> property at construction time, or call this function during the instance initialization. Alternatively, you can call this function in the B<Gnome::Gio::ApplicationClass>.startup virtual function, before chaining up to the parent implementation.
 
   method g_application_set_resource_base_path ( Str $resource_path )
 
@@ -615,7 +591,7 @@ Adds a B<N-GOptionGroup> to the commandline handling of I<application>.
 This function is comparable to C<g_option_context_add_group()>.
 
 Unlike C<g_application_add_main_option_entries()>, this function does
-not deal with C<Any> I<arg_data> and never transmits options to the
+not deal with undefined I<arg_data> and never transmits options to the
 primary instance.
 
 The reason for that is because, by the time the options arrive at the
@@ -818,6 +794,10 @@ To cancel the hold, call C<g_application_release()>.
 
 =end pod
 
+method hold ( ) {
+  g_application_hold(self.get-native-object);
+}
+
 sub g_application_hold ( N-GObject $application )
   is native(&gio-lib)
   { * }
@@ -839,26 +819,31 @@ call to C<g_application_hold()>.
 
 =end pod
 
+method release ( ) {
+  g_application_release(self.get-native-object);
+}
+
 sub g_application_release ( N-GObject $application )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_activate:
+#TM:4:g_application_activate:ex-application.pl6
 =begin pod
 =head2 g_application_activate
 
 Activates the application.
 
-In essence, this results in the  I<activate> signal being
-emitted in the primary instance.
-
-The application must be registered before calling this function.
+In essence, this results in the  I<activate> signal being emitted in the primary instance. The application must be registered before calling this function.
 
   method g_application_activate ( )
 
 
 =end pod
+
+method activate ( ) {
+  g_application_activate(self.get-native-object);
+}
 
 sub g_application_activate ( N-GObject $application )
   is native(&gio-lib)
@@ -897,102 +882,71 @@ sub g_application_open ( N-GObject $application, N-GObject $files, int32 $n_file
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_run:
+#TM:4:g_application_run:ex-application.pl6
 =begin pod
 =head2 g_application_run
 
 Runs the application.
 
-This function is intended to be run from C<main()> and its return value
-is intended to be returned by C<main()>. Although you are expected to pass
-the I<argc>, I<argv> parameters from C<main()> to this function, it is possible
-to pass C<Any> if I<argv> is not available or commandline handling is not
-required.  Note that on Windows, I<argc> and I<argv> are ignored, and
-C<g_win32_get_command_line()> is called internally (for proper support
-of Unicode commandline arguments).
+This function is intended to be run from C<main()> and its return value is intended to be returned by C<main()>. Although you are expected to pass the I<argc>, I<argv> parameters from C<main()> to this function, it is possible to pass C<Any> if I<argv> is not available or commandline handling is not required.  Note that on Windows, I<argc> and I<argv> are ignored, and C<g_win32_get_command_line()> is called internally (for proper support of Unicode commandline arguments).
 
-B<Gnome::Gio::Application> will attempt to parse the commandline arguments.  You
-can add commandline flags to the list of recognised options by way of
-C<g_application_add_main_option_entries()>.  After this, the
- I<handle-local-options> signal is emitted, from which the
-application can inspect the values of its B<N-GOptionEntrys>.
+B<Gnome::Gio::Application> will attempt to parse the commandline arguments.  You can add commandline flags to the list of recognised options by way of C<g_application_add_main_option_entries()>.  After this, the  I<handle-local-options> signal is emitted, from which the application can inspect the values of its B<N-GOptionEntrys>.
 
- I<handle-local-options> is a good place to handle options
-such as `--version`, where an immediate reply from the local process is
-desired (instead of communicating with an already-running instance).
-A  I<handle-local-options> handler can stop further processing
-by returning a non-negative value, which then becomes the exit status of
-the process.
+ I<handle-local-options> is a good place to handle options such as `--version`, where an immediate reply from the local process is desired (instead of communicating with an already-running instance). A  I<handle-local-options> handler can stop further processing by returning a non-negative value, which then becomes the exit status of the process.
 
-What happens next depends on the flags: if
-C<G_APPLICATION_HANDLES_COMMAND_LINE> was specified then the remaining
-commandline arguments are sent to the primary instance, where a
- I<command-line> signal is emitted.  Otherwise, the
-remaining commandline arguments are assumed to be a list of files.
-If there are no files listed, the application is activated via the
- I<activate> signal.  If there are one or more files, and
-C<G_APPLICATION_HANDLES_OPEN> was specified then the files are opened
-via the  I<open> signal.
+What happens next depends on the flags: if C<G_APPLICATION_HANDLES_COMMAND_LINE> was specified then the remaining commandline arguments are sent to the primary instance, where a I<command-line> signal is emitted.  Otherwise, the remaining commandline arguments are assumed to be a list of files. If there are no files listed, the application is activated via the I<activate> signal. If there are one or more files, and C<G_APPLICATION_HANDLES_OPEN> was specified then the files are opened via the  I<open> signal.
 
-If you are interested in doing more complicated local handling of the
-commandline then you should implement your own B<Gnome::Gio::Application> subclass
-and override C<local_command_line()>. In this case, you most likely want
-to return C<1> from your C<local_command_line()> implementation to
-suppress the default handling. See
-[Gnome::Gio::Application-example-cmdline2.c][Gnome::Gio::Application-example-cmdline2]
-for an example.
+=begin comment
+If you are interested in doing more complicated local handling of the commandline then you should implement your own B<Gnome::Gio::Application> subclass and override C<local_command_line()>. In this case, you most likely want to return C<1> from your C<local_command_line()> implementation to suppress the default handling. See Gnome::Gio::Application-example-cmdline2.c for an example.
+=end comment
 
-If, after the above is done, the use count of the application is zero
-then the exit status is returned immediately.  If the use count is
-non-zero then the default main context is iterated until the use count
-falls to zero, at which point 0 is returned.
+If, after the above is done, the use count of the application is zero then the exit status is returned immediately.  If the use count is non-zero then the default main context is iterated until the use count falls to zero, at which point 0 is returned.
 
-If the C<G_APPLICATION_IS_SERVICE> flag is set, then the service will
-run for as much as 10 seconds with a use count of zero while waiting
-for the message that caused the activation to arrive.  After that,
-if the use count falls to zero the application will exit immediately,
-except in the case that C<g_application_set_inactivity_timeout()> is in
-use.
+If the C<G_APPLICATION_IS_SERVICE> flag is set, then the service will run for as much as 10 seconds with a use count of zero while waiting for the message that caused the activation to arrive.  After that, if the use count falls to zero the application will exit immediately, except in the case that C<g_application_set_inactivity_timeout()> is in use.
 
-This function sets the prgname (C<g_set_prgname()>), if not already set,
-to the basename of argv[0].
+This function sets the prgname (C<g_set_prgname()>), if not already set, to the basename of argv[0].
 
-Much like C<g_main_loop_run()>, this function will acquire the main context
-for the duration that the application is running.
+Much like C<g_main_loop_run()>, this function will acquire the main context for the duration that the application is running.
 
-Since 2.40, applications that are not explicitly flagged as services
-or launchers (ie: neither C<G_APPLICATION_IS_SERVICE> or
-C<G_APPLICATION_IS_LAUNCHER> are given as flags) will check (from the
-default handler for local_command_line) if "--Gnome::Gio::Application-service"
-was given in the command line.  If this flag is present then normal
-commandline processing is interrupted and the
-C<G_APPLICATION_IS_SERVICE> flag is set.  This provides a "compromise"
-solution whereby running an application directly from the commandline
-will invoke it in the normal way (which can be useful for debugging)
-while still allowing applications to be D-Bus activated in service
-mode.  The D-Bus service file should invoke the executable with
-"--Gnome::Gio::Application-service" as the sole commandline argument.  This
-approach is suitable for use by most graphical applications but
-should not be used from applications like editors that need precise
-control over when processes invoked via the commandline will exit and
-what their exit status will be.
+Since 2.40, applications that are not explicitly flagged as services or launchers (ie: neither C<G_APPLICATION_IS_SERVICE> or C<G_APPLICATION_IS_LAUNCHER> are given as flags) will check (from the default handler for local_command_line) if "--gapplication-service" was given in the command line.  If this flag is present then normal commandline processing is interrupted and the C<G_APPLICATION_IS_SERVICE> flag is set.  This provides a "compromise" solution whereby running an application directly from the commandline will invoke it in the normal way (which can be useful for debugging) while still allowing applications to be D-Bus activated in service mode.  The D-Bus service file should invoke the executable with "--gapplication-service" as the sole commandline argument.  This approach is suitable for use by most graphical applications but should not be used from applications like editors that need precise control over when processes invoked via the commandline will exit and what their exit status will be.
 
 Returns: the exit status
 
-  method g_application_run ( int32 $argc, CArray[Str] $argv --> int32  )
-
-=item int32 $argc; the argc from C<main()> (or 0 if I<argv> is C<Any>)
-=item CArray[Str] $argv; (array length=argc) (element-type filename) (nullable): the argv from C<main()>, or C<Any>
+  method g_application_run ( --> int32  )
 
 =end pod
 
-sub g_application_run ( N-GObject $application, int32 $argc, CArray[Str] $argv )
-  returns int32
+method run ( --> Int ) {
+  g_application_run( self.get-native-object )
+}
+
+sub g_application_run ( N-GObject $application --> Int ) {
+
+  my Int $argc = 1 + @*ARGS.elems;
+
+  my $arg_arr = CArray[Str].new;
+  my Int $arg-count = 0;
+  $arg_arr[$arg-count++] = $*PROGRAM.Str;
+  for @*ARGS -> $arg {
+    $arg_arr[$arg-count++] = $arg;
+  }
+
+  my $argv = CArray[CArray[Str]].new;
+  $argv[0] = $arg_arr;
+
+note ($application, $argc, $argv).join(', ');
+  _g_application_run( $application, $argc, $argv)
+}
+
+sub _g_application_run (
+  N-GObject $application, int32 $argc, CArray[CArray[Str]] $arg_arr
+) returns int32
   is native(&gio-lib)
+  is symbol('g_application_run')
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_application_quit:
+#TM:4:g_application_quit:ex-application.pl6
 =begin pod
 =head2 g_application_quit
 
@@ -1014,6 +968,10 @@ unspecified.
 
 
 =end pod
+
+method quit ( ) {
+  g_application_quit( self.get-native-object )
+}
 
 sub g_application_quit ( N-GObject $application )
   is native(&gio-lib)
@@ -1280,7 +1238,7 @@ Also here, the types of positional arguments in the signal handler are important
 =head2 Supported signals
 
 
-=comment #TS:0:startup:
+=comment #TS:4:startup:ex-application.pl6
 =head3 startup
 
 The I<startup> signal is emitted on the primary instance immediately
@@ -1294,7 +1252,7 @@ after registration. See C<g_application_register()>.
 =item $application; the application
 
 
-=comment #TS:0:shutdown:
+=comment #TS:4:shutdown:ex-application.pl6
 =head3 shutdown
 
 The I<shutdown> signal is emitted only on the registered primary instance
@@ -1322,7 +1280,7 @@ activation occurs. See C<g_application_activate()>.
 =item $application; the application
 
 
-=comment #TS:0:open:
+=comment #TS:4:open:ex-application.pl6
 =head3 open
 
 The I<open> signal is emitted on the primary instance when there are
