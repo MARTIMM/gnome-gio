@@ -1910,3 +1910,20 @@ enum GNetworkConnectivity is export (
   'G_NETWORK_CONNECTIVITY_PORTAL'      => 3,
   'G_NETWORK_CONNECTIVITY_FULL'        => 4
 );
+
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+=begin pod
+=head2 enum GResourceLookupFlags
+
+GResourceLookupFlags determine how resource path lookups are handled.
+
+=item G_RESOURCE_LOOKUP_FLAGS_NONE: No flags set.
+
+=end pod
+
+#TE:0:GResourceLookupFlags:
+enum GResourceLookupFlags is export (
+  'G_RESOURCE_LOOKUP_FLAGS_NONE',
+);
