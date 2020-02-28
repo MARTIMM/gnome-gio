@@ -755,22 +755,42 @@ Returns a valid error object if registration didn't succeed.
 =item N-GObject $cancellable; (nullable): a B<GCancellable>, or C<Any>
 
 =end pod
+method register (
+  Gnome::GObject::Object :$cancellable  # Later Gnome::Gio::Cancellable
+  --> Gnome::Glib::Error
+) {
+  my CArray[N-GError] $error .= new(N-GError);
+  my Int $sts = _g_application_register(
+    self.get-native-object,
+    ?$cancellable ?? $cancellable.get-native-object !! N-GObject,
+    $error
+  );
+
+  if $sts {
+    Gnome::Glib::Error.new(:native-object(N-GError))
+  }
+
+  else {
+    Gnome::Glib::Error.new(:native-object($error[0]))
+  }
+}
+
 sub g_application_register (
   N-GObject $application, N-GObject :$cancellable,
   --> Gnome::Glib::Error
 ) {
-  my N-GError $error .= new;
+  my CArray[N-GError] $error .= new;
   if _g_application_register( $application, $cancellable, $error) {
     Gnome::Glib::Error.new(:native-object(N-GError))
   }
 
   else {
-    Gnome::Glib::Error.new(:native-object($error))
+    Gnome::Glib::Error.new(:native-object($error[0]))
   }
 }
 
 sub _g_application_register (
-  N-GObject $application, N-GObject $cancellable, N-GError $error is rw
+  N-GObject $application, N-GObject $cancellable, CArray[N-GError] $error
   --> int32
 ) is native(&gio-lib)
   is symbol('g_application_register')
@@ -934,7 +954,6 @@ sub g_application_run ( N-GObject $application --> Int ) {
   my $argv = CArray[CArray[Str]].new;
   $argv[0] = $arg_arr;
 
-note ($application, $argc, $argv).join(', ');
   _g_application_run( $application, $argc, $argv)
 }
 
