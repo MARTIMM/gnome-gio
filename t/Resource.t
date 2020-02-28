@@ -11,15 +11,23 @@ use Gnome::Gio::Resource;
 my Gnome::Gio::Resource $r;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $r .= new;
-  isa-ok $r, Gnome::Gio::Resource, '.new()';
+  throws-like(
+    { $r .= new(:load<non-existent.gresource>); },
+    X::Gnome, 'Non existent resource',
+    :message(/:s Failed to open file/)
+  );
+
+  $r .= new(:load<t/data/g-resources/rtest.gresource>);
+  isa-ok $r, Gnome::Gio::Resource, '.new(:load)';
+}
+
+subtest 'Manipulations', {
+  ok 1, $r.register // '.register()';
+  ok 1, $r.unregister // '.unregister()';
 }
 
 #`{{
 #-------------------------------------------------------------------------------
-subtest 'Manipulations', {
-}
-
 #-------------------------------------------------------------------------------
 subtest 'Inherit ...', {
 }
@@ -43,4 +51,3 @@ subtest 'Signals ...', {
 
 #-------------------------------------------------------------------------------
 done-testing;
-

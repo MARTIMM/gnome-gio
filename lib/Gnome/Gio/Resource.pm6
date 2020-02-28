@@ -82,9 +82,6 @@ Substitutions must start with a slash, and must not contain a trailing slash bef
   unit class Gnome::Gio::Resource;
   also is Gnome::GObject::Boxed;
 
-=comment  also does Gnome::Gtk3::Buildable;
-=comment  also does Gnome::Gtk3::Orientable;
-
 =comment head2 Example
 
 =end pod
@@ -96,6 +93,7 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::Glib::Error;
 use Gnome::GObject::Boxed;
+use Gnome::Gio::Enums;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::Resource:auth<github:MARTIMM>;
@@ -123,21 +121,23 @@ class N-GResource
 =head1 Methods
 =head2 new
 
-Create a new Resource object by loading data from a resource bundle.
+Create a new Resource object by loading resources from a resource bundle.
 
-  multi method new ( :$load! )
+  multi method new ( :load! )
 
 Create a Resource object using a native object from elsewhere. See also B<Gnome::GObject::Object>.
 
   multi method new ( N-GObject :$native-object! )
 
+=begin comment
 Create a Resource object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
 
   multi method new ( Str :$build-id! )
+=end comment
 
 =end pod
 
-#TM:0:new(:load):
+#TM:1:new(:load):
 #TM:0:new(:native-object):
 #TM:0:new(:build-id):
 
@@ -148,16 +148,21 @@ submethod BUILD ( *%options ) {
 
   # process all named arguments
   if ? %options<load> {
-    my N-GError $ne .= new;
+    my CArray[N-GError] $ne .= new(N-GError);
+    my Gnome::Glib::Error $e;
     my N-GResource $nr = g_resource_load( %options<load>, $ne);
+
     if ? $nr {
+      $e .= new(:native-object(N-GError));
     }
 
     else {
-      my Gnome::Glib::Error $e .= new(:native-object($ne));
+      $e .= new(:native-object($ne[0]));
     }
 
-    die X::Gnome.new(:message($e.message)) if $e.valid;
+    die X::Gnome.new(:message($e.message)) if $e.is-valid;
+
+    self.set-native-object($nr);
   }
 
   elsif ? %options<native-object> || ? %options<build-id> {
@@ -174,9 +179,9 @@ submethod BUILD ( *%options ) {
   }
 
   # create default object
-  else {
-    # self.set-native-object(g_resource_new());
-  }
+#  else {
+#    self.set-native-object(N-GResource.new);
+#  }
 
   # only after creating the native-object, the gtype is known
   self.set-class-info('GResource');
@@ -203,7 +208,7 @@ method _fallback ( $native-sub is copy --> Callable ) {
 =begin pod
 =head2 [g_resource_] error_quark
 
-Gets the B<GResource> Error Quark.
+Gets the B<Gnome::Gio::Resource> Error Quark.
 
 Returns: a B<GQuark>
 
@@ -218,29 +223,26 @@ sub g_resource_error_quark (  --> int32 )
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_new_from_data:
 =begin pod
 =head2 [g_resource_] new_from_data
 
-Creates a GResource from a reference to the binary resource bundle.
-This will keep a reference to I<data> while the resource lives, so
-the data should not be modified or freed.
+Creates a B<Gnome::Gio::Resource> from a reference to the binary resource bundle. This will keep a reference to I<data> while the resource lives, so the data should not be modified or freed.
 
-If you want to use this resource in the global resource namespace you need
-to register it with C<g_resources_register()>.
+If you want to use this resource in the global resource namespace you need to register it with C<g_resources_register()>.
 
-Note: I<data> must be backed by memory that is at least pointer aligned.
-Otherwise this function will internally create a copy of the memory since
-GLib 2.56, or in older versions fail and exit the process.
+Note: I<data> must be backed by memory that is at least pointer aligned. Otherwise this function will internally create a copy of the memory since GLib 2.56, or in older versions fail and exit the process.
 
 If I<data> is empty or corrupt, C<G_RESOURCE_ERROR_INTERNAL> will be returned.
 
 Returns: (transfer full): a new B<GResource>, or C<Any> on error
 
-Since: 2.32
-
-  method g_resource_new_from_data ( N-GObject $data, N-GError $error --> GResource )
+  method g_resource_new_from_data (
+    N-GObject $data, N-GError $error
+    --> GResource
+  )
 
 =item N-GObject $data; A B<GBytes>
 =item N-GError $error; return location for a B<GError>, or C<Any>
@@ -250,6 +252,7 @@ Since: 2.32
 sub g_resource_new_from_data ( N-GObject $data, N-GError $error --> GResource )
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_ref:
@@ -259,16 +262,16 @@ sub g_resource_new_from_data ( N-GObject $data, N-GError $error --> GResource )
 Atomically increments the reference count of I<resource> by one. This
 function is MT-safe and may be called from any thread.
 
-Returns: The passed in B<GResource>
+Returns: The passed in B<N-GResource>
 
 Since: 2.32
 
-  method g_resource_ref ( --> GResource )
+  method g_resource_ref ( --> N-GResource )
 
 
 =end pod
 
-sub g_resource_ref ( GResource $resource --> GResource )
+sub g_resource_ref ( N-GResource $resource --> N-GResource )
   is native(&gio-lib)
   { * }
 
@@ -289,36 +292,37 @@ Since: 2.32
 
 =end pod
 
-sub g_resource_unref ( GResource $resource  )
+sub g_resource_unref ( N-GResource $resource  )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_resource_load:
+#TM:1:g_resource_load:new(:load)
 =begin pod
 =head2 g_resource_load
 
-Loads a binary resource bundle and creates a B<GResource> representation of it, allowing you to query it for data.
+Loads a binary resource bundle and creates a B<N-GResource> representation of it, allowing you to query it for data.
 
 If you want to use this resource in the global resource namespace you need to register it with C<g_resources_register()>.
 
 If I<filename> is empty or the data in it is corrupt, C<G_RESOURCE_ERROR_INTERNAL> will be returned. If I<filename> doesn’t exist, or there is an error in reading it, an error from C<g_mapped_file_new()> will be returned.
 
-Returns: (transfer full): a new B<GResource>, or C<Any> on error
+Returns: a new B<N-GResource>, or C<Any> on error
 
 Since: 2.32
 
-  method g_resource_load ( Str $filename, N-GError $error --> GResource )
+  method g_resource_load ( Str $filename, N-GError $error --> N-GResource )
 
-=item Str $filename; (type filename): the path of a filename to load, in the GLib filename encoding
+=item Str $filename; the path of a filename to load, in the GLib filename encoding
 =item N-GError $error; return location for a B<GError>, or C<Any>
 
 =end pod
 
-sub g_resource_load ( Str $filename, N-GError $error --> GResource )
+sub g_resource_load ( Str $filename, CArray[N-GError] $error --> N-GResource )
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_open_stream:
 =begin pod
@@ -342,57 +346,70 @@ Since: 2.32
 
 =end pod
 
-sub g_resource_open_stream ( GResource $resource, Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> GInputStream )
+sub g_resource_open_stream ( N-GResource $resource, Str $path, int32 $lookup_flags, N-GError $error --> GInputStream )
   is native(&gio-lib)
   { * }
+}}
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_lookup_data:
 =begin pod
 =head2 [g_resource_] lookup_data
 
-Looks for a file at the specified I<path> in the resource and
-returns a B<GBytes> that lets you directly access the data in
-memory.
+Looks for a file at the specified I<path> in the resource and returns a B<GBytes> that lets you directly access the data in memory.
 
-The data is always followed by a zero byte, so you
-can safely use the data as a C string. However, that byte
-is not included in the size of the GBytes.
+The data is always followed by a zero byte, so you can safely use the data as a C string. However, that byte is not included in the size of the GBytes.
 
-For uncompressed resource files this is a pointer directly into
-the resource bundle, which is typically in some readonly data section
-in the program binary. For compressed files we allocate memory on
-the heap and automatically uncompress the data.
+For uncompressed resource files this is a pointer directly into the resource bundle, which is typically in some readonly data section in the program binary. For compressed files we allocate memory on the heap and automatically uncompress the data.
 
 I<lookup_flags> controls the behaviour of the lookup.
 
-Returns: (transfer full): B<GBytes> or C<Any> on error.
-Free the returned object with C<g_bytes_unref()>
+Returns: (transfer full): B<GBytes> or C<Any> on error. Free the returned object with C<g_bytes_unref()>
 
-Since: 2.32
-
-  method g_resource_lookup_data ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> N-GObject )
+  method g_resource_lookup_data (
+    Str $path, GResourceLookupFlags $lookup_flags,
+    -->
+  )
 
 =item Str $path; A pathname inside the resource
 =item GResourceLookupFlags $lookup_flags; A B<GResourceLookupFlags>
 =item N-GError $error; return location for a B<GError>, or C<Any>
 
 =end pod
+sub g_resource_lookup_data (
+  N-GResource $resource, Str $path, int32 $lookup_flags
+  --> Gnome::Glib::Error
+) {
+  my CArray[N-GError] $ne .= new(N-GError);
+  my Gnome::Glib::Error $e;
+  my CArray[int8] $bts = _g_resource_lookup_data(
+    $resource, $path, $lookup_flags, $ne
+  );
+  ...
+}
 
-sub g_resource_lookup_data ( GResource $resource, Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> N-GObject )
-  is native(&gio-lib)
+
+sub _g_resource_lookup_data (
+  N-GResource $resource, Str $path, int32 $lookup_flags,
+  CArray[N-GError] $error
+  --> N-GObject
+) is native(&gio-lib)
+  is symbol('g_resource_lookup_data')
   { * }
+}}
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_enumerate_children:
 =begin pod
 =head2 [g_resource_] enumerate_children
 
 Returns all the names of children at the specified I<path> in the resource.
-The return result is a C<Any> terminated list of strings which should
+The return result is a list of strings which should
 be released with C<g_strfreev()>.
 
-If I<path> is invalid or does not exist in the B<GResource>,
+If I<path> is invalid or does not exist in the B<N-GResource>,
 C<G_RESOURCE_ERROR_NOT_FOUND> will be returned.
 
 I<lookup_flags> controls the behaviour of the lookup.
@@ -409,10 +426,12 @@ Since: 2.32
 
 =end pod
 
-sub g_resource_enumerate_children ( GResource $resource, Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> CArray[Str] )
+sub g_resource_enumerate_children ( N-GResource $resource, Str $path, int32 $lookup_flags, N-GError $error --> CArray[Str] )
   is native(&gio-lib)
   { * }
+}}
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_get_info:
 =begin pod
@@ -437,18 +456,17 @@ Since: 2.32
 
 =end pod
 
-sub g_resource_get_info ( GResource $resource, Str $path, GResourceLookupFlags $lookup_flags, uint64 $size, uint32 $flags, N-GError $error --> int32 )
+sub g_resource_get_info ( N-GResource $resource, Str $path, int32 $lookup_flags, uint64 $size, uint32 $flags, N-GError $error --> int32 )
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:0:g_resources_register:
 =begin pod
 =head2 [g_resource_] g_resources_register
 
-Registers the resource with the process-global set of resources.
-Once a resource is registered the files in it can be accessed
-with the global resource lookup functions like C<g_resources_lookup_data()>.
+Registers the resource with the process-global set of resources. Once a resource is registered the files in it can be accessed with the global resource lookup functions like C<g_resources_lookup_data()>.
 
 Since: 2.32
 
@@ -457,7 +475,11 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_register ( GResource $resource  )
+method register ( ) {
+  g_resources_register( self.get-native-object );
+}
+
+sub g_resources_register ( N-GResource $resource  )
   is native(&gio-lib)
   { * }
 
@@ -475,10 +497,15 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_unregister ( GResource $resource  )
+
+method unregister ( ) {
+  g_resources_unregister( self.get-native-object );
+}
+sub g_resources_unregister ( N-GResource $resource  )
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resources_open_stream:
 =begin pod
@@ -503,10 +530,12 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_open_stream ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> GInputStream )
+sub g_resources_open_stream ( Str $path, int32 $lookup_flags, N-GError $error --> GInputStream )
   is native(&gio-lib)
   { * }
+}}
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_resources_lookup_data:
 =begin pod
@@ -540,7 +569,7 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_lookup_data ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> N-GObject )
+sub g_resources_lookup_data ( Str $path, int32 $lookup_flags, N-GError $error --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -568,7 +597,7 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_enumerate_children ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> CArray[Str] )
+sub g_resources_enumerate_children ( Str $path, int32 $lookup_flags, N-GError $error --> CArray[Str] )
   is native(&gio-lib)
   { * }
 
@@ -596,10 +625,11 @@ Since: 2.32
 
 =end pod
 
-sub g_resources_get_info ( Str $path, GResourceLookupFlags $lookup_flags, uint64 $size, uint32 $flags, N-GError $error --> int32 )
+sub g_resources_get_info ( Str $path, int32 $lookup_flags, uint64 $size, uint32 $flags, N-GError $error --> int32 )
   is native(&gio-lib)
   { * }
-
+}}
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:g_static_resource_init:
 =begin pod
@@ -608,9 +638,7 @@ sub g_resources_get_info ( Str $path, GResourceLookupFlags $lookup_flags, uint64
 Initializes a GResource from static data using a
 GStaticResource.
 
-This is normally used by code generated by
-[glib-compile-resources][glib-compile-resources]
-and is not typically used by other code.
+This is normally used by code generated by glib-compile-resources and is not typically used by other code.
 
 Since: 2.32
 
@@ -671,3 +699,4 @@ Since: 2.32
 sub g_static_resource_get_resource ( GStaticResource $static_resource --> GResource )
   is native(&gio-lib)
   { * }
+}}
