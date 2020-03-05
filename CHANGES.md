@@ -1,5 +1,8 @@
 ## Release notes
 
+* 2020-03-03 0.4.0
+  * Add ActionMap modules
+
 * 2020-02-29 0.3.0
   * Add Action, SimpleAction modules
 
