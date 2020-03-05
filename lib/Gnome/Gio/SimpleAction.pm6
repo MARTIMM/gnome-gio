@@ -301,33 +301,23 @@ Also here, the types of positional arguments in the signal handler are important
 =head2 Supported signals
 
 
-=comment #TS:0:activate:
+=comment #TS:4:activate:ex-application.pl6
 =head3 activate
 
 Indicates that the action was just activated.
 
-I<parameter> will always be of the expected type, i.e. the parameter type
-specified when the action was created. If an incorrect type is given when
-activating the action, this signal is not emitted.
+I<$parameter> will always be of the expected type, i.e. the parameter type specified when the action was created. If an incorrect type is given when activating the action, this signal is not emitted.
 
-Since GLib 2.40, if no handler is connected to this signal then the
-default behaviour for boolean-stated actions with a C<Any> parameter
-type is to toggle them via the  I<change-state> signal.
-For stateful actions where the state type is equal to the parameter
-type, the default is to forward them directly to
- I<change-state>.  This should allow almost all users
-of B<Gnome::Gio::SimpleAction> to connect only one handler or the other.
+Since GLib 2.40, if no handler is connected to this signal then the default behaviour for boolean-stated actions with an C<Any> parameter type is to toggle them via the  I<change-state> signal. For stateful actions where the state type is equal to the parameter type, the default is to forward them directly to I<change-state>.  This should allow almost all users of B<Gnome::Gio::SimpleAction> to connect only one handler or the other.
 
   method handler (
-    Unknown type G_TYPE_VARIANT $parameter,
+    N-GVariant $parameter,
     Gnome::GObject::Object :widget($simple),
     *%user-options
   );
 
 =item $simple; the B<Gnome::Gio::SimpleAction>
-
-=item $parameter; (nullable): the parameter to the activation, or C<Any> if it has
-no parameter
+=item $parameter; the parameter to the activation, or C<Any> if it has no parameter
 
 =comment #TS:0:change-state:
 =head3 change-state

@@ -16,8 +16,8 @@ subtest 'ISA test', {
 }
 
 subtest 'Manipulations', {
-  ok 1, $sa.set-enabled(True), '.set-enabled();
-
+  $sa.set-enabled(True);
+  ok $sa.get-enabled, '.set-enabled() / .get-enabled()';
 }
 
 #`{{
