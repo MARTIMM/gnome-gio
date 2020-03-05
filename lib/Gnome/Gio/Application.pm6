@@ -54,8 +54,8 @@ For an example of using extra D-Bus hooks with Gnome::Gio::Application, see [Gno
 =head2 Implemented Interfaces
 
 Gnome::Gio::Application implements
-=item Gnome::Gio::ActionGroup
-=item Gnome::Gio::ActionMap
+=comment item Gnome::Gio::ActionGroup
+=item [Gnome::Gio::ActionMap](ActionMap.html)
 
 
 =head1 Synopsis
@@ -63,9 +63,8 @@ Gnome::Gio::Application implements
 
   unit class Gnome::Gio::Application;
   also is Gnome::GObject::Object;
-
+  also does Gnome::Gio::ActionMap;
 =comment  also does Gnome::Gio::ActionGroup;
-=comment  also does Gnome::Gio::ActionMap;
 
 =comment head2 Example
 
@@ -80,17 +79,17 @@ use Gnome::Glib::Error;
 use Gnome::Glib::Option;
 use Gnome::GObject::Object;
 use Gnome::Gio::Enums;
+use Gnome::Gio::ActionMap;
 
 #use Gnome::Gio::ActionGroup;
-#use Gnome::Gio::ActionMap;
 
 #-------------------------------------------------------------------------------
 # https://developer.gnome.org/gio/stable/GApplication.html
 unit class Gnome::Gio::Application:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
+also does Gnome::Gio::ActionMap;
 
 #also does Gnome::Gio::ActionGroup;
-#also does Gnome::Gio::ActionMap;
 
 #-------------------------------------------------------------------------------
 my Bool $signals-added = False;
@@ -172,10 +171,9 @@ method _fallback ( $native-sub is copy --> Callable ) {
   try { $s = &::("g_application_$native-sub"); } unless ?$s;
   try { $s = &::("g_$native-sub"); } unless ?$s;
   try { $s = &::($native-sub); }
-#  $s = self._buildable_interface($native-sub) unless ?$s;
-#  $s = self._orientable_interface($native-sub) unless ?$s;
+
+  $s = self._action_map_interface($native-sub) unless ?$s;
 #also does Gnome::Gio::ActionGroup;
-#also does Gnome::Gio::ActionMap;
 
   self.set-class-name-of-sub('GApplication');
   $s = callsame unless ?$s;
