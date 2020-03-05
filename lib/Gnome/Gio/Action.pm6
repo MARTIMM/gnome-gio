@@ -8,8 +8,6 @@ use v6;
 
 An action interface
 
-=comment ![](images/X.png)
-
 =head1 Description
 
 B<Gnome::Gio::Action> represents a single named action.
@@ -43,14 +41,12 @@ Probably the only useful thing to do with a B<Gnome::Gio::Action> is to put it
 inside of a B<GSimpleActionGroup>.
 
 
-
-
 =begin comment
 =head2 Known implementations
 
 Gnome::Gio::Action is implemented by
 =comment item Gnome::Gio::PropertyAction
-=comment item Gnome::Gio::SimpleAction
+=item [Gnome::Gio::SimpleAction](SimpleAction.html)
 
 
 =end comment
@@ -66,7 +62,7 @@ Gnome::Gio::Action is implemented by
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-use Gnome::N::X;
+#use Gnome::N::X;
 use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::Glib::Error;
