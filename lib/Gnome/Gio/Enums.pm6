@@ -1923,7 +1923,7 @@ GResourceLookupFlags determine how resource path lookups are handled.
 
 =end pod
 
-#TE:0:GResourceLookupFlags:
+#TE:1:GResourceLookupFlags:
 enum GResourceLookupFlags is export (
   'G_RESOURCE_LOOKUP_FLAGS_NONE',
 );
