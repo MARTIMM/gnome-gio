@@ -91,7 +91,6 @@ use NativeCall;
 use Gnome::N::X;
 use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
-use Gnome::N::N-GError;
 use Gnome::Glib::Error;
 use Gnome::GObject::Boxed;
 use Gnome::Gio::Enums;
