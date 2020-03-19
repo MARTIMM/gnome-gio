@@ -1,5 +1,8 @@
 ## Release notes
 
+* 2020-03-19 0.4.1
+  * Small changes caused by extracted native classes
+
 * 2020-03-03 0.4.0
   * Add ActionMap modules
 
