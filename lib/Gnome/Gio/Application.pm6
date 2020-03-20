@@ -76,7 +76,7 @@ use Gnome::N::X;
 use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::Glib::Error;
-use Gnome::Glib::Option;
+use Gnome::Glib::OptionContext;
 use Gnome::GObject::Object;
 use Gnome::Gio::Enums;
 use Gnome::Gio::ActionMap;
