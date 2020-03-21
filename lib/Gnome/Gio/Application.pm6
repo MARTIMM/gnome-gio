@@ -107,7 +107,7 @@ Create a new object with a valid application id and a mask of GApplicationFlags 
 
 Create an object using a native object from elsewhere.
 
-  multi method new ( N-GObject :$object! )
+  multi method new ( N-GObject :$native-object! )
 
 =end pod
 
@@ -143,8 +143,8 @@ submethod BUILD ( *%options ) {
     }
   }
 
-  elsif ? %options<object> {
-    self.set-native-object(%options<object>);
+  elsif ? %options<native-object> {
+    self.set-native-object(%options<native-object>);
   }
 
   elsif %options.keys.elems {
