@@ -202,6 +202,17 @@ method _fallback ( $native-sub is copy --> Callable ) {
   $s;
 }
 
+#-------------------------------------------------------------------------------
+# no ref/unref
+method native-object-ref ( $n-native-object --> Any ) {
+  g_resource_ref($n-native-object)
+}
+
+#-------------------------------------------------------------------------------
+method native-object-unref ( $n-native-object ) {
+  g_resource_unref($n-native-object)
+}
+
 
 #-------------------------------------------------------------------------------
 #TM:0:g_resource_error_quark:
