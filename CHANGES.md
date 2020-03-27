@@ -1,5 +1,7 @@
 ## Release notes
 
+* 2020-03-25 0.4.2
+  * Added `g_resource_ref()` and `g_resource_unref()` to Resources after changes in Gnome::GObject::Boxed
 * 2020-03-19 0.4.1
   * Small changes caused by extracted native classes
 
