@@ -12,8 +12,8 @@ my Gnome::Gio::MenuModel $mm;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
   ok 1, 'ok';
-#  $mm .= new(:empty);
-#  isa-ok $mm, Gnome::Gio::MenuModel, '.new(:empty)';
+#  $mm .= new;
+#  isa-ok $mm, Gnome::Gio::MenuModel, '.new';
 }
 
 #`{{
