@@ -8,24 +8,26 @@ use v6;
 
 File and Directory Handling
 
-=comment ![](images/X.png)
-
 =head1 Description
 
 I<include>: gio/gio.h
 
-B<N-GFile> is a high level abstraction for manipulating files on a virtual file system. B<N-GFiles> are lightweight, immutable objects that do no I/O upon creation. It is necessary to understand that B<N-GFile> objects do not represent files, merely an identifier for a file. All file content I/O is implemented as streaming operations (see B<GInputStream> and B<GOutputStream>).
+B<N-GFile> is a high level abstraction for manipulating files on a virtual file system. B<N-GFiles> are lightweight, immutable objects that do no I/O upon creation. It is necessary to understand that B<N-GFile> objects do not represent files, merely an identifier for a file.
 
 To construct a B<N-GFile>, you can use:
 =item C<g_file_new_for_path()> if you have a path.
 =item C<g_file_new_for_uri()> if you have a URI.
-=item C<g_file_new_for_commandline_arg()> for a command line argument.
-=item C<g_file_new_tmp()> to create a temporary file from a template.
-=item C<g_file_parse_name()> from a UTF-8 string gotten from C<g_file_get_parse_name()>.
-=item C<g_file_new_build_filename()> to create a file from path elements.
+=comment item C<g_file_new_for_commandline_arg()> for a command line argument.
+=comment item C<g_file_new_tmp()> to create a temporary file from a template.
+=comment item C<g_file_parse_name()> from a UTF-8 string gotten from C<g_file_get_parse_name()>.
+=comment item C<g_file_new_build_filename()> to create a file from path elements.
 
 One way to think of a B<N-GFile> is as an abstraction of a pathname. For normal files the system pathname is what is stored internally, but as B<N-GFiles> are extensible it could also be something else that corresponds to a pathname in a userspace implementation of a filesystem.
 
+Many of the native subroutines originally in this module are not implemented in this Raku class. This is because I/O is very well supported by Raku and there is no need to provide I/O routines here. This class mainly exists to handle returned native objects from other classes. The most important calls needed are thus to get the name of a file or url.
+
+
+=begin comment
 B<N-GFiles> make up hierarchies of directories and files that correspond to the files on a filesystem. You can move through the file system with B<N-GFile> using C<g_file_get_parent()> to get an identifier for the parent directory, C<g_file_get_child()> to get a child within a directory, C<g_file_resolve_relative_path()> to resolve a relative path between two B<N-GFiles>. There can be multiple hierarchies, so you may not end up at the same root if you repeatedly call C<g_file_get_parent()> on two different files.
 
 All B<N-GFiles> have a basename (get with C<g_file_get_basename()>). These names are byte strings that are used to identify the file on the filesystem (relative to its parent directory) and there is no guarantees that they have any particular charset encoding or even make any sense at all. If you want to use filenames in a user interface you should use the display name that you can get by requesting the C<G_FILE_ATTRIBUTE_STANDARD_DISPLAY_NAME> attribute with C<g_file_query_info()>. This is guaranteed to be in UTF-8 and can be used in a user interface. But always store the real basename or the B<N-GFile> to use to actually access the file, because there is no way to go from a display name to the actual name.
@@ -45,6 +47,7 @@ Some B<N-GFile> operations almost always take a noticeable amount of time, and s
 
 One notable feature of B<N-GFiles> are entity tags, or "etags" for short. Entity tags are somewhat like a more abstract version of the traditional mtime, and can be used to quickly determine if the file has been modified from the version on the file system. See the HTTP 1.1 [specification](http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html) for HTTP Etag headers, which are a very similar concept.
 
+=end comment
 
 =head2 See Also
 
@@ -106,230 +109,6 @@ class N-GFile
   is repr('CPointer')
   is export
   { }
-
-#`{{
-=begin pod
-=head2 class N-GFileIface
-
-An interface for writing VFS file handles.
-
-
-=item UInt $.g_iface: The parent interface.
-=item ___dup: Duplicates a B<GFile>.
-=item ___hash: Creates a hash of a B<GFile>.
-=item ___equal: Checks equality of two given B<GFiles>.
-=item ___is_native: Checks to see if a file is native to the system.
-=item ___has_uri_scheme: Checks to see if a B<GFile> has a given URI scheme.
-=item ___get_uri_scheme: Gets the URI scheme for a B<GFile>.
-=item ___get_basename: Gets the basename for a given B<GFile>.
-=item ___get_path: Gets the current path within a B<GFile>.
-=item ___get_uri: Gets a URI for the path within a B<GFile>.
-=item ___get_parse_name: Gets the parsed name for the B<GFile>.
-=item ___get_parent: Gets the parent directory for the B<GFile>.
-=item ___prefix_matches: Checks whether a B<GFile> contains a specified file.
-=item ___get_relative_path: Gets the path for a B<GFile> relative to a given path.
-=item ___resolve_relative_path: Resolves a relative path for a B<GFile> to an absolute path.
-=item ___get_child_for_display_name: Gets the child B<GFile> for a given display name.
-=item ___enumerate_children: Gets a B<GFileEnumerator> with the children of a B<GFile>.
-=item ___enumerate_children_async: Asynchronously gets a B<GFileEnumerator> with the children of a B<GFile>.
-=item ___enumerate_children_finish: Finishes asynchronously enumerating the children.
-=item ___query_info: Gets the B<GFileInfo> for a B<GFile>.
-=item ___query_info_async: Asynchronously gets the B<GFileInfo> for a B<GFile>.
-=item ___query_info_finish: Finishes an asynchronous query info operation.
-=item ___query_filesystem_info: Gets a B<GFileInfo> for the file system B<GFile> is on.
-=item ___query_filesystem_info_async: Asynchronously gets a B<GFileInfo> for the file system B<GFile> is on.
-=item ___query_filesystem_info_finish: Finishes asynchronously getting the file system info.
-=item ___find_enclosing_mount: Gets a B<GMount> for the B<GFile>.
-=item ___find_enclosing_mount_async: Asynchronously gets the B<GMount> for a B<GFile>.
-=item ___find_enclosing_mount_finish: Finishes asynchronously getting the volume.
-=item ___set_display_name: Sets the display name for a B<GFile>.
-=item ___set_display_name_async: Asynchronously sets a B<GFile>'s display name.
-=item ___set_display_name_finish: Finishes asynchronously setting a B<GFile>'s display name.
-=item ___query_settable_attributes: Returns a list of B<GFileAttributes> that can be set.
-=item ____query_settable_attributes_async: Asynchronously gets a list of B<GFileAttributes> that can be set.
-=item ____query_settable_attributes_finish: Finishes asynchronously querying settable attributes.
-=item ___query_writable_namespaces: Returns a list of B<GFileAttribute> namespaces that are writable.
-=item ____query_writable_namespaces_async: Asynchronously gets a list of B<GFileAttribute> namespaces that are writable.
-=item ____query_writable_namespaces_finish: Finishes asynchronously querying the writable namespaces.
-=item ___set_attribute: Sets a B<GFileAttribute>.
-=item ___set_attributes_from_info: Sets a B<GFileAttribute> with information from a B<GFileInfo>.
-=item ___set_attributes_async: Asynchronously sets a file's attributes.
-=item ___set_attributes_finish: Finishes setting a file's attributes asynchronously.
-=item ___read_fn: Reads a file asynchronously.
-=item ___read_async: Asynchronously reads a file.
-=item ___read_finish: Finishes asynchronously reading a file.
-=item ___append_to: Writes to the end of a file.
-=item ___append_to_async: Asynchronously writes to the end of a file.
-=item ___append_to_finish: Finishes an asynchronous file append operation.
-=item ___create: Creates a new file.
-=item ___create_async: Asynchronously creates a file.
-=item ___create_finish: Finishes asynchronously creating a file.
-=item ___replace: Replaces the contents of a file.
-=item ___replace_async: Asynchronously replaces the contents of a file.
-=item ___replace_finish: Finishes asynchronously replacing a file.
-=item ___delete_file: Deletes a file.
-=item ___delete_file_async: Asynchronously deletes a file.
-=item ___delete_file_finish: Finishes an asynchronous delete.
-=item ___trash: Sends a B<GFile> to the Trash location.
-=item ___trash_async: Asynchronously sends a B<GFile> to the Trash location.
-=item ___trash_finish: Finishes an asynchronous file trashing operation.
-=item ___make_directory: Makes a directory.
-=item ___make_directory_async: Asynchronously makes a directory.
-=item ___make_directory_finish: Finishes making a directory asynchronously.
-=item ___make_symbolic_link: Makes a symbolic link.
-=item ____make_symbolic_link_async: Asynchronously makes a symbolic link
-=item ____make_symbolic_link_finish: Finishes making a symbolic link asynchronously.
-=item ___copy: Copies a file.
-=item ___copy_async: Asynchronously copies a file.
-=item ___copy_finish: Finishes an asynchronous copy operation.
-=item ___move: Moves a file.
-=item ____move_async: Asynchronously moves a file.
-=item ____move_finish: Finishes an asynchronous move operation.
-=item ___mount_mountable: Mounts a mountable object.
-=item ___mount_mountable_finish: Finishes a mounting operation.
-=item ___unmount_mountable: Unmounts a mountable object.
-=item ___unmount_mountable_finish: Finishes an unmount operation.
-=item ___eject_mountable: Ejects a mountable.
-=item ___eject_mountable_finish: Finishes an eject operation.
-=item ___mount_enclosing_volume: Mounts a specified location.
-=item ___mount_enclosing_volume_finish: Finishes mounting a specified location.
-=item ___monitor_dir: Creates a B<GFileMonitor> for the location.
-=item ___monitor_file: Creates a B<GFileMonitor> for the location.
-=item ___open_readwrite: Open file read/write. Since 2.22.
-=item ___open_readwrite_async: Asynchronously opens file read/write. Since 2.22.
-=item ___open_readwrite_finish: Finishes an asynchronous open read/write. Since 2.22.
-=item ___create_readwrite: Creates file read/write. Since 2.22.
-=item ___create_readwrite_async: Asynchronously creates file read/write. Since 2.22.
-=item ___create_readwrite_finish: Finishes an asynchronous creates read/write. Since 2.22.
-=item ___replace_readwrite: Replaces file read/write. Since 2.22.
-=item ___replace_readwrite_async: Asynchronously replaces file read/write. Since 2.22.
-=item ___replace_readwrite_finish: Finishes an asynchronous replace read/write. Since 2.22.
-=item ___start_mountable: Starts a mountable object. Since 2.22.
-=item ___start_mountable_finish: Finishes an start operation. Since 2.22.
-=item ___stop_mountable: Stops a mountable. Since 2.22.
-=item ___stop_mountable_finish: Finishes an stop operation. Since 2.22.
-=item Int $.supports_thread_contexts: a boolean that indicates whether the B<GFile> implementation supports thread-default contexts. Since 2.22.
-=item ___unmount_mountable_with_operation: Unmounts a mountable object using a B<GMountOperation>. Since 2.22.
-=item ___unmount_mountable_with_operation_finish: Finishes an unmount operation using a B<GMountOperation>. Since 2.22.
-=item ___eject_mountable_with_operation: Ejects a mountable object using a B<GMountOperation>. Since 2.22.
-=item ___eject_mountable_with_operation_finish: Finishes an eject operation using a B<GMountOperation>. Since 2.22.
-=item ___poll_mountable: Polls a mountable object for media changes. Since 2.22.
-=item ___poll_mountable_finish: Finishes an poll operation for media changes. Since 2.22.
-=item ___measure_disk_usage: Recursively measures the disk usage of I<file>. Since 2.38
-=item ___measure_disk_usage_async: Asynchronously recursively measures the disk usage of I<file>. Since 2.38
-=item ___measure_disk_usage_finish: Finishes an asynchronous recursive measurement of the disk usage of I<file>. Since 2.38
-
-
-=end pod
-
-#TT:0:N-GFileIface:
-class N-GFileIface is export is repr('CStruct') {
-  has uint64 $.g_iface;
-  has GFil $.e *             (* dup)                         (GFile         *file);
-  has guin $.t               (* hash)                        (GFile         *file);
-  has GFile $.file2);
-  has gboolea $.n            (* is_native)                   (GFile         *file);
-  has str $.uri_scheme);
-  has cha $.r *              (* get_uri_scheme)              (GFile         *file);
-  has cha $.r *              (* get_basename)                (GFile         *file);
-  has cha $.r *              (* get_path)                    (GFile         *file);
-  has cha $.r *              (* get_uri)                     (GFile         *file);
-  has cha $.r *              (* get_parse_name)              (GFile         *file);
-  has GFil $.e *             (* get_parent)                  (GFile         *file);
-  has GFile $.file);
-  has GFile $.descendant);
-  has str $.relative_path);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has voi $.d                (* _query_settable_attributes_async)  (void);
-  has voi $.d                (* _query_settable_attributes_finish) (void);
-  has N-GError $.error);
-  has voi $.d                (* _query_writable_namespaces_async)  (void);
-  has voi $.d                (* _query_writable_namespaces_finish) (void);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has voi $.d                (* _make_symbolic_link_async)   (void);
-  has voi $.d                (* _make_symbolic_link_finish)  (void);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has voi $.d                (* _move_async)                 (void);
-  has voi $.d                (* _move_finish)                (void);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has int32 $.supports_thread_contexts;
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-  has N-GError $.error);
-  has Pointer $.user_data);
-  has N-GError $.error);
-}
-}}
 
 #-------------------------------------------------------------------------------
 
