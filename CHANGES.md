@@ -1,4 +1,6 @@
 ## Release notes
+* 2020-04-06 0.5.0
+  * Add File module to Gnome::Gio
 
 * 2020-03-25 0.4.2
   * Added `g_resource_ref()` and `g_resource_unref()` to Resources after changes in Gnome::GObject::Boxed
@@ -6,7 +8,7 @@
   * Small changes caused by extracted native classes
 
 * 2020-03-03 0.4.0
-  * Add ActionMap modules
+  * Add ActionMap module to Gnome::Gio
 
 * 2020-02-29 0.3.0
   * Add Action, SimpleAction modules
