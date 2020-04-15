@@ -1,4 +1,7 @@
 ## Release notes
+* 2020-04-12 0.5.1
+  * I was on the verge of removing module MenuModule because of some notes about deprecating application menus. A closer look at a picture on the [page here](https://wiki.gnome.org/HowDoI/ApplicationMenu) showed a menu in the application frame and that is not supported anymore. This is different than the thought that some XML format to describe menus was deprecated.
+
 * 2020-04-06 0.5.0
   * Add File module to Gnome::Gio
 
