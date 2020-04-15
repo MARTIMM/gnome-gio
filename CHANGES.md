@@ -1,4 +1,7 @@
 ## Release notes
+* 2020-04-12 0.5.1
+  * Removed module MenuModule. Removed it because it supports GMenu which is deprecated.
+
 * 2020-04-06 0.5.0
   * Add File module to Gnome::Gio
 
