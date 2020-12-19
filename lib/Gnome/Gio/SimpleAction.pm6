@@ -279,7 +279,7 @@ There are two ways to connect to a signal. The first option you have is to use C
 The positional arguments of the signal handler are all obligatory as well as their types. The named attributes C<:$widget> and user data are optional.
 
   # handler method
-  method mouse-event ( GdkEvent $event, :$widget ) { ... }
+  method mouse-event ( N-GdkEvent $event, :$widget ) { ... }
 
   # connect a signal on window object
   my Gnome::Gtk3::Window $w .= new( ... );
@@ -289,7 +289,7 @@ The positional arguments of the signal handler are all obligatory as well as the
 
   my Gnome::Gtk3::Window $w .= new( ... );
   my Callable $handler = sub (
-    N-GObject $native, GdkEvent $event, OpaquePointer $data
+    N-GObject $native, N-GdkEvent $event, OpaquePointer $data
   ) {
     ...
   }
@@ -312,7 +312,8 @@ Since GLib 2.40, if no handler is connected to this signal then the default beha
 
   method handler (
     N-GVariant $parameter,
-    Gnome::GObject::Object :widget($simple),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($simple),
     *%user-options
   );
 
@@ -358,7 +359,8 @@ It could set it to any value at all, or take some other action.
 
   method handler (
     Unknown type G_TYPE_VARIANT $value,
-    Gnome::GObject::Object :widget($simple),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($simple),
     *%user-options
   );
 

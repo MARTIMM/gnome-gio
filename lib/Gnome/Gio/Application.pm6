@@ -1233,7 +1233,7 @@ There are two ways to connect to a signal. The first option you have is to use C
 The positional arguments of the signal handler are all obligatory as well as their types. The named attributes C<:$widget> and user data are optional.
 
   # handler method
-  method mouse-event ( GdkEvent $event, :$widget ) { ... }
+  method mouse-event ( N-GdkEvent $event, :$widget ) { ... }
 
   # connect a signal on window object
   my Gnome::Gtk3::Window $w .= new( ... );
@@ -1243,7 +1243,7 @@ The positional arguments of the signal handler are all obligatory as well as the
 
   my Gnome::Gtk3::Window $w .= new( ... );
   my Callable $handler = sub (
-    N-GObject $native, GdkEvent $event, OpaquePointer $data
+    N-GObject $native, N-GdkEvent $event, OpaquePointer $data
   ) {
     ...
   }
@@ -1262,7 +1262,8 @@ The I<startup> signal is emitted on the primary instance immediately
 after registration. See C<g_application_register()>.
 
   method handler (
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
   );
 
@@ -1276,7 +1277,8 @@ The I<shutdown> signal is emitted only on the registered primary instance
 immediately after the main loop terminates.
 
   method handler (
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
   );
 
@@ -1290,7 +1292,8 @@ The I<activate> signal is emitted on the primary instance when an
 activation occurs. See C<g_application_activate()>.
 
   method handler (
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
   );
 
@@ -1307,7 +1310,8 @@ files to open. See C<g_application_open()> for more information.
     Unknown type G_TYPE_POINTER $files,
     Int $n_files,
     Str $hint,
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
   );
 
@@ -1332,7 +1336,8 @@ process. See C<g_application_command_line_set_exit_status()>.
 
   method handler (
     Unknown type G_TYPE_APPLICATION_COMMAND_LINE $command_line,
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
     --> Int
   );
@@ -1394,7 +1399,8 @@ the default option processing continue.
 
   method handler (
     Unknown type G_TYPE_VARIANT_DICT $options,
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
     --> Int
   );
@@ -1416,7 +1422,8 @@ The default handler for this signal calls C<g_application_quit()>.
 Returns: C<1> if the signal has been handled
 
   method handler (
-    Gnome::GObject::Object :widget($application),
+    Int :$_handler_id,
+    Gnome::GObject::Object :_widget($application),
     *%user-options
     --> Int
   );
