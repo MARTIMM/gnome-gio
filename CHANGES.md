@@ -1,4 +1,8 @@
 ## Release notes
+* 2020-12-19 0.5.2
+  * bugfix in test; path tested was only for linux types, not windows.
+  * Type mismatch in Application, MenuModel and SimpelAction
+
 * 2020-04-12 0.5.1
   * I was on the verge of removing module MenuModule because of some notes about deprecating application menus. A closer look at a picture on the [page here](https://wiki.gnome.org/HowDoI/ApplicationMenu) showed a menu in the application frame and that is not supported anymore. This is different than the thought that some XML format to describe menus was deprecated.
 
