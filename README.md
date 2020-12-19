@@ -1,6 +1,6 @@
 ![gtk logo][logo]
 
-# Gnome Gio -
+# Gnome Gio
 
 ![T][travis-svg] ![A][appveyor-svg] ![L][license-svg]
 
