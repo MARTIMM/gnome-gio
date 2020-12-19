@@ -48,7 +48,8 @@ subtest 'Manipulations', {
   $f.clear-object;
 
   $f .= new(:path<t/data/g-resources/rtest>);
-  like $f.get-path, / 't/data/g-resources/rtest' $/, '.get-path()';
+  like $f.get-path,
+    / t <[/\\]> data <[/\\]> g\-resources <[/\\]> rtest $/, '.get-path()';
   $f.clear-object;
 }
 

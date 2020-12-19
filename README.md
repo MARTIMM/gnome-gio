@@ -1,8 +1,18 @@
 ![gtk logo][logo]
 
-# Gnome Gio -
+# Gnome Gio
 
-[![License](http://martimm.github.io/label/License-label.svg)](http://www.perlfoundation.org/artistic_license_2_0)
+![T][travis-svg] ![A][appveyor-svg] ![L][license-svg]
+
+[travis-svg]: https://travis-ci.org/MARTIMM/gnome-gio.svg?branch=master
+[travis-run]: https://travis-ci.org/MARTIMM/gnome-gio
+
+[appveyor-svg]: https://ci.appveyor.com/api/projects/status/github/MARTIMM/gnome-gio?branch=master&passingText=Windows%20-%20OK&failingText=Windows%20-%20FAIL&pendingText=Windows%20-%20pending&svg=true
+[appveyor-run]: https://ci.appveyor.com/project/MARTIMM/gnome-gio/branch/master
+
+[license-svg]: http://martimm.github.io/label/License-label.svg
+[licence-lnk]: http://www.perlfoundation.org/artistic_license_2_0
+
 
 # Description
 
@@ -14,8 +24,11 @@ That being said, the Raku implementation is not implementing all of it, only tho
 
 
 # Documentation
-## Release notes
-* [Release notes][changes]
+* [ 🔗 Website](https://martimm.github.io/gnome-gtk3/content-docs/reference-gio.html)
+* [ 🔗 Travis-ci run on master branch][travis-run]
+* [ 🔗 Appveyor run on master branch][appveyor-run]
+* [ 🔗 License document][licence-lnk]
+* [ 🔗 Release notes][changes]
 
 # Installation
 Do not install this package on its own. Instead install `Gnome::Gtk3`.
@@ -39,5 +52,5 @@ There are always some problems! If you find one please help by filing an issue a
 
 [//]: # (---- [refs] ----------------------------------------------------------)
 [changes]: https://github.com/MARTIMM/perl6-gnome-gobject/blob/master/CHANGES.md
-[logo]: https://martimm.github.io/perl6-gnome-gtk3/content-docs/images/gtk-perl6.png
+[logo]: https://martimm.github.io/gnome-gtk3/content-docs/images/gtk-perl6.png
 [issues]: https://github.com/MARTIMM/perl6-gnome-gtk3/issues
