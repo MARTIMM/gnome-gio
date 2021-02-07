@@ -1,4 +1,4 @@
-#TL:0:Gnome::Gio::Action:
+#TL:1:Gnome::Gio::Action:
 
 use v6;
 #-------------------------------------------------------------------------------
@@ -8,53 +8,29 @@ use v6;
 
 An action interface
 
+
 =head1 Description
 
 B<Gnome::Gio::Action> represents a single named action.
 
-The main interface to an action is that it can be activated with
-C<g_action_activate()>.  This results in the 'activate' signal being
-emitted.  An activation has a B<GVariant> parameter (which may be
-C<Any>).  The correct type for the parameter is determined by a static
-parameter type (which is given at construction time).
+The main interface to an action is that it can be activated with C<activate()>.  This results in the 'activate' signal being emitted.
 
-An action may optionally have a state, in which case the state may be
-set with C<g_action_change_state()>.  This call takes a B<GVariant>.  The
-correct type for the state is determined by a static state type
-(which is given at construction time).
+An action may optionally have a state, in which case the state may be set with C<change-state()>.  This call takes a B<N-GVariant>.  The correct type for the state is determined by a static state type (which is given at construction time).
 
-The state may have a hint associated with it, specifying its valid
-range.
+The state may have a hint associated with it, specifying its valid range.
 
-B<Gnome::Gio::Action> is merely the interface to the concept of an action, as
-described above.  Various implementations of actions exist, including
-B<GSimpleAction>.
+B<Gnome::Gio::Action> is merely the interface to the concept of an action, as described above.  Various implementations of actions exist, including B<GSimpleAction>.
 
-In all cases, the implementing class is responsible for storing the
-name of the action, the parameter type, the enabled state, the
-optional state type and the state and emitting the appropriate
-signals when these change.  The implementor is responsible for filtering
-calls to C<g_action_activate()> and C<g_action_change_state()> for type
-safety and for the state being enabled.
+In all cases, the implementing class is responsible for storing the name of the action, the parameter type, the enabled state, the optional state type and the state and emitting the appropriate signals when these change.  The implementor is responsible for filtering calls to C<activate()> and C<change-state()> for type safety and for the state being enabled.
 
-Probably the only useful thing to do with a B<Gnome::Gio::Action> is to put it
-inside of a B<GSimpleActionGroup>.
+Probably the only useful thing to do with a B<Gnome::Gio::Action> is to put it inside of a B<GSimpleActionGroup>.
 
-
-=begin comment
-=head2 Known implementations
-
-Gnome::Gio::Action is implemented by
-=comment item Gnome::Gio::PropertyAction
-=item [Gnome::Gio::SimpleAction](SimpleAction.html)
-
-
-=end comment
 
 =head1 Synopsis
 =head2 Declaration
 
   unit role Gnome::Gio::Action;
+
 
 =comment head2 Example
 
@@ -65,390 +41,338 @@ use NativeCall;
 #use Gnome::N::X;
 use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
+use Gnome::N::GlibToRakuTypes;
+
 use Gnome::Glib::Error;
+use Gnome::Glib::Variant;
+use Gnome::Glib::VariantType;
+use Gnome::Glib::N-GVariant;
+use Gnome::Glib::N-GVariantType;
+
+#use Gnome::Gio::N-GObject;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::Action:auth<github:MARTIMM>;
+unit role Gnome::Gio::Action:auth<github:MARTIMM>:ver<0.1.0>;
 
 #-------------------------------------------------------------------------------
 =begin pod
 =head1 Methods
 =end pod
 
-#-------------------------------------------------------------------------------
-#TM:1:new():interfacing
 # interfaces are not instantiated
-submethod BUILD ( *%options ) { }
+#submethod BUILD ( *%options ) { }
 
-#`{{
+#-------------------------------------------------------------------------------
+#TM:2:activate:
 =begin pod
-=head1 Methods
-=head2 new
+=head2 activate
 
-Create a new Action object.
+Activates the action.  I<$parameter> must be the correct type of parameter for the action (ie: the parameter type given at construction time).  If the parameter type was undefined then I<$parameter> must also be undefined.  If the I<$parameter> GVariant is floating, it is consumed.
 
-  multi method new ( )
+  method activate ( N-GVariant $parameter )
 
-Create a Action object using a native object from elsewhere. See also B<Gnome::GObject::Object>.
-
-  multi method new ( N-GObject :$native-object! )
-
-Create a Action object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
-
-  multi method new ( Str :$build-id! )
+=item N-GVariant $parameter; the parameter to the activation
 
 =end pod
 
-#TM:0:new():inheriting
-#TM:0:new():
-#TM:0:new(:native-object):
-#TM:0:new(:build-id):
+method activate ( $parameter ) {
+  my $no = $parameter;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
 
-submethod BUILD ( *%options ) {
-
-
-
-  # prevent creating wrong native-objects
-  return unless self.^name eq 'Gnome::Gio::Action';
-
-  # process all named arguments
-  if ? %options<widget> || ? %options<native-object> ||
-     ? %options<build-id> {
-    # provided in Gnome::GObject::Object
-  }
-
-  elsif %options.keys.elems {
-    die X::Gnome.new(
-      :message(
-        'Unsupported, undefined, incomplete or wrongly typed options for ' ~
-        self.^name ~ ': ' ~ %options.keys.join(', ')
-      )
-    );
-  }
-
-  # create default object
-  else {
-    # self.set-native-object(g_action_new());
-  }
-
-  # only after creating the native-object, the gtype is known
-  self.set-class-info('GAction');
-}
-}}
-
-#-------------------------------------------------------------------------------
-# no pod. user does not have to know about it.
-# Hook for modules using this interface. Same principle as _fallback but
-# does not need callsame. Also this method must be usable without
-# an instanciated object.
-method _action_interface ( Str $native-sub --> Callable ) {
-
-  my Callable $s;
-  try { $s = &::("g_action_$native-sub"); };
-  try { $s = &::("g_$native-sub"); } unless ?$s;
-  try { $s = &::("$native-sub"); } if !$s and $native-sub ~~ m/^ 'g_' /;
-  $s
+  g_action_activate(
+    self._f('GAction'), $no
+  );
 }
 
-#-------------------------------------------------------------------------------
-#TM:0:g_action_get_name:
-=begin pod
-=head2 [g_action_] get_name
-
-Queries the name of I<action>.
-
-Returns: the name of the action B<Gnome::Gio::Action>
-
-  method g_action_get_name ( --> Str )
-
-
-=end pod
-
-sub g_action_get_name ( N-GObject $action --> Str )
+sub g_action_activate ( N-GObject $action, N-GVariant $parameter  )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_get_parameter_type:
+#TM:2:change-state:
 =begin pod
-=head2 [g_action_] get_parameter_type
+=head2 change-state
 
-Queries the type of the parameter that must be given when activating
-I<action>.
+Request for the state of this action to be changed to I<$value>. The action must be stateful and I<value> must be of the correct type. See C<get-state-type()>.  This call merely requests a change.  The action may refuse to change its state or may change its state to something other than I<value>. See C<get-state-hint()>.
 
-When activating the action using C<g_action_activate()>, the B<GVariant>
-given to that function must be of the type returned by this function.
+  method change-state ( N-GVariant $value )
 
-In the case that this function returns C<Any>, you must not give any
-B<GVariant>, but C<Any> instead.
-
-Returns: (nullable): the parameter type
-B<Gnome::Gio::Action>
-  method g_action_get_parameter_type ( --> N-GObject )
-
+=item N-GVariant $value; the new state
 
 =end pod
 
-sub g_action_get_parameter_type ( N-GObject $action --> N-GObject )
+method change-state ( $value ) {
+  my $no = $value;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+
+  g_action_change_state(
+    self._f('GAction'), $no
+  );
+}
+
+sub g_action_change_state ( N-GObject $action, N-GVariant $value  )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_get_state_type:
+#TM:2:get-enabled:
 =begin pod
-=head2 [g_action_] get_state_type
+=head2 get-enabled
 
-Queries the type of the state of I<action>.
-
-If the action is stateful (e.g. created with
-C<g_simple_action_new_stateful()>) then this function returns the
-B<GVariantType> of the state.  This is the type of the initial value
-given as the state. All calls to C<g_action_change_state()> must give a
-B<GVariant> of this type and C<g_action_get_state()> will return a
-B<GVariant> of the same type.
-
-If the action is not stateful (e.g. created with C<g_simple_action_new()>)
-then this function will return C<Any>. In that case, C<g_action_get_state()>
-will return C<Any> and you must not call C<g_action_change_state()>.
-
-Returns: (nullable): the state type, if the action is stateful
-B<Gnome::Gio::Action>
-  method g_action_get_state_type ( --> N-GObject )
-
-
-=end pod
-
-sub g_action_get_state_type ( N-GObject $action --> N-GObject )
-  is native(&gio-lib)
-  { * }
-
-#-------------------------------------------------------------------------------
-#TM:0:g_action_get_state_hint:
-=begin pod
-=head2 [g_action_] get_state_hint
-
-Requests a hint about the valid range of values for the state of
-I<action>.
-
-If C<Any> is returned it either means that the action is not stateful
-or that there is no hint about the valid range of values for the
-state of the action.
-
-If a B<GVariant> array is returned then each item in the array is a
-possible value for the state.  If a B<GVariant> pair (ie: two-tuple) is
-returned then the tuple specifies the inclusive lower and upper bound
-of valid values for the state.
-
-In any case, the information is merely a hint.  It may be possible to
-have a state value outside of the hinted range and setting a value
-within the range may fail.
-
-The return value (if non-C<Any>) should be freed with
-C<g_variant_unref()> when it is no longer required.
-
-Returns: (nullable) (transfer full): the state range hint
-B<Gnome::Gio::Action>
-  method g_action_get_state_hint ( --> N-GObject )
-
-
-=end pod
-
-sub g_action_get_state_hint ( N-GObject $action --> N-GObject )
-  is native(&gio-lib)
-  { * }
-
-#-------------------------------------------------------------------------------
-#TM:0:g_action_get_enabled:
-=begin pod
-=head2 [g_action_] get_enabled
-
-Checks if I<action> is currently enabled.
-
-An action must be enabled in order to be activated or in order to
-have its state changed from outside callers.
+Checks if this action is currently enabled.  An action must be enabled in order to be activated or in order to have its state changed from outside callers.
 
 Returns: whether the action is enabled
-B<Gnome::Gio::Action>
-  method g_action_get_enabled ( --> Int )
+
+  method get-enabled ( --> Bool )
 
 
 =end pod
 
-sub g_action_get_enabled ( N-GObject $action --> int32 )
+method get-enabled ( --> Bool ) {
+
+  g_action_get_enabled(
+    self._f('GAction'),
+  ).Bool;
+}
+
+sub g_action_get_enabled ( N-GObject $action --> gboolean )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_get_state:
+#TM:2:get-name:
 =begin pod
-=head2 [g_action_] get_state
+=head2 get-name
 
-Queries the current state of I<action>.
+Queries the name of this action.
 
-If the action is not stateful then C<Any> will be returned.  If the
-action is stateful then the type of the return value is the type
-given by C<g_action_get_state_type()>.
+Returns: the name of the action.
 
-The return value (if non-C<Any>) should be freed with
-C<g_variant_unref()> when it is no longer required.
-
-Returns: (transfer full): the current state of the action
-B<Gnome::Gio::Action>
-  method g_action_get_state ( --> N-GObject )
+  method get-name ( -->  Str  )
 
 
 =end pod
 
-sub g_action_get_state ( N-GObject $action --> N-GObject )
+method get-name ( -->  Str  ) {
+
+  g_action_get_name(
+    self._f('GAction'),
+  );
+}
+
+sub g_action_get_name ( N-GObject $action --> gchar-ptr )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_change_state:
+#TM:2:get-parameter-type:
 =begin pod
-=head2 [g_action_] change_state
+=head2 get-parameter-type
 
-Request for the state of I<action> to be changed to I<value>.
+Queries the type of the parameter that must be given when activating this action.  When activating the action using C<activate()>, the B<N-GVariant> given to that function must be of the type returned by this function.  In the case that this function returns undefined, you must not give any B<N-GVariant>, but undefined instead.
 
-The action must be stateful and I<value> must be of the correct type.
-See C<g_action_get_state_type()>.
+Returns: the parameter type.
 
-This call merely requests a change.  The action may refuse to change
-its state or may change its state to something other than I<value>.
-See C<g_action_get_state_hint()>.
-
-If the I<value> GVariant is floating, it is consumed.
-B<Gnome::Gio::Action>
-  method g_action_change_state ( N-GObject $value )
-
-=item N-GObject $value; the new state
+  method get-parameter-type ( --> Gnome::Glib::VariantType )
 
 =end pod
 
-sub g_action_change_state ( N-GObject $action, N-GObject $value  )
+method get-parameter-type ( --> Gnome::Glib::VariantType ) {
+
+  Gnome::Glib::VariantType.new(
+    :native-object(g_action_get_parameter_type(self._f('GAction')))
+  );
+}
+
+sub g_action_get_parameter_type ( N-GObject $action --> N-GVariantType )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_activate:
+#TM:2:get-state:
 =begin pod
-=head2 g_action_activate
+=head2 get-state
 
-Activates the action.
+Queries the current state of this action.  If the action is not stateful then undefined will be returned.  If the action is stateful then the type of the return value is the type given by C<get-state-type()>.  The return value (if not undefined) should be freed with C<clear-object()> when it is no longer required.
 
-I<parameter> must be the correct type of parameter for the action (ie:
-the parameter type given at construction time).  If the parameter
-type was C<Any> then I<parameter> must also be C<Any>.
+Returns: the current state of the action.
 
-If the I<parameter> GVariant is floating, it is consumed.
-B<Gnome::Gio::Action>
-  method g_action_activate ( N-GObject $parameter )
-
-=item N-GObject $parameter; (nullable): the parameter to the activation
+  method get-state ( --> Gnome::Glib::Variant )
 
 =end pod
 
-sub g_action_activate ( N-GObject $action, N-GObject $parameter  )
+method get-state ( --> Gnome::Glib::Variant ) {
+
+  Gnome::Glib::Variant.new(
+    :native-object(g_action_get_state(self._f('GAction')))
+  );
+}
+
+sub g_action_get_state ( N-GObject $action --> N-GVariant )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_name_is_valid:
+#TM:2:get-state-hint:
 =begin pod
-=head2 [g_action_] name_is_valid
+=head2 get-state-hint
 
-Checks if I<action_name> is valid.
+Requests a hint about the valid range of values for the state of this action.  If an undefined value is returned, it either means that the action is not stateful or that there is no hint about the valid range of values for the state of the action.
+=comment  If a B<N-GVariant> array is returned then each item in the array is a possible value for the state.  If a B<N-GVariant> pair (ie: two-tuple) is returned then the tuple specifies the inclusive lower and upper bound of valid values for the state. In any case, the information is merely a hint.  It may be possible to have a state value outside of the hinted range and setting a value within the range may fail.
+The returned value, if defined, should be freed with C<clear-object()> when it is no longer required.
 
-I<action_name> is valid if it consists only of alphanumeric characters,
-plus '-' and '.'.  The empty string is not a valid action name.
+Returns: the state range hint, an undefined, array or tuple Variant.
 
-It is an error to call this function with a non-utf8 I<action_name>.
-I<action_name> must not be C<Any>.
-
-Returns: C<1> if I<action_name> is valid
-B<Gnome::Gio::Action>
-  method g_action_name_is_valid ( Str $action_name --> Int )
-
-=item Str $action_name; an potential action name
+  method get-state-hint ( --> Gnome::Glib::Variant )
 
 =end pod
 
-sub g_action_name_is_valid ( Str $action_name --> int32 )
+method get-state-hint ( --> Gnome::Glib::Variant ) {
+
+  Gnome::Glib::Variant.new(
+    :native-object(g_action_get_state_hint(self._f('GAction')))
+  );
+}
+
+sub g_action_get_state_hint ( N-GObject $action --> N-GVariant )
   is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_parse_detailed_name:
+#TM:1:get-state-type:
 =begin pod
-=head2 [g_action_] parse_detailed_name
+=head2 get-state-type
 
-Parses a detailed action name into its separate name and target
-components.
+Queries the type of the state of this action.  If the action is stateful, then this function returns the B<Gnome::Glib::VariantType> of the state.  This is the type of the initial value given as the state. All calls to C<change-state()> must give a B<N-GVariant> of this type and C<get-state()> will return a B<N-GVariant> of the same type. If the action is not stateful, then this function will return an undefined type. In that case, C<get-state()> will return undefined and you must not call C<change-state()>.
 
-Detailed action names can have three formats.
+Returns: the state type, if the action is stateful
 
-The first format is used to represent an action name with no target
-value and consists of just an action name containing no whitespace
-nor the characters ':', '(' or ')'.  For example: "app.action".
+  method get-state-type ( --> Gnome::Glib::VariantType )
 
-The second format is used to represent an action with a target value
-that is a non-empty string consisting only of alphanumerics, plus '-'
-and '.'.  In that case, the action name and target value are
-separated by a double colon ("::").  For example:
-"app.action::target".
 
-The third format is used to represent an action with any type of
-target value, including strings.  The target value follows the action
-name, surrounded in parens.  For example: "app.action(42)".  The
-target value is parsed using C<g_variant_parse()>.  If a tuple-typed
-value is desired, it must be specified in the same way, resulting in
-two sets of parens, for example: "app.action((1,2,3))".  A string
-target can be specified this way as well: "app.action('target')".
-For strings, this third format must be used if * target value is
-empty or contains characters other than alphanumerics, '-' and '.'.
+=end pod
 
-Returns: C<1> if successful, else C<0> with I<error> set
-B<Gnome::Gio::Action>
-  method g_action_parse_detailed_name ( Str $detailed_name, CArray[Str] $action_name, N-GObject $target_value, N-GError $error --> Int )
+method get-state-type ( --> Gnome::Glib::VariantType ) {
+
+  Gnome::Glib::VariantType.new(
+    :native-object(g_action_get_state_type(self._f('GAction')))
+  );
+}
+
+sub g_action_get_state_type ( N-GObject $action --> N-GVariantType )
+  is native(&gio-lib)
+  { * }
+
+#-------------------------------------------------------------------------------
+#TM:1:name-is-valid:
+=begin pod
+=head2 name-is-valid
+
+Checks if I<$action_name> is valid.  I<$action_name> is valid if it consists only of alphanumeric characters, plus '-' and '.'.  The empty string is not a valid action name.  It is an error to call this function with a non-utf8 I<action_name>.
+
+Returns: C<True> if I<action_name> is valid
+
+  method name-is-valid (  Str  $action_name --> Bool )
+
+=item  Str  $action_name; an potential action name
+
+=end pod
+
+method name-is-valid (  Str  $action_name --> Bool ) {
+
+  g_action_name_is_valid($action_name).Bool;
+}
+
+sub g_action_name_is_valid ( gchar-ptr $action_name --> gboolean )
+  is native(&gio-lib)
+  { * }
+
+#-------------------------------------------------------------------------------
+#TM:1:parse-detailed-name:
+=begin pod
+=head2 parse-detailed-name
+
+Parses a detailed action name into its separate name and target components.  Detailed action names can have three formats.
+
+The first format is used to represent an action name with no target value and consists of just an action name containing no whitespace or the characters ':', '(' or ')'.  For example: I<app.action>.
+
+The second format is used to represent an action with a target value that is a non-empty string consisting only of alphanumerics, plus '-' and '.'.  In that case, the action name and target value are separated by a double colon ("::").  For example: I<app.action::target>.
+
+The third format is used to represent an action with any type of target value, including strings.  The target value follows the action name, surrounded in parens.  For example: I<app.action(42)>.
+
+The target value is parsed using C<parse()> from B<Gnome::Glib::Variant>.  If a tuple-typed value is desired, it must be specified in the same way, resulting in two sets of parens, for example: I<app.action((1,2,3))>.  A string target can be specified this way as well: I<app.action('target')>. For strings, this third format must be used if the target value is empty or contains characters other than alphanumerics, '-' and '.'.
+
+Returns: A List
+
+  method parse-detailed-name ( Str $detailed_name --> List )
 
 =item Str $detailed_name; a detailed action name
-=item CArray[Str] $action_name; (out): the action name
-=item N-GObject $target_value; (out): the target value, or C<Any> for no target
-=item N-GError $error; a pointer to a C<Any> B<GError>, or C<Any>
+
+The returned List contains;
+=item Str $action_name; the action name
+=item Gnome::Glib::Variant $target_value; the target value, or an undefined type for no target
+=item Gnome::Glib::Error which is invalid if call returns successfull or is valid with an error message and code explaining the cause.
 
 =end pod
 
-sub g_action_parse_detailed_name ( Str $detailed_name, CArray[Str] $action_name, N-GObject $target_value, N-GError $error --> int32 )
-  is native(&gio-lib)
+method parse-detailed-name ( Str  $detailed_name --> List ) {
+
+  my $an = CArray[Str].new('');
+  my $tv = CArray[N-GVariant].new(N-GVariant);
+  my $e = CArray[N-GError].new(N-GError);
+
+  my Int $r = g_action_parse_detailed_name( $detailed_name, $an, $tv, $e);
+
+  if $r {
+#note "r: $r, $an[0], $tv[0]";
+    ( $an[0], Gnome::Glib::Variant.new(:native-object($tv[0])),
+      Gnome::Glib::Error.new(:native-object(N-GError))
+    )
+  }
+
+  else {
+#note "r: $r, $e[0].gist()";
+    ( '', Gnome::Glib::Variant.new(:native-object(N-GVariant)),
+      Gnome::Glib::Error.new(:native-object($e[0]))
+    )
+  }
+}
+
+sub g_action_parse_detailed_name (
+  gchar-ptr $detailed_name, gchar-pptr $action_name,
+  CArray[N-GVariant] $target_value, CArray[N-GError] $error --> gboolean
+) is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:g_action_print_detailed_name:
+#TM:1:print-detailed-name:
 =begin pod
-=head2 [g_action_] print_detailed_name
+=head2 print-detailed-name
 
-Formats a detailed action name from I<action_name> and I<target_value>.
-
-It is an error to call this function with an invalid action name.
-
-This function is the opposite of C<g_action_parse_detailed_name()>.
-It will produce a string that can be parsed back to the I<action_name>
-and I<target_value> by that function.
-
-See that function for the types of strings that will be printed by
-this function.
+Formats a detailed action name from I<$action_name> and I<$target_value>.  It is an error to call this function with an invalid action name.  This function is the opposite of C<parse-detailed-name()>. It will produce a string that can be parsed back to the I<$action_name> and I<$target_value> by that function.  See that function for the types of strings that will be printed by this function.
 
 Returns: a detailed format string
-B<Gnome::Gio::Action>
-  method g_action_print_detailed_name ( Str $action_name, N-GObject $target_value --> Str )
 
-=item Str $action_name; a valid action name
-=item N-GObject $target_value; (nullable): a B<GVariant> target value, or C<Any>
+  method print-detailed-name (
+    Str $action_name, N-GVariant $target_value
+    --> Str
+  )
+
+=item  Str  $action_name; a valid action name
+=item N-GVariant $target_value; a B<N-GVariant> target value, or undefined
 
 =end pod
 
-sub g_action_print_detailed_name ( Str $action_name, N-GObject $target_value --> Str )
-  is native(&gio-lib)
+method print-detailed-name ( Str $action_name, $target_value --> Str ) {
+  my $no = $target_value;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+
+  g_action_print_detailed_name( $action_name, $no);
+}
+
+sub g_action_print_detailed_name (
+  gchar-ptr $action_name, N-GVariant $target_value --> gchar-ptr
+) is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
@@ -464,9 +388,9 @@ An example of using a string type property of a B<Gnome::Gtk3::Label> object. Th
 
 =head2 Supported properties
 
-=comment #TP:0:name:
+=comment -----------------------------------------------------------------------
+=comment #TP:1:name:
 =head3 Action Name
-
 
 The name of the action.  This is mostly meaningful for identifying
 the action once it has been added to a B<GActionGroup>. It is immutable.
@@ -474,44 +398,43 @@ the action once it has been added to a B<GActionGroup>. It is immutable.
 
 The B<Gnome::GObject::Value> type of property I<name> is C<G_TYPE_STRING>.
 
+=comment -----------------------------------------------------------------------
 =comment #TP:0:parameter-type:
 =head3 Parameter Type
-
 
 The type of the parameter that must be given when activating the
 action. This is immutable, and may be C<Any> if no parameter is needed when
 activating the action.
 
-
 The B<Gnome::GObject::Value> type of property I<parameter-type> is C<G_TYPE_BOXED>.
 
-=comment #TP:0:enabled:
+=comment -----------------------------------------------------------------------
+=comment #TP:1:enabled:
 =head3 Enabled
 
+If this action is currently enabled.
 
-If I<action> is currently enabled.
 If the action is disabled then calls to C<g_action_activate()> and
 C<g_action_change_state()> have no effect.
 
-
 The B<Gnome::GObject::Value> type of property I<enabled> is C<G_TYPE_BOOLEAN>.
 
+=comment -----------------------------------------------------------------------
 =comment #TP:0:state-type:
 =head3 State Type
 
 
-The B<GVariantType> of the state that the action has, or C<Any> if the
+The B<N-GVariantType> of the state that the action has, or C<Any> if the
 action is stateless. This is immutable.
 
 
 The B<Gnome::GObject::Value> type of property I<state-type> is C<G_TYPE_BOXED>.
 
+=comment -----------------------------------------------------------------------
 =comment #TP:0:state:
 =head3 State
 
-
 The state of the action, or C<Any> if the action is stateless.
-
 
 The B<Gnome::GObject::Value> type of property I<state> is C<G_TYPE_VARIANT>.
 =end pod
