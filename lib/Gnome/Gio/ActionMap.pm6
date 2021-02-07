@@ -11,8 +11,6 @@ Interface for action containers
 
 =head1 Description
 
-I<include>: gio/gio.h
-
 The Gnome::Gio::ActionMap interface is implemented by B<Gnome::Gio::ActionGroup> implementations that operate by containing a number of named B<Gnome::Gio::Action> instances, such as B<Gnome::Gio::SimpleActionGroup>.
 
 One useful application of this interface is to map the names of actions from various action groups to unique, prefixed names (e.g. by prepending "app." or "win."). This is the motivation for the 'Map' part of the interface name.
