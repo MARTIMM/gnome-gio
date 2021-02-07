@@ -1,7 +1,7 @@
 {
   "description": "Raku Gnome GIO api, Please install Gnome::Gtk3",
   "name": "Gnome::Gio",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "authors": [ "Marcel Timmerman"],
   "tags": [ "gnome", "gio"],
 
