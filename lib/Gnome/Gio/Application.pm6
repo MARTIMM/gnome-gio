@@ -51,13 +51,6 @@ For an example of using actions with Gnome::Gio::Application, see [Gnome::Gio::A
 For an example of using extra D-Bus hooks with Gnome::Gio::Application, see [Gnome::Gio::Application-example-dbushooks.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-dbushooks.c).
 
 
-=head2 Implemented Interfaces
-
-Gnome::Gio::Application implements
-=comment item Gnome::Gio::ActionGroup
-=item [Gnome::Gio::ActionMap](ActionMap.html)
-
-
 =head1 Synopsis
 =head2 Declaration
 
@@ -172,10 +165,10 @@ method _fallback ( $native-sub is copy --> Callable ) {
   try { $s = &::("g_$native-sub"); } unless ?$s;
   try { $s = &::($native-sub); }
 
+  self.set-class-name-of-sub('GApplication');
   $s = self._action_map_interface($native-sub) unless ?$s;
 #also does Gnome::Gio::ActionGroup;
 
-  self.set-class-name-of-sub('GApplication');
   $s = callsame unless ?$s;
 
   $s;
