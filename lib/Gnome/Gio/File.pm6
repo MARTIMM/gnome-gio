@@ -91,6 +91,9 @@ use Gnome::N::N-GObject;
 use Gnome::N::TopLevelClassSupport;
 
 #-------------------------------------------------------------------------------
+# officially, GFile is an interface but no class in GIO is implementing it.
+# So, don't make it a role and inherit from TopLevelClassSupport
+
 unit class Gnome::Gio::File:auth<github:MARTIMM>;
 also is Gnome::N::TopLevelClassSupport;
 
@@ -146,7 +149,7 @@ submethod BUILD ( *%options ) {
     # process all options
 
     # check if common options are handled by some parent
-    elsif %options<native-object>:exists or %options<widget>:exists { }
+    elsif %options<native-object>:exists { }
     elsif %options<build-id>:exists { }
 
     elsif ? %options<path> {
