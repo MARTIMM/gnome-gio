@@ -1,6 +1,6 @@
 #TL:1:Gnome::Gio::ActionMap:
 
-use v6.d;
+use v6;
 
 #-------------------------------------------------------------------------------
 =begin pod
@@ -15,19 +15,12 @@ The Gnome::Gio::ActionMap interface is implemented by B<Gnome::Gio::ActionGroup>
 
 One useful application of this interface is to map the names of actions from various action groups to unique, prefixed names (e.g. by prepending "app." or "win."). This is the motivation for the 'Map' part of the interface name.
 
-=head2 Known implementations
-
-Gnome::Gio::ActionMap is implemented by
-
-=item [Gnome::Gio::Application](Application.html)
-=comment item Gnome::Gio::SimpleActionGroup.
-
-
 
 =head1 Synopsis
 =head2 Declaration
 
   unit role Gnome::Gio::ActionMap;
+
 
 =comment head2 Example
 
@@ -38,14 +31,17 @@ use NativeCall;
 #use Gnome::N::X;
 use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
+use Gnome::N::GlibToRakuTypes;
+
 use Gnome::Gio::Action;
+use Gnome::Gio::SimpleAction;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>;
+unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>:ver<0.1.0>;
 
 #-------------------------------------------------------------------------------
 #`{{TODO
-class N-GActionEntry is export is repr('CStruct') {
+class N-N-GObjectEntry is export is repr('CStruct') {
   has Str $.name;
 
   void (* activate) (GSimpleAction *action,
@@ -67,94 +63,160 @@ class N-GActionEntry is export is repr('CStruct') {
 =head1 Methods
 =end pod
 
-#-------------------------------------------------------------------------------
-#TM:1:new():interfacing
 # interfaces are not instantiated
+#submethod BUILD ( *%options ) { }
 
-submethod BUILD ( *%options ) { }
 
-#`{{
+#-------------------------------------------------------------------------------
+#TM:0:add-action:
 =begin pod
-=head1 Methods
-=head2 new
+=head2 add-action
 
-Create a new ActionMap object.
+Adds an action to the action map.  If the action map already contains an action with the same name as I<$action> then the old action is dropped from the action map.  The action map takes its own reference on I<$action>.
 
-  multi method new ( )
+  method add-action ( N-GObject $action )
 
-Create a ActionMap object using a native object from elsewhere. See also B<Gnome::GObject::Object>.
-
-  multi method new ( N-GObject :$native-object! )
-
-Create a ActionMap object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
-
-  multi method new ( Str :$build-id! )
+=item N-GObject $action; an action object
 
 =end pod
 
-#TM:0:new():inheriting
-#TM:0:new():
-#TM:0:new(:native-object):
-#TM:0:new(:build-id):
+method add-action ( N-GObject $action ) {
 
-submethod BUILD ( *%options ) {
-
-
-
-  # prevent creating wrong native-objects
-  return unless self.^name eq 'Gnome::Gio::ActionMap';
-
-  # process all named arguments
-  if ? %options<widget> || ? %options<native-object> ||
-     ? %options<build-id> {
-    # provided in Gnome::GObject::Object
-  }
-
-  elsif %options.keys.elems {
-    die X::Gnome.new(
-      :message(
-        'Unsupported, undefined, incomplete or wrongly typed options for ' ~
-        self.^name ~ ': ' ~ %options.keys.join(', ')
-      )
-    );
-  }
-
-  # create default object
-  else {
-    # self.set-native-object(g_action_map_new());
-  }
-
-  # only after creating the native-object, the gtype is known
-  self.set-class-info('GActionMap');
+  g_action_map_add_action(
+    self._f('GActionMap'), $action
+  );
 }
+
+sub g_action_map_add_action ( N-GObject $action_map, N-GObject $action  )
+  is native(&gio-lib)
+  { * }
+
+#`{{
+#-------------------------------------------------------------------------------
+#TM:0:add-action-entries:
+=begin pod
+=head2 add-action-entries
+
+A convenience function for creating multiple B<GSimpleAction> instances and adding them to this action map.  Each action is constructed as per one B<N-GObjectEntry>.
+
+=comment |[<!-- language="C" --> static void activate_quit (GSimpleAction *simple, GVariant      *parameter, gpointer       user_data) { exit (0); }  static void activate_print_string (GSimpleAction *simple, GVariant      *parameter, gpointer       user_data) { g_print ("C<s>\n", g_variant_get_string (parameter, NULL)); }  static N-GObjectGroup * create_action_group (void) { const N-GObjectEntry entries[] = { { "quit",         activate_quit              }, { "print-string", activate_print_string, "s" } }; GSimpleActionGroup *group;  group = C<g_simple_action_group_new()>; g_action_map_add_action_entries (G_ACTION_MAP (group), entries, G_N_ELEMENTS (entries), NULL);  return G_ACTION_GROUP (group); } ]|
+
+
+  method add-action-entries (
+    N-GObjectEntry $entries, Int $n_entries, Pointer $user_data
+  )
+
+=item N-GObjectEntry $entries; (array length=n_entries) (element-type N-GObjectEntry): a pointer to the first item in an array of B<N-GObjectEntry> structs
+=item Int $n_entries; the length of I<entries>, or -1 if I<entries> is C<undefined>-terminated
+=item Pointer $user_data; the user data for signal connections
+
+=end pod
+
+method add-action-entries ( N-GObjectEntry $entries, Int $n_entries, Pointer $user_data ) {
+
+  g_action_map_add_action_entries(
+    self._f('GActionMap'), $entries, $n_entries, $user_data
+  );
+}
+
+sub g_action_map_add_action_entries ( N-GObject $action_map, N-GObjectEntry $entries, gint $n_entries, gpointer $user_data  )
+  is native(&gio-lib)
+  { * }
 }}
 
 #-------------------------------------------------------------------------------
-# no pod. user does not have to know about it.
-method _action_map_interface ( $native-sub --> Callable ) {
+#TM:0:lookup-action:
+=begin pod
+=head2 lookup-action
 
-  my Callable $s;
-  try { $s = &::("g_action_map_$native-sub"); };
-  try { $s = &::("g_$native-sub"); } unless ?$s;
-  try { $s = &::($native-sub); } if !$s and $native-sub ~~ m/^ 'g_' /;
+Looks up the action with the name I<$action_name> in action map.  If no such action exists, returns an invalid object.
 
-  $s
+Returns: a Gnome::Gio::SimpleAction object
+
+  method lookup-action (
+    Str $action_name --> Gnome::Gio::SimpleAction
+  )
+
+=item  Str  $action_name; the name of an action
+
+=end pod
+
+method lookup-action (  Str  $action_name --> Gnome::Gio::SimpleAction ) {
+
+  Gnome::Gio::SimpleAction.new(
+    :native-object(
+      g_action_map_lookup_action( self._f('GActionMap'), $action_name)
+    )
+  )
 }
 
+sub g_action_map_lookup_action ( N-GObject $action_map, gchar-ptr $action_name --> N-GObject )
+  is native(&gio-lib)
+  { * }
+
+#-------------------------------------------------------------------------------
+#TM:0:remove-action:
+=begin pod
+=head2 remove-action
+
+Removes the named action from the action map.  If no action of this name is found in the map then nothing happens.
+
+  method remove-action (  Str  $action_name )
+
+=item  Str  $action_name; the name of the action
+
+=end pod
+
+method remove-action ( Str $action_name ) {
+
+  g_action_map_remove_action(
+    self._f('GActionMap'), $action_name
+  );
+}
+
+sub g_action_map_remove_action ( N-GObject $action_map, gchar-ptr $action_name  )
+  is native(&gio-lib)
+  { * }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=finish
 #-------------------------------------------------------------------------------
 #TM:0:g_action_map_lookup_action:
 =begin pod
 =head2 [g_action_map_] lookup_action
 
-Looks up the action with the name I<action_name> in I<action_map>.
+Looks up the action with the name I<action_name> in action map.
 
 If no such action exists, returns C<Any>.
 
-Returns: (transfer none): a B<N-GAction>, or C<Any>
+Returns: (transfer none): a B<N-N-GObject>, or C<Any>
 
 Since: 2.32
 
-  method g_action_map_lookup_action ( Str $action_name --> GAction )
+  method g_action_map_lookup_action ( Str $action_name --> N-GObject )
 
 =item Str $action_name; the name of an action
 
@@ -170,7 +232,7 @@ sub g_action_map_lookup_action ( N-GObject $action_map, Str $action_name --> N-G
 =begin pod
 =head2 [g_action_map_] add_action
 
-Adds an action to the I<action_map>.
+Adds an action to the action map.
 
 If the action map already contains an action with the same name
 as I<action> then the old action is dropped from the action map.
@@ -179,9 +241,9 @@ The action map takes its own reference on I<action>.
 
 Since: 2.32
 
-  method g_action_map_add_action ( GAction $action )
+  method g_action_map_add_action ( N-GObject $action )
 
-=item GAction $action; a B<GAction>
+=item N-GObject $action; a B<N-GObject>
 
 =end pod
 
@@ -220,9 +282,9 @@ sub g_action_map_remove_action ( N-GObject $action_map, Str $action_name  )
 =head2 [g_action_map_] add_action_entries
 
 A convenience function for creating multiple B<GSimpleAction> instances
-and adding them to a B<GActionMap>.
+and adding them to a B<N-GObject>.
 
-Each action is constructed as per one B<GActionEntry>.
+Each action is constructed as per one B<N-GObjectEntry>.
 
 |[<!-- language="C" -->
 static void
@@ -241,10 +303,10 @@ gpointer       user_data)
 g_print ("C<s>\n", g_variant_get_string (parameter, NULL));
 }
 
-static GActionGroup *
+static N-GObjectGroup *
 create_action_group (void)
 {
-const GActionEntry entries[] = {
+const N-GObjectEntry entries[] = {
 { "quit",         activate_quit              },
 { "print-string", activate_print_string, "s" }
 };
@@ -259,15 +321,15 @@ return G_ACTION_GROUP (group);
 
 Since: 2.32
 
-  method g_action_map_add_action_entries ( GActionEntry $entries, Int $n_entries, Pointer $user_data )
+  method g_action_map_add_action_entries ( N-GObjectEntry $entries, Int $n_entries, Pointer $user_data )
 
-=item GActionEntry $entries; (array length=n_entries) (element-type GActionEntry): a pointer to the first item in an array of B<GActionEntry> structs
+=item N-GObjectEntry $entries; (array length=n_entries) (element-type N-GObjectEntry): a pointer to the first item in an array of B<N-GObjectEntry> structs
 =item Int $n_entries; the length of I<entries>, or -1 if I<entries> is C<Any>-terminated
 =item Pointer $user_data; the user data for signal connections
 
 =end pod
 
-sub g_action_map_add_action_entries ( N-GObject $action_map, GActionEntry $entries, int32 $n_entries, Pointer $user_data  )
+sub g_action_map_add_action_entries ( N-GObject $action_map, N-GObjectEntry $entries, int32 $n_entries, Pointer $user_data  )
   is native(&gio-lib)
   is export
   { * }

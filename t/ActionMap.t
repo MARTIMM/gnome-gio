@@ -17,6 +17,10 @@ subtest 'ISA test', {
   isa-ok $am, 'Gnome::Gio::ActionMap', '.new()';
 }
 
+#-------------------------------------------------------------------------------
+# further tests done in Application
+done-testing;
+
 #`{{
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
