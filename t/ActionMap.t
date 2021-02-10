@@ -21,6 +21,8 @@ subtest 'ISA test', {
 # further tests done in Application
 done-testing;
 
+=finish
+
 #`{{
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
