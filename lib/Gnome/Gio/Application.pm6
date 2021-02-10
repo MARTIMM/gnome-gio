@@ -234,11 +234,9 @@ Activates the application.  In essence, this results in the  I<activate> signal 
 
   method activate ( )
 
-
 =end pod
 
 method activate ( ) {
-
   g_application_activate(
     self.get-native-object-no-reffing,
   );
@@ -1199,7 +1197,7 @@ sub _g_application_new ( gchar-ptr $application_id, GEnum $flags --> N-GObject )
 =begin pod
 =head1 Signals
 
-There are two ways to connect to a signal. The first option you have is to use C<register-signal()> from B<Gnome::GObject::Object>. The second option is to use C<g_signal_connect_object()> directly from B<Gnome::GObject::Signal>.
+There are two ways to connect to a signal. The first option you have is to use C<register-signal()> from B<Gnome::GObject::Object>. The second option is to use C<connect-object()> directly from B<Gnome::GObject::Signal>.
 
 =head2 First method
 
@@ -1223,7 +1221,7 @@ The positional arguments of the signal handler are all obligatory as well as the
 
   $w.connect-object( 'button-press-event', $handler);
 
-Also here, the types of positional arguments in the signal handler are important. This is because both methods C<register-signal()> and C<g_signal_connect_object()> are using the signatures of the handler routines to setup the native call interface.
+Also here, the types of positional arguments in the signal handler are important. This is because both methods C<register-signal()> and C<connect-object()> are using the signatures of the handler routines to setup the native call interface.
 
 =head2 Supported signals
 
@@ -1233,7 +1231,7 @@ Also here, the types of positional arguments in the signal handler are important
 =head3 activate
 
 The I<activate> signal is emitted on the primary instance when an
-activation occurs. See C<g_application_activate()>.
+activation occurs. See C<activate()>.
 
   method handler (
     Int :$_handle_id,
@@ -1249,7 +1247,7 @@ activation occurs. See C<g_application_activate()>.
 =head3 command-line
 
 The I<command-line> signal is emitted on the primary instance when
-a commandline is not handled locally. See C<g_application_run()> and
+a commandline is not handled locally. See C<run()> and
 the B<GApplicationCommandLine> documentation for more information.
 
 Returns: An integer that is set as the exit status for the calling
