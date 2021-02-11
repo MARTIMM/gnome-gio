@@ -53,8 +53,8 @@ subtest 'Manipulations', {
     ]
   );
 
-  is-deeply $sag.list-actions,
-    [<new-action MyActionTest1 MyActionTest2>.reverse],
+  is-deeply $sag.list-actions.sort,
+     <new-action MyActionTest1 MyActionTest2>.sort,
      '.list-actions()';
 
   ok $sag.has-action('MyActionTest2'), '.has-action(): MyActionTest2 exists';
