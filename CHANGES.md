@@ -1,6 +1,7 @@
 ## Release notes
 * 2021-02-06 0.5.3
   * Modified and tested modules **Gnome::Gio::Action** and **Gnome::Gio::SimpleAction**.
+  * Add modules **Gnome::Gio::ActionGroup** and **Gnome::Gio::SimpleActionGroup** and tests.
 
 * 2020-12-19 0.5.2
   * bugfix in test; path tested was only for linux types, not windows.

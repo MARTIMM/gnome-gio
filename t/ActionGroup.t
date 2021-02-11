@@ -2,23 +2,23 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::Gio::ActionMap;
+use Gnome::Gio::ActionGroup;
+ok 1, 'Gnome::Gio::ActionGroup loads ok';
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------
-my Gnome::Gio::ActionMap $am;
-ok 1, 'loads ok';
-
+my Gnome::Gio::ActionGroup $ag;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $am .= new;
-  isa-ok $am, 'Gnome::Gio::ActionMap', '.new()';
+  $ag .= new;
+  isa-ok $ag, Gnome::Gio::ActionGroup, '.new()';
 }
 
 #-------------------------------------------------------------------------------
-# further tests done in Application
+# rest is tested in SimpleActionGroup.t
+#-------------------------------------------------------------------------------
 done-testing;
 
 =finish
@@ -36,10 +36,10 @@ subtest 'Manipulations', {
 }
 
 #-------------------------------------------------------------------------------
-subtest 'Inherit Gnome::Gio::ActionMap', {
-  class MyClass is Gnome::Gio::ActionMap {
+subtest 'Inherit Gnome::Gio::ActionGroup', {
+  class MyClass is Gnome::Gio::ActionGroup {
     method new ( |c ) {
-      self.bless( :GActionMap, |c);
+      self.bless( :GActionGroup, |c);
     }
 
     submethod BUILD ( *%options ) {
@@ -48,7 +48,7 @@ subtest 'Inherit Gnome::Gio::ActionMap', {
   }
 
   my MyClass $mgc .= new;
-  isa-ok $mgc, Gnome::Gio::ActionMap, '.new()';
+  isa-ok $mgc, Gnome::Gio::ActionGroup, '.new()';
 }
 
 #-------------------------------------------------------------------------------
@@ -60,14 +60,14 @@ subtest 'Properties ...', {
   use Gnome::GObject::Value;
   use Gnome::GObject::Type;
 
-  #my Gnome::Gio::ActionMap $am .= new;
+  #my Gnome::Gio::ActionGroup $ag .= new;
 
   sub test-property (
     $type, Str $prop, Str $routine, $value,
     Bool :$approx = False, Bool :$is-local = False
   ) {
     my Gnome::GObject::Value $gv .= new(:init($type));
-    $am.get-property( $prop, $gv);
+    $ag.get-property( $prop, $gv);
     my $gv-value = $gv."$routine"();
     if $approx {
       is-approx $gv-value, $value,
@@ -114,15 +114,15 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::ActionMap :$_widget, gulong :$_handler-id
+      Gnome::Gio::ActionGroup :$_widget, gulong :$_handler-id
       # --> ...
     ) {
 
-      isa-ok $_widget, Gnome::Gio::ActionMap;
+      isa-ok $_widget, Gnome::Gio::ActionGroup;
       $!signal-processed = True;
     }
 
-    method signal-emitter ( Gnome::Gio::ActionMap :$widget --> Str ) {
+    method signal-emitter ( Gnome::Gio::ActionGroup :$widget --> Str ) {
 
       while $main.gtk-events-pending() { $main.iteration-do(False); }
 
@@ -153,15 +153,15 @@ subtest 'Signals ...', {
     }
   }
 
-  my Gnome::Gio::ActionMap $am .= new;
+  my Gnome::Gio::ActionGroup $ag .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
   #$w.container-add($m);
 
   my SignalHandlers $sh .= new;
-  $am.register-signal( $sh, 'method', 'signal');
+  $ag.register-signal( $sh, 'method', 'signal');
 
-  my Promise $p = $am.start-thread(
+  my Promise $p = $ag.start-thread(
     $sh, 'signal-emitter',
     # G_PRIORITY_DEFAULT,       # enable 'use Gnome::Glib::Main'
     # :!new-context,

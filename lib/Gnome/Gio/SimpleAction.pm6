@@ -425,28 +425,6 @@ An example of using a string type property of a B<Gnome::Gtk3::Label> object. Th
 =head2 Supported properties
 
 =comment -----------------------------------------------------------------------
-=comment #TP:0:name:
-=head3 Action Name
-
-
-The name of the action. This is mostly meaningful for identifying
-the action once it has been added to a B<GSimpleActionGroup>.
-
-
-The B<Gnome::GObject::Value> type of property I<name> is C<G_TYPE_STRING>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:parameter-type:
-=head3 Parameter Type
-
-
-The type of the parameter that must be given when activating the
-action.
-
-
-The B<Gnome::GObject::Value> type of property I<parameter-type> is C<G_TYPE_BOXED>.
-
-=comment -----------------------------------------------------------------------
 =comment #TP:0:enabled:
 =head3 Enabled
 
@@ -456,20 +434,6 @@ If I<action> is currently enabled.
 If the action is disabled then calls to C<g_action_activate()> and
 C<g_action_change_state()> have no effect.
 
-
-The B<Gnome::GObject::Value> type of property I<enabled> is C<G_TYPE_BOOLEAN>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:name:
-=head3 Action Name
-
-
-The name of the action. This is mostly meaningful for identifying
-the action once it has been added to a B<GSimpleActionGroup>.
-
-
-The B<Gnome::GObject::Value> type of property I<name> is C<G_TYPE_STRING>.
-
 =comment -----------------------------------------------------------------------
 =comment #TP:0:name:
 =head3 Action Name
@@ -492,51 +456,8 @@ action.
 
 The B<Gnome::GObject::Value> type of property I<parameter-type> is C<G_TYPE_BOXED>.
 
-=comment -----------------------------------------------------------------------
-=comment #TP:0:name:
-=head3 Action Name
-
-
-The name of the action. This is mostly meaningful for identifying
-the action once it has been added to a B<GSimpleActionGroup>.
-
-
-The B<Gnome::GObject::Value> type of property I<name> is C<G_TYPE_STRING>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:parameter-type:
-=head3 Parameter Type
-
-
-The type of the parameter that must be given when activating the
-action.
-
-
-The B<Gnome::GObject::Value> type of property I<parameter-type> is C<G_TYPE_BOXED>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:enabled:
-=head3 Enabled
-
-
-If I<action> is currently enabled.
-
-If the action is disabled then calls to C<g_action_activate()> and
-C<g_action_change_state()> have no effect.
-
 
 The B<Gnome::GObject::Value> type of property I<enabled> is C<G_TYPE_BOOLEAN>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:state-type:
-=head3 State Type
-
-
-The B<N-GVariantType> of the state that the action has, or C<undefined> if the
-action is stateless.
-
-
-The B<Gnome::GObject::Value> type of property I<state-type> is C<G_TYPE_BOXED>.
 
 =comment -----------------------------------------------------------------------
 =comment #TP:0:state:
@@ -547,41 +468,6 @@ The state of the action, or C<undefined> if the action is stateless.
 
 
 The B<Gnome::GObject::Value> type of property I<state> is C<G_TYPE_VARIANT>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:name:
-=head3 Action Name
-
-
-The name of the action. This is mostly meaningful for identifying
-the action once it has been added to a B<GSimpleActionGroup>.
-
-
-The B<Gnome::GObject::Value> type of property I<name> is C<G_TYPE_STRING>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:parameter-type:
-=head3 Parameter Type
-
-
-The type of the parameter that must be given when activating the
-action.
-
-
-The B<Gnome::GObject::Value> type of property I<parameter-type> is C<G_TYPE_BOXED>.
-
-=comment -----------------------------------------------------------------------
-=comment #TP:0:enabled:
-=head3 Enabled
-
-
-If I<action> is currently enabled.
-
-If the action is disabled then calls to C<g_action_activate()> and
-C<g_action_change_state()> have no effect.
-
-
-The B<Gnome::GObject::Value> type of property I<enabled> is C<G_TYPE_BOOLEAN>.
 
 =comment -----------------------------------------------------------------------
 =comment #TP:0:state-type:

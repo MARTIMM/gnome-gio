@@ -152,6 +152,7 @@ subtest 'Themes ...', {
 }
 }}
 
+#`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circulat dependency
 #-------------------------------------------------------------------------------
 subtest 'Signals ...', {
   use Gnome::Gtk3::Main;
@@ -225,6 +226,7 @@ subtest 'Signals ...', {
 
   is $p.result, 'done', 'emitter finished';
 }
+}}
 
 #-------------------------------------------------------------------------------
 done-testing;
