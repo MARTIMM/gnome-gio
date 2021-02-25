@@ -49,8 +49,6 @@ use Gnome::Glib::VariantType;
 use Gnome::Glib::N-GVariant;
 use Gnome::Glib::N-GVariantType;
 
-#use Gnome::Gio::N-GObject;
-
 #-------------------------------------------------------------------------------
 unit role Gnome::Gio::Action:auth<github:MARTIMM>:ver<0.1.0>;
 
