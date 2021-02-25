@@ -169,7 +169,7 @@ subtest 'Themes ...', {
 }}
 
 
-#`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circulat dependency
+#`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circular dependency
 #-------------------------------------------------------------------------------
 subtest 'Signals ...', {
   use Gnome::Gtk3::Main;
