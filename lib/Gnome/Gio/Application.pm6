@@ -18,7 +18,7 @@ B<Gnome::Gio::Application> provides convenient life cycle management by maintain
 
 Another feature that B<Gnome::Gio::Application> (optionally) provides is process uniqueness. Applications can make use of this functionality by providing a unique application ID. If given, only one application with this ID can be running at a time per session. The session concept is platform-dependent, but corresponds roughly to a graphical desktop login. When your application is launched again, its arguments are passed through platform communication to the already running program. The already running instance of the program is called the "primary instance"; for non-unique applications this is the always the current instance. On Linux, the D-Bus session bus is used for communication.
 
-The use of B<Gnome::Gio::Application> differs from some other commonly-used uniqueness libraries (such as libunique) in important ways. The application is not expected to manually register itself and check if it is the primary instance. Instead, the Raku C<MAIN()> subroutine of a B<Gnome::Gio::Application> should do very little more than instantiating the application instance, possibly connecting signal handlers, then calling C<run()>. All checks for uniqueness are done internally. If the application is the primary instance then the startup signal is emitted and the mainloop runs. If the application is not the primary instance then a signal is sent to the primary instance and C<run()> promptly returns. See the code examples below.
+The use of B<Gnome::Gio::Application> differs from some other commonly-used uniqueness libraries (such as libunique) in important ways. The application is not expected to manually register itself and check if it is the primary instance. Instead, the Raku main program of a B<Gnome::Gio::Application> based application should do very little more than instantiating the application instance, possibly connecting signal handlers, then calling C<run()>. All checks for uniqueness are done internally. If the application is the primary instance then the startup signal is emitted and the mainloop runs. If the application is not the primary instance then a signal is sent to the primary instance and C<run()> promptly returns. See the code examples below.
 
 If used, the expected form of an application identifier is the same as that of of a L<D-Bus well-known bus name|https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus>. Examples include: `com.example.MyApp`, `org.example.internal_apps.Calculator`, `org._7_zip.Archiver`. For details on valid application identifiers, see C<id-is-valid()>.
 
@@ -57,7 +57,12 @@ As the name indicates, the platform data may vary depending on the operating sys
   unit class Gnome::Gio::Application;
   also is Gnome::GObject::Object;
   also does Gnome::Gio::ActionMap;
-=comment  also does Gnome::Gio::ActionGroup;
+  also does Gnome::Gio::ActionGroup;
+
+
+=head2 Uml Diagram
+![](plantuml/Application.svg)
+
 
 =comment head2 Example
 
@@ -72,6 +77,7 @@ use Gnome::N::GlibToRakuTypes;
 
 use Gnome::Glib::Error;
 use Gnome::Glib::OptionContext;
+use Gnome::Glib::N-GVariant;
 
 use Gnome::GObject::Object;
 
@@ -85,7 +91,7 @@ use Gnome::Gio::ActionMap;
 unit class Gnome::Gio::Application:auth<github:MARTIMM>:ver<0.1.0>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::ActionMap;
-#also does Gnome::Gio::ActionGroup;
+also does Gnome::Gio::ActionGroup;
 
 #-------------------------------------------------------------------------------
 my Bool $signals-added = False;
@@ -834,7 +840,7 @@ This function is intended to be run from C<main()> and its return value is inten
 
 B<Gnome::Gio::Application> will attempt to parse the commandline arguments.  You can add commandline flags to the list of recognised options by way of C<g_application_add_main_option_entries()>.  After this, the  I<handle-local-options> signal is emitted, from which the application can inspect the values of its B<N-GOptionEntrys>.
 
- I<handle-local-options> is a good place to handle options such as `--version`, where an immediate reply from the local process is desired (instead of communicating with an already-running instance). A  I<handle-local-options> handler can stop further processing by returning a non-negative value, which then becomes the exit status of the process.
+I<handle-local-options> is a good place to handle options such as `--version`, where an immediate reply from the local process is desired (instead of communicating with an already-running instance). A  I<handle-local-options> handler can stop further processing by returning a non-negative value, which then becomes the exit status of the process.
 
 What happens next depends on the flags: if C<G_APPLICATION_HANDLES_COMMAND_LINE> was specified then the remaining commandline arguments are sent to the primary instance, where a I<command-line> signal is emitted.  Otherwise, the remaining commandline arguments are assumed to be a list of files. If there are no files listed, the application is activated via the I<activate> signal. If there are one or more files, and C<G_APPLICATION_HANDLES_OPEN> was specified then the files are opened via the  I<open> signal.
 
@@ -1319,7 +1325,7 @@ the default option processing continue.
 
 
   method handler (
-    Unknown type G_TYPE_VARIANT_DICT $options,
+    N-GVariant $options,
     Int :$_handle_id,
     Gnome::GObject::Object :_widget($application),
     *%user-options
