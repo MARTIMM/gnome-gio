@@ -1,7 +1,7 @@
 {
   "description": "Raku Gnome GIO api, Please install Gnome::Gtk3",
   "name": "Gnome::Gio",
-  "version": "0.5.4",
+  "version": "0.6.0",
   "authors": [ "Marcel Timmerman"],
   "tags": [ "gnome", "gio"],
 
@@ -15,6 +15,10 @@
     "Gnome::Gio::Application": "lib/Gnome/Gio/Application.pm6",
     "Gnome::Gio::Enums": "lib/Gnome/Gio/Enums.pm6",
     "Gnome::Gio::File": "lib/Gnome/Gio/File.pm6",
+    "Gnome::Gio::Menu": "lib/Gnome/Gio/Menu.pm6",
+    "Gnome::Gio::MenuAttributeIter": "lib/Gnome/Gio/MenuAttributeIter.pm6",
+    "Gnome::Gio::MenuLinkIter": "lib/Gnome/Gio/MenuLinkIter.pm6",
+    "Gnome::Gio::MenuItem": "lib/Gnome/Gio/MenuItem.pm6",
     "Gnome::Gio::MenuModel": "lib/Gnome/Gio/MenuModel.pm6",
     "Gnome::Gio::Resource": "lib/Gnome/Gio/Resource.pm6",
     "Gnome::Gio::SimpleAction": "lib/Gnome/Gio/SimpleAction.pm6",
