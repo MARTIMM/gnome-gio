@@ -2,18 +2,19 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::Gio::MenuModel;
+#use Gnome::Gio::Menu;
+use Gnome::Gio::MenuItem;
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------
-my Gnome::Gio::MenuModel $mm;
+#my Gnome::Gio::Menu $m;
+my Gnome::Gio::MenuItem $mi;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  ok 1, 'ok';
-#  $mm .= new;
-#  isa-ok $mm, Gnome::Gio::MenuModel, '.new';
+  $mi .= new( :label<load>, :action<load-file>);
+  isa-ok $mi, Gnome::Gio::MenuItem, '.new(label,:action)';
 }
 
 #`{{
@@ -29,10 +30,10 @@ subtest 'Manipulations', {
 }
 
 #-------------------------------------------------------------------------------
-subtest 'Inherit Gnome::Gio::MenuModel', {
-  class MyClass is Gnome::Gio::MenuModel {
+subtest 'Inherit Gnome::Gio::Menu', {
+  class MyClass is Gnome::Gio::Menu {
     method new ( |c ) {
-      self.bless( :GMenuModel, |c);
+      self.bless( :GMenu, |c);
     }
 
     submethod BUILD ( *%options ) {
@@ -41,7 +42,7 @@ subtest 'Inherit Gnome::Gio::MenuModel', {
   }
 
   my MyClass $mgc .= new;
-  isa-ok $mgc, Gnome::Gio::MenuModel, '.new()';
+  isa-ok $mgc, Gnome::Gio::Menu, '.new()';
 }
 
 #-------------------------------------------------------------------------------
@@ -53,14 +54,14 @@ subtest 'Properties ...', {
   use Gnome::GObject::Value;
   use Gnome::GObject::Type;
 
-  #my Gnome::Gio::MenuModel $mm .= new;
+  #my Gnome::Gio::Menu $m .= new;
 
   sub test-property (
     $type, Str $prop, Str $routine, $value,
     Bool :$approx = False, Bool :$is-local = False
   ) {
     my Gnome::GObject::Value $gv .= new(:init($type));
-    $mm.get-property( $prop, $gv);
+    $m.get-property( $prop, $gv);
     my $gv-value = $gv."$routine"();
     if $approx {
       is-approx $gv-value, $value,
@@ -107,15 +108,15 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::MenuModel :$_widget, gulong :$_handler-id
+      Gnome::Gio::Menu :$_widget, gulong :$_handler-id
       # --> ...
     ) {
 
-      isa-ok $_widget, Gnome::Gio::MenuModel;
+      isa-ok $_widget, Gnome::Gio::Menu;
       $!signal-processed = True;
     }
 
-    method signal-emitter ( Gnome::Gio::MenuModel :$widget --> Str ) {
+    method signal-emitter ( Gnome::Gio::Menu :$widget --> Str ) {
 
       while $main.gtk-events-pending() { $main.iteration-do(False); }
 
@@ -146,15 +147,15 @@ subtest 'Signals ...', {
     }
   }
 
-  my Gnome::Gio::MenuModel $mm .= new;
+  my Gnome::Gio::Menu $m .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
   #$w.container-add($m);
 
   my SignalHandlers $sh .= new;
-  $mm.register-signal( $sh, 'method', 'signal');
+  $m.register-signal( $sh, 'method', 'signal');
 
-  my Promise $p = $mm.start-thread(
+  my Promise $p = $m.start-thread(
     $sh, 'signal-emitter',
     # :!new-context,
     # :start-time(now + 1)
