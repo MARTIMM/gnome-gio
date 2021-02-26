@@ -84,8 +84,7 @@ use Gnome::GObject::Object;
 use Gnome::Gio::Enums;
 use Gnome::Gio::File;
 use Gnome::Gio::ActionMap;
-
-#use Gnome::Gio::ActionGroup;
+use Gnome::Gio::ActionGroup;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::Application:auth<github:MARTIMM>:ver<0.1.0>;
