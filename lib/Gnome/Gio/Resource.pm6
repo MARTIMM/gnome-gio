@@ -12,19 +12,18 @@ Resource framework
 
 =head1 Description
 
-I<include>: gio/gio.h
+Applications and libraries often contain binary or textual data that is really part of the application, rather than user data. For instance B<Gnome::Gtk3::Builder> .ui files, splashscreen images, B<Gnome::Gio::Menu> markup XML, CSS files, icons, etc. These are often shipped as files in 'some-data-dir/app-name', or manually included as literal strings in the code.
 
-Applications and libraries often contain binary or textual data that is really part of the application, rather than user data. For instance B<Gnome::Gtk3::Builder> .ui files, splashscreen images, GMenu markup XML, CSS files, icons, etc. These are often shipped as files in `$datadir/appname`, or manually included as literal strings in the code.
-
-The B<Gnome::Gio::Resource> API and the glib-compile-resources program provide a convenient and efficient alternative to this which has some nice properties. You maintain the files as normal files, so it is easy to edit them, but during the build the files are combined into a binary bundle that is linked into the executable. This means that loading the resource files are efficient (as they are already in memory, shared with other instances) and simple (no need to check for things like I/O errors or locate the files in the filesystem). It also makes it easier to create relocatable applications.
+The B<Gnome::Gio::Resource> API and the C<glib-compile-resources> program provide a convenient and efficient alternative to this which has some nice properties. You maintain the files as normal files, so it is easy to edit them, but during the build the files are combined into a binary bundle.
+=comment that is linked into the executable. This means that loading the resource files are efficient (as they are already in memory, shared with other instances) and simple (no need to check for things like I/O errors or locate the files in the filesystem). It also makes it easier to create relocatable applications.
 
 Resource files can also be marked as compressed. Such files will be included in the resource bundle in a compressed form, but will be automatically uncompressed when the resource is used. This is very useful e.g. for larger text files that are parsed once (or rarely) and then thrown away.
 
 Resource files can also be marked to be preprocessed, by setting the value of the `preprocess` attribute to a comma-separated list of preprocessing options. The only options currently supported are:
 
-=item `xml-stripblanks` which will use the xmllint command to strip ignorable whitespace from the XML file. For this to work, the `XMLLINT` environment variable must be set to the full path to the xmllint executable, or xmllint must be in the `PATH`; otherwise the preprocessing step is skipped.
+=item C<xml-stripblanks> which will use the xmllint command to strip ignorable whitespace from the XML file. For this to work, the `XMLLINT` environment variable must be set to the full path to the xmllint executable, or C<xmllint> must be in the `PATH`; otherwise the preprocessing step is skipped.
 
-=item `to-pixdata` which will use the gdk-pixbuf-pixdata command to convert images to the B<Gnome::Gdk3::Pixdata> format, which allows you to create pixbufs directly using the data inside the resource file, rather than an (uncompressed) copy if it. For this, the gdk-pixbuf-pixdata program must be in the PATH, or the `GDK_PIXBUF_PIXDATA` environment variable must be set to the full path to the gdk-pixbuf-pixdata executable; otherwise the resource compiler will abort.
+=item C<to-pixdata> which will use the C<gdk-pixbuf-pixdata> command to convert images to the B<Gnome::Gdk3::Pixdata> format, which allows you to create pixbufs directly using the data inside the resource file, rather than an (uncompressed) copy if it. For this, the C<gdk-pixbuf-pixdata> program must be in the PATH, or the C<GDK_PIXBUF_PIXDATA> environment variable must be set to the full path to the C<gdk-pixbuf-pixdata> executable; otherwise the resource compiler will abort.
 
 Resource files will be exported in the GResource namespace using the combination of the given `prefix` and the filename from the `file` element. The `alias` attribute can be used to alter the filename to expose them at a different location in the resource namespace. Typically, this is used to include files from a different source directory without exposing the source directory in the resource namespace, as in the example below.
 
@@ -51,9 +50,10 @@ This will create a resource bundle with the following files:
   /org/gtk/Example/example.css
 
 
-Note that all resources in the process share the same namespace, so use Java-style path prefixes (like in the above example) to avoid conflicts.
+=comment Note that all resources in the process share the same namespace, so use Java-style path prefixes (like in the above example) to avoid conflicts.
 
-You can then use glib-compile-resources to compile the XML to a binary bundle that you can load with C<g_resource_load()>. However, its more common to use the --generate-source and --generate-header arguments to create a source file and header to link directly into your application. This will generate `C<get_resource()>`, `C<register_resource()>` and `C<unregister_resource()>` functions, prefixed by the `--c-name` argument passed to [glib-compile-resources][glib-compile-resources]. `C<get_resource()>` returns the generated B<Gnome::Gio::Resource> object. The register and unregister functions register the resource so its files can be accessed using C<g_resources_lookup_data()>.
+You can then use C<glib-compile-resources> to compile the XML to a binary bundle that you can load with C<load()>.
+=comment However, it's more common to use the --generate-source and --generate-header arguments to create a source file and header to link directly into your application. This will generate `C<get_resource()>`, `C<register_resource()>` and `C<unregister_resource()>` functions, prefixed by the `--c-name` argument passed to C<glib-compile-resources>. `C<get_resource()>` returns the generated B<Gnome::Gio::Resource> object. The register and unregister functions register the resource so its files can be accessed using C<g_resources_lookup_data()>.
 
 Once a B<Gnome::Gio::Resource> has been created and registered all the data in it can be accessed globally in the process by using API calls like C<g_resources_open_stream()> to stream the data or C<g_resources_lookup_data()> to get a direct pointer to the data. You can also use URIs like "resource:///org/gtk/Example/data/splashscreen.png" with B<Gnome::Gio::File> to access the resource data.
 
