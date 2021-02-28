@@ -830,7 +830,7 @@ Since: 2.32
 
 =end pod
 
-#TE:0:GResourceError:
+#TE:1:GResourceError:
 enum GResourceError is export (
   'G_RESOURCE_ERROR_NOT_FOUND',
   'G_RESOURCE_ERROR_INTERNAL'
