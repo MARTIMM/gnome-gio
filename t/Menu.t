@@ -119,14 +119,18 @@ subtest 'Manipulations', {
 
   # Add to submenu and give section a name
   $submenu .= new;
-  $submenu.append-section( 'Sources', $section);
+  $submenu.insert-section( 1, 'Sources', $section);
   $section.clear-object;
-  is $submenu.get-n-items, 1, '$submenu.append-section()';
+  is $submenu.get-n-items, 1, '$submenu.insert-section()';
 
   # 2st section with 2 items; asciidoc and HTML
   $section .= new;
   $section.append( 'asciidoc', 'app.select-asciidoc');
-  $section.append( 'HTML', 'app.select-html');
+  #$section.append( 'HTML', 'app.select-html');
+  $section.insert-item(
+    1, Gnome::Gio::MenuItem.new( :label<HTML>, :action<app.select-html>)
+  );
+  is $section.get-n-items, 2, '$section.insert-item()';
 
   # Add to submenu and give section a name
   $submenu.append-section( 'Markup', $section);
@@ -136,6 +140,10 @@ subtest 'Manipulations', {
   $menu.append-submenu( 'Highlight Mode', $submenu);
   $submenu.clear-object;
   is $menu.get-n-items, 3, '$menu.append-submenu()';
+
+
+
+
 
   $menu.freeze;
   nok $menu.is-mutable, '.freeze()';

@@ -284,13 +284,11 @@ sub g_menu_freeze ( N-GObject $menu )
 
 Convenience function for inserting a normal menu item into I<menu>. Combine C<Gnome::Gio::MenuItem.new()> and C<insert-item()> for a more flexible alternative.
 
-
-
   method insert ( Int $position, Str $label, Str $detailed_action )
 
 =item Int $position; the position at which to insert the item
-=item Str $label; (nullable): the section label, or C<undefined>
-=item Str $detailed_action; (nullable): the detailed action string, or C<undefined>
+=item Str $label; the section label, or C<undefined>
+=item Str $detailed_action; the detailed action string, or C<undefined>
 
 =end pod
 
@@ -306,30 +304,19 @@ sub g_menu_insert ( N-GObject $menu, gint $position, gchar-ptr $label, gchar-ptr
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:insert-item:
+#TM:1:insert-item:
 =begin pod
 =head2 insert-item
 
+Inserts I<$item> into I<menu>.
 
-Inserts I<item> into I<menu>.
+The "insertion" is actually done by copying all of the attribute and link values of I<item> and using them to form a new item within I<menu>. As such, I<item> itself is not really inserted, but rather, a menu item that is exactly the same as the one presently described by I<item>.
 
-The "insertion" is actually done by copying all of the attribute and
-link values of I<item> and using them to form a new item within I<menu>.
-As such, I<item> itself is not really inserted, but rather, a menu item
-that is exactly the same as the one presently described by I<item>.
-
-This means that I<item> is essentially useless after the insertion
-occurs.  Any changes you make to it are ignored unless it is inserted
-again (at which point its updated values will be copied).
+This means that I<item> is essentially useless after the insertion occurs.  Any changes you make to it are ignored unless it is inserted again (at which point its updated values will be copied).
 
 You should probably just free I<item> once you're done.
 
-There are many convenience functions to take care of common cases.
-See C<insert()>, C<insert-section()> and
-C<insert-submenu()> as well as "prepend" and "append" variants of
-each of these functions.
-
-
+There are many convenience functions to take care of common cases. See C<insert()>, C<insert-section()> and C<insert-submenu()> as well as "prepend" and "append" variants of each of these functions.
 
   method insert-item ( Int $position, N-GObject $item )
 
@@ -338,7 +325,8 @@ each of these functions.
 
 =end pod
 
-method insert-item ( Int $position, N-GObject $item ) {
+method insert-item ( Int $position, $item is copy ) {
+  $item .= get-native-object-no-reffing unless $item ~~ N-GObject;
 
   g_menu_insert_item(
     self.get-native-object-no-reffing, $position, $item
@@ -350,23 +338,22 @@ sub g_menu_insert_item ( N-GObject $menu, gint $position, N-GObject $item  )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:insert-section:
+#TM:1:insert-section:
 =begin pod
 =head2 insert-section
 
 Convenience function for inserting a section menu item into I<menu>. Combine C<Gnome::Gio::MenuItem.new(:section)> and C<insert-item()> for a more flexible alternative.
 
-
-
   method insert-section ( Int $position, Str $label, N-GObject $section )
 
 =item Int $position; the position at which to insert the item
-=item Str $label; (nullable): the section label, or C<undefined>
+=item Str $label; the section label, or C<undefined>
 =item N-GObject $section; a B<Gnome::Gio::MenuModel> with the items of the section
 
 =end pod
 
-method insert-section ( Int $position, Str $label, N-GObject $section ) {
+method insert-section ( Int $position, Str $label, $section is copy ) {
+  $section .= get-native-object-no-reffing unless $section ~~ N-GObject;
 
   g_menu_insert_section(
     self.get-native-object-no-reffing, $position, $label, $section
@@ -382,22 +369,18 @@ sub g_menu_insert_section ( N-GObject $menu, gint $position, gchar-ptr $label, N
 =begin pod
 =head2 insert-submenu
 
-
-Convenience function for inserting a submenu menu item into I<menu>.
-Combine C<Gnome::Gio::MenuItem.new(:submenu)> and C<insert-item()> for a more
-flexible alternative.
-
-
+Convenience function for inserting a submenu menu item into I<menu>. Combine C<Gnome::Gio::MenuItem.new(:submenu)> and C<insert-item()> for a more flexible alternative.
 
   method insert-submenu ( Int $position, Str $label, N-GObject $submenu )
 
 =item Int $position; the position at which to insert the item
-=item Str $label; (nullable): the section label, or C<undefined>
+=item Str $label; the section label, or C<undefined>
 =item N-GObject $submenu; a B<Gnome::Gio::MenuModel> with the items of the submenu
 
 =end pod
 
-method insert-submenu ( Int $position, Str $label, N-GObject $submenu ) {
+method insert-submenu ( Int $position, Str $label, $submenu is copy ) {
+  $submenu .= get-native-object-no-reffing unless $submenu ~~ N-GObject;
 
   g_menu_insert_submenu(
     self.get-native-object-no-reffing, $position, $label, $submenu
@@ -417,8 +400,8 @@ Convenience function for prepending a normal menu item to the start of I<menu>. 
 
   method prepend ( Str $label, Str $detailed_action )
 
-=item Str $label; (nullable): the section label, or C<undefined>
-=item Str $detailed_action; (nullable): the detailed action string, or C<undefined>
+=item Str $label; the section label, or C<undefined>
+=item Str $detailed_action; the detailed action string, or C<undefined>
 
 =end pod
 
@@ -438,12 +421,9 @@ sub g_menu_prepend ( N-GObject $menu, gchar-ptr $label, gchar-ptr $detailed_acti
 =begin pod
 =head2 prepend-item
 
-
 Prepends I<item> to the start of I<menu>.
 
 See C<insert-item()> for more information.
-
-
 
   method prepend-item ( N-GObject $item )
 
@@ -451,7 +431,8 @@ See C<insert-item()> for more information.
 
 =end pod
 
-method prepend-item ( N-GObject $item ) {
+method prepend-item ( $item is copy ) {
+  $item .= get-native-object-no-reffing unless $item ~~ N-GObject;
 
   g_menu_prepend_item(
     self.get-native-object-no-reffing, $item
@@ -476,7 +457,8 @@ Convenience function for prepending a section menu item to the start of I<menu>.
 
 =end pod
 
-method prepend-section ( Str $label, N-GObject $section ) {
+method prepend-section ( Str $label, $section is copy ) {
+  $section .= get-native-object-no-reffing unless $section ~~ N-GObject;
 
   g_menu_prepend_section(
     self.get-native-object-no-reffing, $label, $section
@@ -492,21 +474,17 @@ sub g_menu_prepend_section ( N-GObject $menu, gchar-ptr $label, N-GObject $secti
 =begin pod
 =head2 prepend-submenu
 
-
-Convenience function for prepending a submenu menu item to the start
-of I<menu>.  Combine C<Gnome::Gio::MenuItem.new(:submenu)> and C<insert-item()> for
-a more flexible alternative.
-
-
+Convenience function for prepending a submenu menu item to the start of I<menu>.  Combine C<Gnome::Gio::MenuItem.new(:submenu)> and C<insert-item()> for a more flexible alternative.
 
   method prepend-submenu ( Str $label, N-GObject $submenu )
 
-=item Str $label; (nullable): the section label, or C<undefined>
+=item Str $label; the section label, or C<undefined>
 =item N-GObject $submenu; a B<Gnome::Gio::MenuModel> with the items of the submenu
 
 =end pod
 
-method prepend-submenu ( Str $label, N-GObject $submenu ) {
+method prepend-submenu ( Str $label, $submenu is copy ) {
+  $submenu .= get-native-object-no-reffing unless $submenu ~~ N-GObject;
 
   g_menu_prepend_submenu(
     self.get-native-object-no-reffing, $label, $submenu
@@ -522,19 +500,13 @@ sub g_menu_prepend_submenu ( N-GObject $menu, gchar-ptr $label, N-GObject $subme
 =begin pod
 =head2 remove
 
-
 Removes an item from the menu.
 
-I<position> gives the index of the item to remove.
+I<$position> gives the index of the item to remove.
 
-It is an error if position is not in range the range from 0 to one
-less than the number of items in the menu.
+It is an error if position is not in range the range from 0 to one less than the number of items in the menu.
 
-It is not possible to remove items by identity since items are added
-to the menu simply by copying their links and attributes (ie:
-identity of the item itself is not preserved).
-
-
+It is not possible to remove items by identity since items are added to the menu simply by copying their links and attributes (ie: identity of the item itself is not preserved).
 
   method remove ( Int $position )
 
@@ -558,13 +530,9 @@ sub g_menu_remove ( N-GObject $menu, gint $position  )
 =begin pod
 =head2 remove-all
 
-
 Removes all items in the menu.
 
-
-
   method remove-all ( )
-
 
 =end pod
 
