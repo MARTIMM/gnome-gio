@@ -2,6 +2,9 @@ use v6;
 use NativeCall;
 use Test;
 
+use Gnome::Glib::Error;
+
+use Gnome::Gio::Enums;
 use Gnome::Gio::Resource;
 
 #use Gnome::N::X;
@@ -17,6 +20,7 @@ subtest 'ISA test', {
   );
 
   $r .= new(:load<t/data/g-resources/rtest.gresource>);
+  ok $r.is-valid, 'valid resource';
   isa-ok $r, Gnome::Gio::Resource, '.new(:load)';
 }
 
@@ -25,9 +29,30 @@ unless %*ENV<raku_test_all>:exists {
   exit;
 }
 
+#-------------------------------------------------------------------------------
 subtest 'Manipulations', {
   ok 1, $r.register // '.register()';
   ok 1, $r.unregister // '.unregister()';
+
+  my Gnome::Glib::Error $e;
+  my Array $a;
+  ( $e, $a) = $r.enumerate-children('/io/gith ub/martimm/rtest');
+  ok $e.is-valid, $e.message;
+  is $e.domain, $r.error-quark, '.error-quark()';
+  is GResourceError($e.code), G_RESOURCE_ERROR_NOT_FOUND, 'G_RESOURCE_ERROR_NOT_FOUND';
+  ( $e, $a) = $r.enumerate-children(
+    '/io/github/martimm/rtest/t/data/g-resources/'
+  );
+  nok $e.is-valid, '.enumerate-children()';
+
+  #TODO no children....
+  my @parts = 'io/github/martimm/rtest/t/data/g-resources'.split('/');
+  my $path = '/';
+  for @parts -> $p {
+    $path ~= "$p/";
+    ( $e, $a) = $r.enumerate-children($path);
+    note "P: $path, $e.is-valid(), $a.gist()";
+  }
 }
 
 #-------------------------------------------------------------------------------

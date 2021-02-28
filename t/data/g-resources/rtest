@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Run glib-compile-resources xt/data/g-resources/ex-application -->
+<!-- Run glib-compile-resources t/data/g-resources/rtest -->
 <gresources>
-  <gresource prefix="/io/github/martimm/test/application">
-    <file compressed="true">xt/data/g-resources/ex-application-menu.ui</file>
+  <gresource prefix="/io/github/martimm/rtest">
+    <file>t/data/g-resources/rtest-menu.ui</file>
+    <file>t/data/g-resources/ActionMap.t</file>
   </gresource>
 </gresources>
