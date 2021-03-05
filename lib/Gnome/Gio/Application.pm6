@@ -76,7 +76,7 @@ use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
 use Gnome::Glib::Error;
-use Gnome::Glib::OptionContext;
+#use Gnome::Glib::OptionContext;
 use Gnome::Glib::N-GVariant;
 
 use Gnome::GObject::Object;
@@ -832,12 +832,11 @@ sub g_application_release ( N-GObject $application  )
 =begin pod
 =head2 run
 
-
 Runs the application.
 
-This function is intended to be run from C<main()> and its return value is intended to be returned by C<main()>. Although you are expected to pass the I<argc>, I<argv> parameters from C<main()> to this function, it is possible to pass C<Any> if I<argv> is not available or commandline handling is not required.  Note that on Windows, I<argc> and I<argv> are ignored, and C<g_win32_get_command_line()> is called internally (for proper support of Unicode commandline arguments).
+This function is intended to be run from C<main()> and its return value is intended to be returned by your main program.
 
-B<Gnome::Gio::Application> will attempt to parse the commandline arguments.  You can add commandline flags to the list of recognised options by way of C<g_application_add_main_option_entries()>.  After this, the  I<handle-local-options> signal is emitted, from which the application can inspect the values of its B<N-GOptionEntrys>.
+B<Gnome::Gio::Application> will attempt to parse the commandline arguments read from `@*ARGS`. You can add commandline flags to the list of recognized options by way of C<add-main-option-entries()>. After this, the I<handle-local-options> signal is emitted, from which the application can inspect the values of its B<N-GOptionEntrys>.
 
 I<handle-local-options> is a good place to handle options such as `--version`, where an immediate reply from the local process is desired (instead of communicating with an already-running instance). A  I<handle-local-options> handler can stop further processing by returning a non-negative value, which then becomes the exit status of the process.
 
@@ -1030,8 +1029,9 @@ sub g_application_set_option_context_description ( N-GObject $application, gchar
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
-#TM:0:set-option-context-parameter-string:
+# TM:0:set-option-context-parameter-string:
 =begin pod
 =head2 set-option-context-parameter-string
 
@@ -1077,6 +1077,7 @@ method set-option-context-summary (  Str  $summary ) {
 sub g_application_set_option_context_summary ( N-GObject $application, gchar-ptr $summary  )
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:1:set-resource-base-path:
