@@ -1,8 +1,11 @@
 ## Release notes
+
+* 2021-03-05 0.6.1
+  * Removed dependency on **Gnome::Glib::OptionContext**.
+
 * 2021-02-24 0.6.0
   * Splitting **Gnome::Gio::MenuModel** in parts; MenuModel, MenuAttributeIter and MenuLinkIter.
   * Add new module **Gnome::Gio::Menu**. Directly split into Menu and MenuIter.
-
 
 * 2021-02-13 0.5.4
   * made role testing more simple.
