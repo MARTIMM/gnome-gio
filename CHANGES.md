@@ -1,5 +1,9 @@
 ## Release notes
 
+* 2021-03-09 0.7.0
+  * Bugfixed in **Gnome::Gio::Application** `.run()`. Commandline arguments were set wrong.
+  * Add module **Gnome::Gio::ApplicationCommandLine**.
+
 * 2021-03-05 0.6.1
   * Removed dependency on **Gnome::Glib::OptionContext**.
 
