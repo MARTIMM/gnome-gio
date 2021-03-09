@@ -95,6 +95,75 @@ also does Gnome::Gio::ActionGroup;
 #-------------------------------------------------------------------------------
 my Bool $signals-added = False;
 
+#`{{
+#-------------------------------------------------------------------------------
+# next GOptionFlags and GOptionArg copied from GOptionContext to use in
+# g_application_add_main_option without implementing a Raku module
+=begin pod
+=head2 enum GOptionFlags
+
+Flags which modify individual options.
+
+=item G_OPTION_FLAG_NONE: No flags.
+=item G_OPTION_FLAG_HIDDEN: The option doesn't appear in `--help` output.
+=item G_OPTION_FLAG_IN_MAIN: The option appears in the main section of the `--help` output, even if it is defined in a group.
+=item G_OPTION_FLAG_REVERSE: For options of the C<G_OPTION_ARG_NONE> kind, this flag indicates that the sense of the option is reversed.
+=item G_OPTION_FLAG_NO_ARG: For options of the C<G_OPTION_ARG_CALLBACK> kind, this flag indicates that the callback does not take any argument (like a C<G_OPTION_ARG_NONE> option).
+=item G_OPTION_FLAG_FILENAME: For options of the C<G_OPTION_ARG_CALLBACK> kind, this flag indicates that the argument should be passed to the callback in the GLib filename encoding rather than UTF-8.
+=item G_OPTION_FLAG_OPTIONAL_ARG: For options of the C<G_OPTION_ARG_CALLBACK>  kind, this flag indicates that the argument supply is optional. If no argument is given then data of C<N-GOptionParseFunc> will be set to NULL.
+=item G_OPTION_FLAG_NOALIAS: This flag turns off the automatic conflict resolution which prefixes long option names with `groupname-` if  there is a conflict. This option should only be used in situations where aliasing is necessary to model some legacy commandline interface. It is not safe to use this option, unless all option groups are under your direct control.
+
+=end pod
+
+#TE:1:GOptionFlags:
+enum GOptionFlags is export (
+  'G_OPTION_FLAG_NONE'            => 0,
+  'G_OPTION_FLAG_HIDDEN'		      => 1 +< 0,
+  'G_OPTION_FLAG_IN_MAIN'		      => 1 +< 1,
+  'G_OPTION_FLAG_REVERSE'		      => 1 +< 2,
+  'G_OPTION_FLAG_NO_ARG'		      => 1 +< 3,
+  'G_OPTION_FLAG_FILENAME'	      => 1 +< 4,
+  'G_OPTION_FLAG_OPTIONAL_ARG'    => 1 +< 5,
+  'G_OPTION_FLAG_NOALIAS'	        => 1 +< 6
+);
+
+#-------------------------------------------------------------------------------
+=begin pod
+=head2 enum GOptionArg
+
+The B<GOptionArg> enum values determine which type of extra argument the
+options expect to find. If an option expects an extra argument, it can
+be specified in several ways; with a short option: `-x arg`, with a long
+option: `--name arg` or combined in a single argument: `--name=arg`.
+
+
+=item G_OPTION_ARG_NONE: No extra argument. This is useful for simple flags.
+=item G_OPTION_ARG_STRING: The option takes a string argument.
+=item G_OPTION_ARG_INT: The option takes an integer argument.
+=item G_OPTION_ARG_CALLBACK: The option provides a callback (of type B<N-GOptionArgFunc>) to parse the extra argument.
+=item G_OPTION_ARG_FILENAME: The option takes a filename as argument.
+=item G_OPTION_ARG_STRING_ARRAY: The option takes a string argument, multiple uses of the option are collected into an array of strings.
+=item G_OPTION_ARG_FILENAME_ARRAY: The option takes a filename as argument,  multiple uses of the option are collected into an array of strings.
+=item G_OPTION_ARG_DOUBLE: The option takes a double argument. The argument can be formatted either for the user's locale or for the "C" locale.
+=item G_OPTION_ARG_INT64: The option takes a 64-bit integer. Like C<G_OPTION_ARG_INT> but for larger numbers. The number can be in decimal base, or in hexadecimal (when prefixed with `0x`, for example, `0xffffffff`).
+
+
+=end pod
+
+#TE:1:GOptionArg:
+enum GOptionArg is export (
+  'G_OPTION_ARG_NONE',
+  'G_OPTION_ARG_STRING',
+  'G_OPTION_ARG_INT',
+  'G_OPTION_ARG_CALLBACK',
+  'G_OPTION_ARG_FILENAME',
+  'G_OPTION_ARG_STRING_ARRAY',
+  'G_OPTION_ARG_FILENAME_ARRAY',
+  'G_OPTION_ARG_DOUBLE',
+  'G_OPTION_ARG_INT64'
+);
+}}
+
 #-------------------------------------------------------------------------------
 =begin pod
 =head1 Methods
@@ -251,17 +320,21 @@ sub g_application_activate ( N-GObject $application  )
   is native(&gio-lib)
   { * }
 
-#`{{
+#`{{ it works but we can better use Raku option management modules
 #-------------------------------------------------------------------------------
-# TM:0:add-main-option:
+#TM:1:add-main-option:
 =begin pod
 =head2 add-main-option
 
-Add an option to be handled by I<application>.  Calling this function is the equivalent of calling C<add-main-option-entries()> with a single B<GOptionEntry> that has its arg_data member set to C<undefined>. The parsed arguments will be packed into a B<GVariantDict> which is passed to  I<handle-local-options>. If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then it will also be sent to the primary instance. See C<g_application_add_main_option_entries()> for more details.  See B<GOptionEntry> for more documentation of the arguments.
+Add an option to be handled by I<application>.
+=comment Calling this function is the equivalent of calling C<add-main-option-entries()> with a single B<GOptionEntry> that has its arg_data member set to C<undefined>.
+
+The parsed arguments will be packed into a B<GVariantDict> which is passed to  I<handle-local-options>. If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then it will also be sent to the primary instance.
+=comment See C<g_application_add_main_option_entries()> for more details.  See B<GOptionEntry> for more documentation of the arguments.
 
   method add-main-option (
     Str $long_name, Str $short_name, GOptionFlags $flags,
-    GOptionArg $arg, Str $description, Str $arg_description
+    GOptionArg $arg, Str $description, Str $arg_description?
   )
 
 =item Str $long_name; the long name of an option used to specify it in a commandline
@@ -269,11 +342,21 @@ Add an option to be handled by I<application>.  Calling this function is the equ
 =item GOptionFlags $flags; flags from B<GOptionFlags>
 =item GOptionArg $arg; the type of the option, as a B<GOptionArg>
 =item Str $description; the description for the option in `--help` output
-=item Str $arg_description; (nullable): the placeholder to use for the extra argument parsed by the option in `--help` output
+=item Str $arg_description; the placeholder to use for the extra argument parsed by the option in `--help` output
+
+=head3 Example
+
+  $app.add-main-option(
+    'flip-it', 'f', G_OPTION_FLAG_IN_MAIN,
+    G_OPTION_ARG_NONE, 'flips it to the other side'
+  );
 
 =end pod
 
-method add-main-option (  Str  $long_name, Str $short_name, GOptionFlags $flags, GOptionArg $arg,  Str  $description,  Str  $arg_description ) {
+method add-main-option (
+  Str $long_name, Str $short_name, GOptionFlags $flags,
+  GOptionArg $arg, Str $description, Str $arg_description?
+) {
 
   g_application_add_main_option(
     self.get-native-object-no-reffing, $long_name, $short_name.encode[0],
@@ -281,10 +364,11 @@ method add-main-option (  Str  $long_name, Str $short_name, GOptionFlags $flags,
   );
 }
 
-sub g_application_add_main_option ( N-GObject $application, gchar-ptr $long_name, char $short_name, GEnum $flags, GEnum $arg, gchar-ptr $description, gchar-ptr $arg_description  )
-  is native(&gio-lib)
+sub g_application_add_main_option ( N-GObject $application, gchar-ptr $long_name, gchar $short_name, GEnum $flags, GEnum $arg, gchar-ptr $description, gchar-ptr $arg_description
+) is native(&gio-lib)
   { * }
 }}
+
 #`{{
 #-------------------------------------------------------------------------------
 # TM:0:add-main-option-entries:
@@ -866,15 +950,12 @@ method run ( --> Int ) {
 
   my Int $argc = 1 + @*ARGS.elems;
 
-  my $arg_arr = CArray[Str].new;
+  my $argv = CArray[Str].new;
   my Int $arg-count = 0;
-  $arg_arr[$arg-count++] = $*PROGRAM.Str;
+  $argv[$arg-count++] = $*PROGRAM.Str;
   for @*ARGS -> $arg {
-    $arg_arr[$arg-count++] = $arg;
+    $argv[$arg-count++] = $arg;
   }
-
-  my $argv = CArray[CArray[Str]].new;
-  $argv[0] = $arg_arr;
 
   g_application_run(
     self.get-native-object-no-reffing, $argc, $argv
