@@ -18,9 +18,10 @@ B<Gnome::Gio::Application> provides convenient life cycle management by maintain
 
 Another feature that B<Gnome::Gio::Application> (optionally) provides is process uniqueness. Applications can make use of this functionality by providing a unique application ID. If given, only one application with this ID can be running at a time per session. The session concept is platform-dependent, but corresponds roughly to a graphical desktop login. When your application is launched again, its arguments are passed through platform communication to the already running program. The already running instance of the program is called the "primary instance"; for non-unique applications this is the always the current instance. On Linux, the D-Bus session bus is used for communication.
 
-The use of B<Gnome::Gio::Application> differs from some other commonly-used uniqueness libraries (such as libunique) in important ways. The application is not expected to manually register itself and check if it is the primary instance. Instead, the Raku main program of a B<Gnome::Gio::Application> based application should do very little more than instantiating the application instance, possibly connecting signal handlers, then calling C<run()>. All checks for uniqueness are done internally. If the application is the primary instance then the startup signal is emitted and the mainloop runs. If the application is not the primary instance then a signal is sent to the primary instance and C<run()> promptly returns. See the code examples below.
+The use of B<Gnome::Gio::Application> differs from some other commonly-used uniqueness libraries (such as libunique) in important ways. The application is not expected to manually register itself and check if it is the primary instance. Instead, the Raku main program of a B<Gnome::Gio::Application> based application should do very little more than instantiating the application instance, possibly connecting signal handlers, then calling C<run()>. All checks for uniqueness are done internally. If the application is the primary instance then the startup signal is emitted and the mainloop runs. If the application is not the primary instance then a signal is sent to the primary instance and C<run()> promptly returns.
+=comment See the code examples below.
 
-If used, the expected form of an application identifier is the same as that of of a L<D-Bus well-known bus name|https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus>. Examples include: `com.example.MyApp`, `org.example.internal_apps.Calculator`, `org._7_zip.Archiver`. For details on valid application identifiers, see C<id-is-valid()>.
+If used, the expected form of an application identifier is the same as that of of a L<D-Bus well-known bus name|https://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-names-bus>. Examples include: `com.example.MyApp`, `org.example.internal_apps.Calculator`, `org._7_zip.Archiver`. For details on valid application identifiers, see C<id-is-valid()>. Note; the Raku implementation of C<new(:app-id)> checks the id using that routine.
 
 On Linux, the application identifier is claimed as a well-known bus name on the user's session bus.  This means that the uniqueness of your application is scoped to the current session.  It also means that your application may provide additional services (through registration of other object paths) at that bus name.  The registration of these object paths should be done with the shared GDBus session bus.  Note that due to the internal architecture of GDBus, method calls can be dispatched at any time (even if a main loop is not running).  For this reason, you must ensure that any object paths that you wish to register are registered before B<Gnome::Gio::Application> attempts to acquire the bus name of your application (which happens in C<register()>).  Unfortunately, this means that you cannot use C<get-is-remote()> to decide if you want to register object paths.
 
@@ -29,7 +30,7 @@ B<Gnome::Gio::Application> also implements the B<Gnome::Gio::ActionGroup> and B<
 There is a number of different entry points into a B<Gnome::Gio::Application>:
 
 =item via 'Activate' (i.e. just starting the application)
-=item via 'Open' (i.e. opening some files)
+=comment item via 'Open' (i.e. opening some files).
 =item by handling a command-line
 =item via activating an action
 
@@ -39,7 +40,11 @@ The  I<startup> signal lets you handle the application initialization for all of
 
 When dealing with B<Gnome::Gio::ApplicationCommandLine> objects, the platform data is directly available via C<get-cwd()>, C<get-environ()> and C<get-platform-data()> in that object.
 
-As the name indicates, the platform data may vary depending on the operating system, but it always includes the current directory (key "cwd"), and optionally the environment (ie the set of environment variables and their values) of the calling process (key "environ"). The environment is only added to the platform data if the C<G_APPLICATION_SEND_ENVIRONMENT> flag is set.
+As the name indicates, the platform data may vary depending on the operating system, but it always includes the current directory
+=comment (key "cwd")
+, and optionally the environment (ie the set of environment variables and their values) of the calling process
+=comment (key "environ")
+. The environment is only added to the platform data if the C<G_APPLICATION_SEND_ENVIRONMENT> flag is set.
 =comment B<Gnome::Gio::Application> subclasses can add their own platform data by overriding the I<add_platform_data> virtual function. For instance, B<Gnome::Gtk3::Application> adds startup notification data in this way.
 
 =comment To parse commandline arguments you may handle the I<command-line> signal or override the C<local_command_line()> vfunc, to parse them in either the primary instance or the local instance, respectively.
@@ -50,6 +55,8 @@ As the name indicates, the platform data may vary depending on the operating sys
 
 =comment For an example of using extra D-Bus hooks with Gnome::Gio::Application, see [Gnome::Gio::Application-example-dbushooks.c](https://git.gnome.org/browse/glib/tree/gio/tests/Gnome::Gio::Application-example-dbushooks.c).
 
+=head2 See Also
+=item L<Application tutorial|/gnome-gtk3/content-docs/tutorial/Application/introduction.html>
 
 =head1 Synopsis
 =head2 Declaration
@@ -304,16 +311,14 @@ method _fallback ( $native-sub is copy --> Callable ) {
 =begin pod
 =head2 activate
 
-Activates the application.  In essence, this results in the  I<activate> signal being emitted in the primary instance.  The application must be registered before calling this function.
+Activates the application. In essence, this results in the I<activate> signal being emitted in the primary instance.  The application must be registered before calling this function.
 
   method activate ( )
 
 =end pod
 
 method activate ( ) {
-  g_application_activate(
-    self.get-native-object-no-reffing,
-  );
+  g_application_activate(self.get-native-object-no-reffing);
 }
 
 sub g_application_activate ( N-GObject $application  )
@@ -326,14 +331,13 @@ sub g_application_activate ( N-GObject $application  )
 =begin pod
 =head2 add-main-option
 
-Add an option to be handled by I<application>.
+Add an option to be handled by the application.
 =comment Calling this function is the equivalent of calling C<add-main-option-entries()> with a single B<GOptionEntry> that has its arg_data member set to C<undefined>.
 
 The parsed arguments will be packed into a B<GVariantDict> which is passed to  I<handle-local-options>. If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then it will also be sent to the primary instance.
 =comment See C<g_application_add_main_option_entries()> for more details.  See B<GOptionEntry> for more documentation of the arguments.
 
-  method add-main-option (
-    Str $long_name, Str $short_name, GOptionFlags $flags,
+  method add-main-option ( Str $long_name, Str $short_name, GOptionFlags $flags,
     GOptionArg $arg, Str $description, Str $arg_description?
   )
 
@@ -353,8 +357,7 @@ The parsed arguments will be packed into a B<GVariantDict> which is passed to  I
 
 =end pod
 
-method add-main-option (
-  Str $long_name, Str $short_name, GOptionFlags $flags,
+method add-main-option ( Str $long_name, Str $short_name, GOptionFlags $flags,
   GOptionArg $arg, Str $description, Str $arg_description?
 ) {
 
@@ -375,7 +378,7 @@ sub g_application_add_main_option ( N-GObject $application, gchar-ptr $long_name
 =begin pod
 =head2 add-main-option-entries
 
-Adds main option entries to be handled by I<application>.  This function is comparable to C<g_option_context_add_main_entries()>.  After the commandline arguments are parsed, the  I<handle-local-options> signal will be emitted.  At this point, the application can inspect the values pointed to by I<arg_data> in the given B<GOptionEntrys>.  Unlike B<GOptionContext>, B<GApplication> supports giving a C<undefined> I<arg_data> for a non-callback B<GOptionEntry>.  This results in the argument in question being packed into a B<GVariantDict> which is also passed to  I<handle-local-options>, where it can be inspected and modified.  If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then the resulting dictionary is sent to the primary instance, where C<g_application_command_line_get_options_dict()> will return it. This "packing" is done according to the type of the argument -- booleans for normal flags, strings for strings, bytestrings for filenames, etc.  The packing only occurs if the flag is given (ie: we do not pack a "false" B<GVariant> in the case that a flag is missing).  In general, it is recommended that all commandline arguments are parsed locally.  The options dictionary should then be used to transmit the result of the parsing to the primary instance, where C<g_variant_dict_lookup()> can be used.  For local options, it is possible to either use I<arg_data> in the usual way, or to consult (and potentially remove) the option from the options dictionary.  This function is new in GLib 2.40.  Before then, the only real choice was to send all of the commandline arguments (options and all) to the primary instance for handling.  B<GApplication> ignored them completely on the local side.  Calling this function "opts in" to the new behaviour, and in particular, means that unrecognised options will be treated as errors.  Unrecognised options have never been ignored when C<G_APPLICATION_HANDLES_COMMAND_LINE> is unset.  If  I<handle-local-options> needs to see the list of filenames, then the use of C<G_OPTION_REMAINING> is recommended.  If I<arg_data> is C<undefined> then C<G_OPTION_REMAINING> can be used as a key into the options dictionary.  If you do use C<G_OPTION_REMAINING> then you need to handle these arguments for yourself because once they are consumed, they will no longer be visible to the default handling (which treats them as filenames to be opened).  It is important to use the proper GVariant format when retrieving the options with C<g_variant_dict_lookup()>: - for C<G_OPTION_ARG_NONE>, use b - for C<G_OPTION_ARG_STRING>, use &s - for C<G_OPTION_ARG_INT>, use i - for C<G_OPTION_ARG_INT64>, use x - for C<G_OPTION_ARG_DOUBLE>, use d - for C<G_OPTION_ARG_FILENAME>, use ^ay - for C<G_OPTION_ARG_STRING_ARRAY>, use &as - for C<G_OPTION_ARG_FILENAME_ARRAY>, use ^aay
+Adds main option entries to be handled by the application.  This function is comparable to C<g_option_context_add_main_entries()>.  After the commandline arguments are parsed, the  I<handle-local-options> signal will be emitted.  At this point, the application can inspect the values pointed to by I<arg_data> in the given B<GOptionEntrys>.  Unlike B<GOptionContext>, B<GApplication> supports giving a C<undefined> I<arg_data> for a non-callback B<GOptionEntry>.  This results in the argument in question being packed into a B<GVariantDict> which is also passed to  I<handle-local-options>, where it can be inspected and modified.  If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then the resulting dictionary is sent to the primary instance, where C<g_application_command_line_get_options_dict()> will return it. This "packing" is done according to the type of the argument -- booleans for normal flags, strings for strings, bytestrings for filenames, etc.  The packing only occurs if the flag is given (ie: we do not pack a "false" B<GVariant> in the case that a flag is missing).  In general, it is recommended that all commandline arguments are parsed locally.  The options dictionary should then be used to transmit the result of the parsing to the primary instance, where C<g_variant_dict_lookup()> can be used.  For local options, it is possible to either use I<arg_data> in the usual way, or to consult (and potentially remove) the option from the options dictionary.  This function is new in GLib 2.40.  Before then, the only real choice was to send all of the commandline arguments (options and all) to the primary instance for handling.  B<GApplication> ignored them completely on the local side.  Calling this function "opts in" to the new behaviour, and in particular, means that unrecognised options will be treated as errors.  Unrecognised options have never been ignored when C<G_APPLICATION_HANDLES_COMMAND_LINE> is unset.  If  I<handle-local-options> needs to see the list of filenames, then the use of C<G_OPTION_REMAINING> is recommended.  If I<arg_data> is C<undefined> then C<G_OPTION_REMAINING> can be used as a key into the options dictionary.  If you do use C<G_OPTION_REMAINING> then you need to handle these arguments for yourself because once they are consumed, they will no longer be visible to the default handling (which treats them as filenames to be opened).  It is important to use the proper GVariant format when retrieving the options with C<g_variant_dict_lookup()>: - for C<G_OPTION_ARG_NONE>, use b - for C<G_OPTION_ARG_STRING>, use &s - for C<G_OPTION_ARG_INT>, use i - for C<G_OPTION_ARG_INT64>, use x - for C<G_OPTION_ARG_DOUBLE>, use d - for C<G_OPTION_ARG_FILENAME>, use ^ay - for C<G_OPTION_ARG_STRING_ARRAY>, use &as - for C<G_OPTION_ARG_FILENAME_ARRAY>, use ^aay
 
   method add-main-option-entries ( GOptionEntry $entries )
 
@@ -396,11 +399,11 @@ sub g_application_add_main_option_entries ( N-GObject $application, GOptionEntry
 }}
 #`{{
 #-------------------------------------------------------------------------------
-#TM:0:add-option-group:
+# TM:0:add-option-group:
 =begin pod
 =head2 add-option-group
 
-Adds a B<GOptionGroup> to the commandline handling of I<application>.  This function is comparable to C<g_option_context_add_group()>.  Unlike C<g_application_add_main_option_entries()>, this function does not deal with C<undefined> I<arg_data> and never transmits options to the primary instance.  The reason for that is because, by the time the options arrive at the primary instance, it is typically too late to do anything with them. Taking the GTK option group as an example: GTK will already have been initialised by the time the  I<command-line> handler runs. In the case that this is not the first-running instance of the application, the existing instance may already have been running for a very long time.  This means that the options from B<GOptionGroup> are only really usable in the case that the instance of the application being run is the first instance.  Passing options like `--display=` or `--gdk-debug=` on future runs will have no effect on the existing primary instance.  Calling this function will cause the options in the supplied option group to be parsed, but it does not cause you to be "opted in" to the new functionality whereby unrecognised options are rejected even if C<G_APPLICATION_HANDLES_COMMAND_LINE> was given.
+Adds a B<GOptionGroup> to the commandline handling of the application.  This function is comparable to C<g_option_context_add_group()>.  Unlike C<g_application_add_main_option_entries()>, this function does not deal with C<undefined> I<arg_data> and never transmits options to the primary instance.  The reason for that is because, by the time the options arrive at the primary instance, it is typically too late to do anything with them. Taking the GTK option group as an example: GTK will already have been initialised by the time the  I<command-line> handler runs. In the case that this is not the first-running instance of the application, the existing instance may already have been running for a very long time.  This means that the options from B<GOptionGroup> are only really usable in the case that the instance of the application being run is the first instance.  Passing options like `--display=` or `--gdk-debug=` on future runs will have no effect on the existing primary instance.  Calling this function will cause the options in the supplied option group to be parsed, but it does not cause you to be "opted in" to the new functionality whereby unrecognised options are rejected even if C<G_APPLICATION_HANDLES_COMMAND_LINE> was given.
 
   method add-option-group ( GOptionGroup $group )
 
@@ -420,21 +423,22 @@ sub g_application_add_option_group ( N-GObject $application, GOptionGroup $group
   { * }
 }}
 
+#`{{
 #-------------------------------------------------------------------------------
-#TM:0:bind-busy-property:
+# TM:0:bind-busy-property:
 =begin pod
 =head2 bind-busy-property
 
-Marks I<application> as busy (see C<g_application_mark_busy()>) while I<property> on I<object> is C<True>.  The binding holds a reference to I<application> while it is active, but not to I<object>. Instead, the binding is destroyed when I<object> is finalized.
+Marks the application as busy (see C<g_application_mark_busy()>) while I<$property> on I<$object> is C<True>.  The binding holds a reference to the application while it is active, but not to I<object>. Instead, the binding is destroyed when I<$object> is finalized.
 
-  method bind-busy-property ( Pointer $object,  Str  $property )
+  method bind-busy-property ( Pointer $object, Str $property )
 
 =item Pointer $object; (type GObject.Object): a B<GObject>
-=item  Str  $property; the name of a boolean property of I<object>
+=item Str $property; the name of a boolean property of I<object>
 
 =end pod
 
-method bind-busy-property ( Pointer $object,  Str  $property ) {
+method bind-busy-property ( Pointer $object, Str $property ) {
 
   g_application_bind_busy_property(
     self.get-native-object-no-reffing, $object, $property
@@ -444,22 +448,22 @@ method bind-busy-property ( Pointer $object,  Str  $property ) {
 sub g_application_bind_busy_property ( N-GObject $application, gpointer $object, gchar-ptr $property  )
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:1:get-application-id:
 =begin pod
 =head2 get-application-id
 
-Gets the unique identifier for I<application>.
+Gets the unique identifier for the application.
 
-Returns: the identifier for I<application>, owned by I<application>
+Returns: the identifier for the application, owned by the application
 
-  method get-application-id ( -->  Str  )
-
+  method get-application-id ( --> Str )
 
 =end pod
 
-method get-application-id ( -->  Str  ) {
+method get-application-id ( --> Str ) {
 
   g_application_get_application_id(
     self.get-native-object-no-reffing,
@@ -495,9 +499,10 @@ method get-dbus-connection ( --> GDBusConnection ) {
 sub g_application_get_dbus_connection ( N-GObject $application --> GDBusConnection )
   is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
-#TM:0:get-dbus-object-path:
+#TM:4:get-dbus-object-path:ex-application.raku
 =begin pod
 =head2 get-dbus-object-path
 
@@ -505,12 +510,12 @@ Gets the D-Bus object path being used by the application, or C<undefined>.  If B
 
 Returns: the object path, or C<undefined>
 
-  method get-dbus-object-path ( -->  Str  )
+  method get-dbus-object-path ( --> Str )
 
 
 =end pod
 
-method get-dbus-object-path ( -->  Str  ) {
+method get-dbus-object-path ( --> Str ) {
 
   g_application_get_dbus_object_path(
     self.get-native-object-no-reffing,
@@ -520,7 +525,6 @@ method get-dbus-object-path ( -->  Str  ) {
 sub g_application_get_dbus_object_path ( N-GObject $application --> gchar-ptr )
   is native(&gio-lib)
   { * }
-}}
 
 #-------------------------------------------------------------------------------
 #`{{
@@ -554,9 +558,9 @@ sub _g_application_get_default ( --> N-GObject )
 =begin pod
 =head2 get-flags
 
-Gets the flags for I<application>.  See B<GApplicationFlags>.
+Gets the flags for the application.  See B<GApplicationFlags>.
 
-Returns: a mask of ored GApplicationFlags flags for I<application>
+Returns: a mask of ored GApplicationFlags flags for the application
 
   method get-flags ( --> Int )
 
@@ -603,7 +607,7 @@ sub g_application_get_inactivity_timeout ( N-GObject $application --> guint )
 
 Gets the application's current busy state, as set through C<g_application_mark_busy()> or C<g_application_bind_busy_property()>.
 
-Returns: C<True> if I<application> is currenty marked as busy
+Returns: C<True> if the application is currenty marked as busy
 
   method get-is-busy ( --> Int )
 
@@ -622,24 +626,20 @@ sub g_application_get_is_busy ( N-GObject $application --> gboolean )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:1:get-is-registered:
+#TM:5:get-is-registered:g_application_get_is_registered
 =begin pod
 =head2 get-is-registered
 
-Checks if I<application> is registered.  An application is registered if C<g_application_register()> has been successfully called.
+Checks if the application is registered.  An application is registered if C<g_application_register()> has been successfully called.
 
-Returns: C<True> if I<application> is registered
+Returns: C<True> if the application is registered
 
   method get-is-registered ( --> Bool )
-
 
 =end pod
 
 method get-is-registered ( --> Bool ) {
-
-  g_application_get_is_registered(
-    self.get-native-object-no-reffing,
-  ).Bool;
+  g_application_get_is_registered(self.get-native-object-no-reffing).Bool
 }
 
 sub g_application_get_is_registered ( N-GObject $application --> gboolean )
@@ -651,9 +651,9 @@ sub g_application_get_is_registered ( N-GObject $application --> gboolean )
 =begin pod
 =head2 get-is-remote
 
-Checks if I<application> is remote.  If I<application> is remote then it means that another instance of application already exists (the 'primary' instance).  Calls to perform actions on I<application> will result in the actions being performed by the primary instance.  The value of this property cannot be accessed before C<register()> has been called.  See C<get-is-registered()>.
+Checks if the application is remote.  If the application is remote then it means that another instance of application already exists (the 'primary' instance).  Calls to perform actions on the application will result in the actions being performed by the primary instance.  The value of this property cannot be accessed before C<register()> has been called.  See C<get-is-registered()>.
 
-Returns: C<True> if I<application> is remote
+Returns: C<True> if the application is remote
 
   method get-is-remote ( --> Bool )
 
@@ -675,16 +675,16 @@ sub g_application_get_is_remote ( N-GObject $application --> gboolean )
 =begin pod
 =head2 get-resource-base-path
 
-Gets the resource base path of I<application>.  See C<g_application_set_resource_base_path()> for more information.
+Gets the resource base path of the application.  See C<g_application_set_resource_base_path()> for more information.
 
 Returns: (nullable): the base resource path, if one is set
 
-  method get-resource-base-path ( -->  Str  )
+  method get-resource-base-path ( --> Str )
 
 
 =end pod
 
-method get-resource-base-path ( -->  Str  ) {
+method get-resource-base-path ( --> Str ) {
 
   g_application_get_resource_base_path(
     self.get-native-object-no-reffing,
@@ -700,7 +700,7 @@ sub g_application_get_resource_base_path ( N-GObject $application --> gchar-ptr 
 =begin pod
 =head2 hold
 
-Increases the use count of I<application>.  Use this function to indicate that the application has a reason to continue to run.  For example, C<hold()> is called by GTK+ when a toplevel window is on the screen.  To cancel the hold, call C<release()>.
+Increases the use count of the application.  Use this function to indicate that the application has a reason to continue to run.  For example, C<hold()> is called by GTK+ when a toplevel window is on the screen.  To cancel the hold, call C<release()>.
 
   method hold ( )
 
@@ -742,7 +742,7 @@ Returns: C<True> if I<$application_id> is valid
 
   method id-is-valid ( Str $application_id --> Bool )
 
-=item  Str $application_id; a potential application identifier
+=item Str $application_id; a potential application identifier
 
 =end pod
 
@@ -760,7 +760,7 @@ sub g_application_id_is_valid ( gchar-ptr $application_id --> gboolean )
 =begin pod
 =head2 mark-busy
 
-Increases the busy count of I<application>.  Use this function to indicate that the application is busy, for instance while a long running operation is pending.  The busy state will be exposed to other processes, so a session shell will use that information to indicate the state to the user (e.g. with a spinner).  To cancel the busy indication, use C<g_application_unmark_busy()>.
+Increases the busy count of the application.  Use this function to indicate that the application is busy, for instance while a long running operation is pending.  The busy state will be exposed to other processes, so a session shell will use that information to indicate the state to the user (e.g. with a spinner).  To cancel the busy indication, use C<g_application_unmark_busy()>.
 
   method mark-busy ( )
 
@@ -853,7 +853,7 @@ Attempts registration of the application. This is the point at which the applica
 This is implemented by attempting to acquire the application identifier as a unique bus name on the session bus using GDBus. If there is no application ID or if C<G_APPLICATION_NON_UNIQUE> was given, then this process will always become the primary instance.  Due to the internal architecture of GDBus, method calls can be dispatched at any time (even if a main loop is not running).
 For this reason, you must ensure that any object paths that you wish to register are registered before calling this function.  If the application has already been registered then an invalid error object is returned with no work performed.
 
-The I<startup> signal is emitted if registration succeeds and I<application> is the primary instance (including the non-unique case).  In the event of an error (such as I<cancellable> being cancelled, or a failure to connect to the session bus), then the error object is set appropriately.  Note: the return value of this function is not an indicator that this instance is or is not the primary instance of the application.  See C<get-is-remote()> for that.
+The I<startup> signal is emitted if registration succeeds and the application is the primary instance (including the non-unique case).  In the event of an error (such as I<cancellable> being cancelled, or a failure to connect to the session bus), then the error object is set appropriately.  Note: the return value of this function is not an indicator that this instance is or is not the primary instance of the application.  See C<get-is-remote()> for that.
 
 Returns: Gnome::Glib::Error. if registration succeeded the error object is invalid.
 
@@ -893,7 +893,7 @@ sub g_application_register (
 =begin pod
 =head2 release
 
-Decrease the use count of I<application>.  When the use count reaches zero, the application will stop running.  Never call this function except to cancel the effect of a previous call to C<hold()>.
+Decrease the use count of the application.  When the use count reaches zero, the application will stop running.  Never call this function except to cancel the effect of a previous call to C<hold()>.
 
   method release ( )
 
@@ -959,7 +959,7 @@ method run ( --> Int ) {
 
   g_application_run(
     self.get-native-object-no-reffing, $argc, $argv
-  );
+  ) // 1;
 }
 
 sub g_application_run (
@@ -972,16 +972,16 @@ sub g_application_run (
 =begin pod
 =head2 send-notification
 
-Sends a notification on behalf of I<application> to the desktop shell. There is no guarantee that the notification is displayed immediately, or even at all.  Notifications may persist after the application exits. It will be D-Bus-activated when the notification or one of its actions is activated.  Modifying I<notification> after this call has no effect. However, the object can be reused for a later call to this function.  I<id> may be any string that uniquely identifies the event for the application. It does not need to be in any special format. For example, "new-message" might be appropriate for a notification about new messages.  If a previous notification was sent with the same I<id>, it will be replaced with I<notification> and shown again as if it was a new notification. This works even for notifications sent from a previous execution of the application, as long as I<id> is the same string.  I<id> may be C<undefined>, but it is impossible to replace or withdraw notifications without an id.  If I<notification> is no longer relevant, it can be withdrawn with C<g_application_withdraw_notification()>.
+Sends a notification on behalf of the application to the desktop shell. There is no guarantee that the notification is displayed immediately, or even at all.  Notifications may persist after the application exits. It will be D-Bus-activated when the notification or one of its actions is activated.  Modifying I<notification> after this call has no effect. However, the object can be reused for a later call to this function.  I<id> may be any string that uniquely identifies the event for the application. It does not need to be in any special format. For example, "new-message" might be appropriate for a notification about new messages.  If a previous notification was sent with the same I<id>, it will be replaced with I<notification> and shown again as if it was a new notification. This works even for notifications sent from a previous execution of the application, as long as I<id> is the same string.  I<id> may be C<undefined>, but it is impossible to replace or withdraw notifications without an id.  If I<notification> is no longer relevant, it can be withdrawn with C<g_application_withdraw_notification()>.
 
-  method send-notification (  Str  $id, N-GObject $notification )
+  method send-notification ( Str $id, N-GObject $notification )
 
-=item  Str  $id; (nullable): id of the notification, or C<undefined>
+=item Str $id; (nullable): id of the notification, or C<undefined>
 =item N-GObject $notification; the B<GNotification> to send
 
 =end pod
 
-method send-notification (  Str  $id, N-GObject $notification ) {
+method send-notification ( Str $id, N-GObject $notification ) {
 
   g_application_send_notification(
     self.get-native-object-no-reffing, $id, $notification
@@ -997,15 +997,15 @@ sub g_application_send_notification ( N-GObject $application, gchar-ptr $id, N-G
 =begin pod
 =head2 set-application-id
 
-Sets the unique identifier for I<application>.  The application id can only be modified if I<application> has not yet been registered. If defined, the application id must be valid.  See C<id-is-valid()>.
+Sets the unique identifier for the application.  The application id can only be modified if the application has not yet been registered. If defined, the application id must be valid.  See C<id-is-valid()>.
 
-  method set-application-id ( Str $application_id )
+  method set-application-id (Str$application_id )
 
-=item  Str  $application_id; the identifier for I<application>
+=item Str $application_id; the identifier for the application
 
 =end pod
 
-method set-application-id (  Str  $application_id ) {
+method set-application-id ( Str $application_id ) {
 
   g_application_set_application_id(
     self.get-native-object-no-reffing, $application_id
@@ -1021,7 +1021,7 @@ sub g_application_set_application_id ( N-GObject $application, gchar-ptr $applic
 =begin pod
 =head2 set-default
 
-Sets or unsets the default application for the process, as returned by C<g_application_get_default()>.  This function does not take its own reference on I<application>.  If I<application> is destroyed then the default application will revert back to C<undefined>.
+Sets or unsets the default application for the process, as returned by C<g_application_get_default()>.  This function does not take its own reference on the application.  If the application is destroyed then the default application will revert back to C<undefined>.
 
   method set-default ( )
 
@@ -1044,11 +1044,11 @@ sub g_application_set_default ( N-GObject $application  )
 =begin pod
 =head2 set-flags
 
-Sets the flags for I<application>.  The flags can only be modified if I<application> has not yet been registered.  See B<GApplicationFlags>.
+Sets the flags for the application.  The flags can only be modified if the application has not yet been registered.  See B<GApplicationFlags>.
 
   method set-flags ( Int $flags )
 
-=item Int $flags; an ored mask of GApplicationFlags for I<application>
+=item Int $flags; an ored mask of GApplicationFlags for the application
 
 =end pod
 
@@ -1091,15 +1091,15 @@ sub g_application_set_inactivity_timeout ( N-GObject $application, guint $inacti
 =begin pod
 =head2 set-option-context-description
 
-Adds a description to the I<application> option context.  See C<g_option_context_set_description()> for more information.
+Adds a description to the the application option context.  See C<g_option_context_set_description()> for more information.
 
-  method set-option-context-description (  Str  $description )
+  method set-option-context-description ( Str $description )
 
-=item  Str  $description; (nullable): a string to be shown in `--help` output after the list of options, or C<undefined>
+=item Str $description; (nullable): a string to be shown in `--help` output after the list of options, or C<undefined>
 
 =end pod
 
-method set-option-context-description (  Str  $description ) {
+method set-option-context-description ( Str $description ) {
 
   g_application_set_option_context_description(
     self.get-native-object-no-reffing, $description
@@ -1116,15 +1116,15 @@ sub g_application_set_option_context_description ( N-GObject $application, gchar
 =begin pod
 =head2 set-option-context-parameter-string
 
-Sets the parameter string to be used by the commandline handling of I<application>.  This function registers the argument to be passed to C<g_option_context_new()> when the internal B<GOptionContext> of I<application> is created.  See C<g_option_context_new()> for more information about I<parameter_string>.
+Sets the parameter string to be used by the commandline handling of the application.  This function registers the argument to be passed to C<g_option_context_new()> when the internal B<GOptionContext> of the application is created.  See C<g_option_context_new()> for more information about I<parameter_string>.
 
-  method set-option-context-parameter-string (  Str  $parameter_string )
+  method set-option-context-parameter-string ( Str $parameter_string )
 
-=item  Str  $parameter_string; (nullable): a string which is displayed in the first line of `--help` output, after the usage summary `programname [OPTION...]`.
+=item Str $parameter_string; (nullable): a string which is displayed in the first line of `--help` output, after the usage summary `programname [OPTION...]`.
 
 =end pod
 
-method set-option-context-parameter-string (  Str  $parameter_string ) {
+method set-option-context-parameter-string ( Str $parameter_string ) {
 
   g_application_set_option_context_parameter_string(
     self.get-native-object-no-reffing, $parameter_string
@@ -1140,15 +1140,15 @@ sub g_application_set_option_context_parameter_string ( N-GObject $application, 
 =begin pod
 =head2 set-option-context-summary
 
-Adds a summary to the I<application> option context.  See C<g_option_context_set_summary()> for more information.
+Adds a summary to the the application option context.  See C<g_option_context_set_summary()> for more information.
 
-  method set-option-context-summary (  Str  $summary )
+  method set-option-context-summary ( Str $summary )
 
-=item  Str  $summary; (nullable): a string to be shown in `--help` output before the list of options, or C<undefined>
+=item Str $summary; (nullable): a string to be shown in `--help` output before the list of options, or C<undefined>
 
 =end pod
 
-method set-option-context-summary (  Str  $summary ) {
+method set-option-context-summary ( Str $summary ) {
 
   g_application_set_option_context_summary(
     self.get-native-object-no-reffing, $summary
@@ -1165,15 +1165,15 @@ sub g_application_set_option_context_summary ( N-GObject $application, gchar-ptr
 =begin pod
 =head2 set-resource-base-path
 
-Sets (or unsets) the base resource path of I<application>.  The path is used to automatically load various [application resources][gresource] such as menu layouts and action descriptions. The various types of resources will be found at fixed names relative to the given base path.  By default, the resource base path is determined from the application ID by prefixing '/' and replacing each '.' with '/'.  This is done at the time that the B<GApplication> object is constructed.  Changes to the application ID after that point will not have an impact on the resource base path.  As an example, if the application has an ID of "org.example.app" then the default resource base path will be "/org/example/app".  If this is a B<Gnome::Gtk3::Application> (and you have not manually changed the path) then B<Gnome::Gtk3:: will> then search for the menus of the application at "/org/example/app/gtk/menus.ui".  See B<GResource> for more information about adding resources to your application.  You can disable automatic resource loading functionality by setting the path to C<undefined>.  Changing the resource base path once the application is running is not recommended.  The point at which the resource path is consulted for forming paths for various purposes is unspecified.  When writing a sub-class of B<GApplication> you should either set the  I<resource-base-path> property at construction time, or call this function during the instance initialization. Alternatively, you can call this function in the B<GApplicationClass>.startup virtual function, before chaining up to the parent implementation.
+Sets (or unsets) the base resource path of the application.  The path is used to automatically load various [application resources][gresource] such as menu layouts and action descriptions. The various types of resources will be found at fixed names relative to the given base path.  By default, the resource base path is determined from the application ID by prefixing '/' and replacing each '.' with '/'.  This is done at the time that the B<GApplication> object is constructed.  Changes to the application ID after that point will not have an impact on the resource base path.  As an example, if the application has an ID of "org.example.app" then the default resource base path will be "/org/example/app".  If this is a B<Gnome::Gtk3::Application> (and you have not manually changed the path) then B<Gnome::Gtk3:: will> then search for the menus of the application at "/org/example/app/gtk/menus.ui".  See B<GResource> for more information about adding resources to your application.  You can disable automatic resource loading functionality by setting the path to C<undefined>.  Changing the resource base path once the application is running is not recommended.  The point at which the resource path is consulted for forming paths for various purposes is unspecified.  When writing a sub-class of B<GApplication> you should either set the  I<resource-base-path> property at construction time, or call this function during the instance initialization. Alternatively, you can call this function in the B<GApplicationClass>.startup virtual function, before chaining up to the parent implementation.
 
-  method set-resource-base-path (  Str  $resource_path )
+  method set-resource-base-path ( Str $resource_path )
 
-=item  Str  $resource_path; (nullable): the resource path to use
+=item Str $resource_path; (nullable): the resource path to use
 
 =end pod
 
-method set-resource-base-path (  Str  $resource_path ) {
+method set-resource-base-path ( Str $resource_path ) {
 
   g_application_set_resource_base_path(
     self.get-native-object-no-reffing, $resource_path
@@ -1189,16 +1189,16 @@ sub g_application_set_resource_base_path ( N-GObject $application, gchar-ptr $re
 =begin pod
 =head2 unbind-busy-property
 
-Destroys a binding between I<property> and the busy state of I<application> that was previously created with C<g_application_bind_busy_property()>.
+Destroys a binding between I<property> and the busy state of the application that was previously created with C<g_application_bind_busy_property()>.
 
-  method unbind-busy-property ( Pointer $object,  Str  $property )
+  method unbind-busy-property ( Pointer $object, Str $property )
 
 =item Pointer $object; (type GObject.Object): a B<GObject>
-=item  Str  $property; the name of a boolean property of I<object>
+=item Str $property; the name of a boolean property of I<object>
 
 =end pod
 
-method unbind-busy-property ( Pointer $object,  Str  $property ) {
+method unbind-busy-property ( Pointer $object, Str $property ) {
 
   g_application_unbind_busy_property(
     self.get-native-object-no-reffing, $object, $property
@@ -1214,7 +1214,7 @@ sub g_application_unbind_busy_property ( N-GObject $application, gpointer $objec
 =begin pod
 =head2 unmark-busy
 
-Decreases the busy count of I<application>.  When the busy count reaches zero, the new state will be propagated to other processes.  This function must only be called to cancel the effect of a previous call to C<g_application_mark_busy()>.
+Decreases the busy count of the application.  When the busy count reaches zero, the new state will be propagated to other processes.  This function must only be called to cancel the effect of a previous call to C<g_application_mark_busy()>.
 
   method unmark-busy ( )
 
@@ -1239,13 +1239,13 @@ sub g_application_unmark_busy ( N-GObject $application  )
 
 Withdraws a notification that was sent with C<g_application_send_notification()>.  This call does nothing if a notification with I<id> doesn't exist or the notification was never sent.  This function works even for notifications sent in previous executions of this application, as long I<id> is the same as it was for the sent notification.  Note that notifications are dismissed when the user clicks on one of the buttons in a notification or triggers its default action, so there is no need to explicitly withdraw the notification in that case.
 
-  method withdraw-notification (  Str  $id )
+  method withdraw-notification ( Str $id )
 
-=item  Str  $id; id of a previously sent notification
+=item Str $id; id of a previously sent notification
 
 =end pod
 
-method withdraw-notification (  Str  $id ) {
+method withdraw-notification ( Str $id ) {
 
   g_application_withdraw_notification(
     self.get-native-object-no-reffing, $id
@@ -1266,9 +1266,9 @@ Creates a new B<GApplication> instance.  If non-C<undefined>, the application id
 
 Returns: a new B<GApplication> instance
 
-  method _g_application_new (  Str  $application_id, GApplicationFlags $flags --> GApplication )
+  method _g_application_new ( Str $application_id, GApplicationFlags $flags --> GApplication )
 
-=item  Str  $application_id; (nullable): the application id
+=item Str $application_id; (nullable): the application id
 =item GApplicationFlags $flags; the application flags
 
 =end pod
