@@ -92,6 +92,7 @@ use Gnome::Gio::Enums;
 use Gnome::Gio::File;
 use Gnome::Gio::ActionMap;
 use Gnome::Gio::ActionGroup;
+use Gnome::Gio::Notification;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::Application:auth<github:MARTIMM>:ver<0.1.0>;
@@ -981,7 +982,7 @@ method run ( --> Int ) {
 
   g_application_run(
     self.get-native-object-no-reffing, $argc, $argv
-  ) // 1;
+  );
 }
 
 sub g_application_run (
@@ -990,7 +991,7 @@ sub g_application_run (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:send-notification:
+#TM:4:send-notification:ex-application.pl6
 =begin pod
 =head2 send-notification
 
@@ -1003,7 +1004,9 @@ Sends a notification on behalf of the application to the desktop shell. There is
 
 =end pod
 
-method send-notification ( Str $id, N-GObject $notification ) {
+method send-notification ( Str $id, $notification is copy ) {
+  $notification .= get-native-object-no-reffing
+    unless $notification ~~ N-GObject;
 
   g_application_send_notification(
     self.get-native-object-no-reffing, $id, $notification
@@ -1256,7 +1259,7 @@ sub g_application_unmark_busy ( N-GObject $application  )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:withdraw-notification:
+#TM:4:withdraw-notification:ex-application.pl6
 =begin pod
 =head2 withdraw-notification
 
