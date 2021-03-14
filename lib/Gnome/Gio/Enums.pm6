@@ -41,14 +41,16 @@ Flags used when creating a B<GAppInfo>.
 =item G_APP_INFO_CREATE_NONE: No flags.
 =item G_APP_INFO_CREATE_NEEDS_TERMINAL: Application opens in a terminal window.
 =item G_APP_INFO_CREATE_SUPPORTS_URIS: Application supports URI arguments.
-=item G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION: Application supports startup notification. Since 2.26
-
+=item G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION: Application supports startup notification.
 
 =end pod
 
 #TE:0:GAppInfoCreateFlags:
 enum GAppInfoCreateFlags is export (
-  'G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION'  => (1 +< 2)
+  G_APP_INFO_CREATE_NONE                            => 0x00,
+  G_APP_INFO_CREATE_NEEDS_TERMINAL                  => 0x01,
+  G_APP_INFO_CREATE_SUPPORTS_URIS                   => 0x02,
+  G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION   => 0x04,
 );
 
 #-------------------------------------------------------------------------------
@@ -57,13 +59,9 @@ enum GAppInfoCreateFlags is export (
 
 Flags used when calling a C<g_converter_convert()>.
 
-Since: 2.24
-
-
 =item G_CONVERTER_NO_FLAGS: No flags.
 =item G_CONVERTER_INPUT_AT_END: At end of input data
 =item G_CONVERTER_FLUSH: Flush data
-
 
 =end pod
 
@@ -1867,9 +1865,6 @@ enum GSubprocessFlags is export (
 
 Priority levels for B<GNotifications>.
 
-Since: 2.42
-
-
 =item G_NOTIFICATION_PRIORITY_LOW: for notifications that do not require immediate attention - typically used for contextual background information, such as contact birthdays or local weather
 =item G_NOTIFICATION_PRIORITY_NORMAL: the default priority, to be used for the majority of notifications (for example email messages, software updates, completed download/sync operations)
 =item G_NOTIFICATION_PRIORITY_HIGH: for events that require more attention, usually because responses are time-sensitive (for example chat and SMS messages or alarms)
@@ -1878,7 +1873,7 @@ Since: 2.42
 
 =end pod
 
-#TE:0:GNotificationPriority:
+#TE:1:GNotificationPriority:
 enum GNotificationPriority is export (
   'G_NOTIFICATION_PRIORITY_NORMAL',
   'G_NOTIFICATION_PRIORITY_LOW',
@@ -1891,9 +1886,6 @@ enum GNotificationPriority is export (
 =head2 enum GNetworkConnectivity
 
 The host's network connectivity state, as reported by B<GNetworkMonitor>.
-
-Since: 2.44
-
 
 =item G_NETWORK_CONNECTIVITY_LOCAL: The host is not configured with a route to the Internet; it may or may not be connected to a local network.
 =item G_NETWORK_CONNECTIVITY_LIMITED: The host is connected to a network, but does not appear to be able to reach the full Internet, perhaps due to upstream network problems.
