@@ -378,7 +378,29 @@ sub g_application_add_main_option ( N-GObject $application, gchar-ptr $long_name
 =begin pod
 =head2 add-main-option-entries
 
-Adds main option entries to be handled by the application.  This function is comparable to C<g_option_context_add_main_entries()>.  After the commandline arguments are parsed, the  I<handle-local-options> signal will be emitted.  At this point, the application can inspect the values pointed to by I<arg_data> in the given B<GOptionEntrys>.  Unlike B<GOptionContext>, B<GApplication> supports giving a C<undefined> I<arg_data> for a non-callback B<GOptionEntry>.  This results in the argument in question being packed into a B<GVariantDict> which is also passed to  I<handle-local-options>, where it can be inspected and modified.  If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then the resulting dictionary is sent to the primary instance, where C<g_application_command_line_get_options_dict()> will return it. This "packing" is done according to the type of the argument -- booleans for normal flags, strings for strings, bytestrings for filenames, etc.  The packing only occurs if the flag is given (ie: we do not pack a "false" B<GVariant> in the case that a flag is missing).  In general, it is recommended that all commandline arguments are parsed locally.  The options dictionary should then be used to transmit the result of the parsing to the primary instance, where C<g_variant_dict_lookup()> can be used.  For local options, it is possible to either use I<arg_data> in the usual way, or to consult (and potentially remove) the option from the options dictionary.  This function is new in GLib 2.40.  Before then, the only real choice was to send all of the commandline arguments (options and all) to the primary instance for handling.  B<GApplication> ignored them completely on the local side.  Calling this function "opts in" to the new behaviour, and in particular, means that unrecognised options will be treated as errors.  Unrecognised options have never been ignored when C<G_APPLICATION_HANDLES_COMMAND_LINE> is unset.  If  I<handle-local-options> needs to see the list of filenames, then the use of C<G_OPTION_REMAINING> is recommended.  If I<arg_data> is C<undefined> then C<G_OPTION_REMAINING> can be used as a key into the options dictionary.  If you do use C<G_OPTION_REMAINING> then you need to handle these arguments for yourself because once they are consumed, they will no longer be visible to the default handling (which treats them as filenames to be opened).  It is important to use the proper GVariant format when retrieving the options with C<g_variant_dict_lookup()>: - for C<G_OPTION_ARG_NONE>, use b - for C<G_OPTION_ARG_STRING>, use &s - for C<G_OPTION_ARG_INT>, use i - for C<G_OPTION_ARG_INT64>, use x - for C<G_OPTION_ARG_DOUBLE>, use d - for C<G_OPTION_ARG_FILENAME>, use ^ay - for C<G_OPTION_ARG_STRING_ARRAY>, use &as - for C<G_OPTION_ARG_FILENAME_ARRAY>, use ^aay
+Adds main option entries to be handled by the application.
+
+This function is comparable to C<g_option_context_add_main_entries()>.
+
+After the commandline arguments are parsed, the  I<handle-local-options> signal will be emitted.  At this point, the application can inspect the values pointed to by I<arg_data> in the given B<GOptionEntrys>.
+
+Unlike B<GOptionContext>, B<GApplication> supports giving a C<undefined> I<arg_data> for a non-callback B<GOptionEntry>.  This results in the argument in question being packed into a B<GVariantDict> which is also passed to  I<handle-local-options>, where it can be inspected and modified.  If C<G_APPLICATION_HANDLES_COMMAND_LINE> is set, then the resulting dictionary is sent to the primary instance, where C<g_application_command_line_get_options_dict()> will return it. This "packing" is done according to the type of the argument -- booleans for normal flags, strings for strings, bytestrings for filenames, etc.  The packing only occurs if the flag is given (ie: we do not pack a "false" B<GVariant> in the case that a flag is missing).
+
+In general, it is recommended that all commandline arguments are parsed locally.  The options dictionary should then be used to transmit the result of the parsing to the primary instance, where C<g_variant_dict_lookup()> can be used.  For local options, it is possible to either use I<arg_data> in the usual way, or to consult (and potentially remove) the option from the options dictionary.
+
+This function is new in GLib 2.40.  Before then, the only real choice was to send all of the commandline arguments (options and all) to the primary instance for handling.  B<GApplication> ignored them completely on the local side.  Calling this function "opts in" to the new behaviour, and in particular, means that unrecognised options will be treated as errors.  Unrecognised options have never been ignored when C<G_APPLICATION_HANDLES_COMMAND_LINE> is unset.
+
+If  I<handle-local-options> needs to see the list of filenames, then the use of C<G_OPTION_REMAINING> is recommended.  If I<arg_data> is C<undefined> then C<G_OPTION_REMAINING> can be used as a key into the options dictionary.  If you do use C<G_OPTION_REMAINING> then you need to handle these arguments for yourself because once they are consumed, they will no longer be visible to the default handling (which treats them as filenames to be opened).
+
+It is important to use the proper GVariant format when retrieving the options with C<g_variant_dict_lookup()>:
+=item for C<G_OPTION_ARG_NONE>, use b
+=item for C<G_OPTION_ARG_STRING>, use &s
+=item for C<G_OPTION_ARG_INT>, use i
+=item for C<G_OPTION_ARG_INT64>, use x
+=item for C<G_OPTION_ARG_DOUBLE>, use d
+=item for C<G_OPTION_ARG_FILENAME>, use ^ay
+=item for C<G_OPTION_ARG_STRING_ARRAY>, use &as
+=item for C<G_OPTION_ARG_FILENAME_ARRAY>, use ^aay
 
   method add-main-option-entries ( GOptionEntry $entries )
 
@@ -647,7 +669,7 @@ sub g_application_get_is_registered ( N-GObject $application --> gboolean )
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:1:get-is-remote:
+#TM:4:get-is-remote:ex-application.raku
 =begin pod
 =head2 get-is-remote
 
@@ -822,7 +844,7 @@ sub g_application_open (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:quit:
+#TM:4:quit:ex-application.raku
 =begin pod
 =head2 quit
 
@@ -889,7 +911,7 @@ sub g_application_register (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:1:release:
+#TM:4:release:ex-application.raku
 =begin pod
 =head2 release
 
@@ -932,11 +954,11 @@ If you are interested in doing more complicated local handling of the commandlin
 
 If, after the above is done, the use count of the application is zero then the exit status is returned immediately.  If the use count is non-zero then the default main context is iterated until the use count falls to zero, at which point 0 is returned.
 
-If the C<G_APPLICATION_IS_SERVICE> flag is set, then the service will run for as much as 10 seconds with a use count of zero while waiting for the message that caused the activation to arrive.  After that, if the use count falls to zero the application will exit immediately, except in the case that C<g_application_set_inactivity_timeout()> is in use.
+If the C<G_APPLICATION_IS_SERVICE> flag is set, then the service will run for as much as 10 seconds with a use count of zero while waiting for the message that caused the activation to arrive. When a message arrives, the use count is increased. After that, if the use count falls back to zero or stays zero, the application will exit immediately, except in the case that C<g_application_set_inactivity_timeout()> is in use.
 
-This function sets the prgname (C<g_set_prgname()>), if not already set, to the basename of argv[0].
+This function sets the program name (C<g_set_prgname()>), if not already set, to the basename of argv[0] which is set when C<run()> is called.
 
-Much like C<g_main_loop_run()>, this function will acquire the main context for the duration that the application is running.
+Much like C<run()> from B<Gnome::Glib::MainLoop>, this function will acquire the main context for the duration that the application is running.
 
 Applications that are not explicitly flagged as services or launchers (ie: neither C<G_APPLICATION_IS_SERVICE> or C<G_APPLICATION_IS_LAUNCHER> are given as flags) will check (from the default handler for local_command_line) if "--gapplication-service" was given in the command line.  If this flag is present then normal commandline processing is interrupted and the C<G_APPLICATION_IS_SERVICE> flag is set.  This provides a "compromise" solution whereby running an application directly from the commandline will invoke it in the normal way (which can be useful for debugging) while still allowing applications to be D-Bus activated in service mode.  The D-Bus service file should invoke the executable with "--gapplication-service" as the sole commandline argument.  This approach is suitable for use by most graphical applications but should not be used from applications like editors that need precise control over when processes invoked via the commandline will exit and what their exit status will be.
 
@@ -976,7 +998,7 @@ Sends a notification on behalf of the application to the desktop shell. There is
 
   method send-notification ( Str $id, N-GObject $notification )
 
-=item Str $id; (nullable): id of the notification, or C<undefined>
+=item Str $id; id of the notification, or C<undefined>
 =item N-GObject $notification; the B<GNotification> to send
 
 =end pod
@@ -1086,8 +1108,9 @@ sub g_application_set_inactivity_timeout ( N-GObject $application, guint $inacti
   is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
-#TM:0:set-option-context-description:
+# TM:0:set-option-context-description:
 =begin pod
 =head2 set-option-context-description
 
@@ -1109,7 +1132,7 @@ method set-option-context-description ( Str $description ) {
 sub g_application_set_option_context_description ( N-GObject $application, gchar-ptr $description  )
   is native(&gio-lib)
   { * }
-
+}}
 #`{{
 #-------------------------------------------------------------------------------
 # TM:0:set-option-context-parameter-string:
@@ -1330,7 +1353,7 @@ activation occurs. See C<activate()>.
 
 
 =comment -----------------------------------------------------------------------
-=comment #TS:0:command-line:
+=comment #TS:4:command-line:ex-application.raku
 =head3 command-line
 
 The I<command-line> signal is emitted on the primary instance when
@@ -1341,20 +1364,21 @@ Returns: An integer that is set as the exit status for the calling
 process. See C<g_application_command_line_set_exit_status()>.
 
   method handler (
-    N-GObject $command_line,  # A native GApplicationCommandLine object
+    N-GObject $command_line,
     Int :$_handle_id,
     Gnome::GObject::Object :_widget($application),
     *%user-options
     --> Int
   );
 
-=item $application; the application
+=item $application; the application, a B<Gnome::Gio::Application> object.
 
-=item $command_line; a B<GApplicationCommandLine> representing the
+=item N-GObject $command_line; A native B<Gnome::Gio::ApplicationCommandLine> representing the
+# A native Gnome::Gio::ApplicationCommandLine object
 passed commandline
 
 =comment -----------------------------------------------------------------------
-=comment #TS:0:handle-local-options:
+=comment #TS:4:handle-local-options:ex-application.raku
 =head3 handle-local-options
 
 The I<handle-local-options> signal is emitted on the local instance
@@ -1442,7 +1466,7 @@ Returns: C<True> if the signal has been handled
 
 
 =comment -----------------------------------------------------------------------
-=comment #TS:1:open:
+=comment #TS:0:open:
 =head3 open
 
 The I<open> signal is emitted on the primary instance when there are
@@ -1462,7 +1486,7 @@ files to open. See C<open()> for more information.
 
 
 =comment -----------------------------------------------------------------------
-=comment #TS:0:shutdown:
+=comment #TS:4:shutdown:ex-application.raku
 =head3 shutdown
 
 The I<shutdown> signal is emitted only on the registered primary instance
@@ -1478,7 +1502,7 @@ immediately after the main loop terminates.
 
 
 =comment -----------------------------------------------------------------------
-=comment #TS:0:startup:
+=comment #TS:4:startup:ex-application.raku
 =head3 startup
 
 The I<startup> signal is emitted on the primary instance immediately
