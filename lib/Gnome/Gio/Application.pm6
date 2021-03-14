@@ -122,7 +122,7 @@ Flags which modify individual options.
 
 =end pod
 
-#TE:1:GOptionFlags:
+# TE:1:GOptionFlags:
 enum GOptionFlags is export (
   'G_OPTION_FLAG_NONE'            => 0,
   'G_OPTION_FLAG_HIDDEN'		      => 1 +< 0,
@@ -157,7 +157,7 @@ option: `--name arg` or combined in a single argument: `--name=arg`.
 
 =end pod
 
-#TE:1:GOptionArg:
+# TE:1:GOptionArg:
 enum GOptionArg is export (
   'G_OPTION_ARG_NONE',
   'G_OPTION_ARG_STRING',
