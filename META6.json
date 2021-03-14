@@ -22,6 +22,7 @@
     "Gnome::Gio::MenuItem": "lib/Gnome/Gio/MenuItem.pm6",
     "Gnome::Gio::MenuModel": "lib/Gnome/Gio/MenuModel.pm6",
     "Gnome::Gio::Resource": "lib/Gnome/Gio/Resource.pm6",
+    "Gnome::Gio::Notification": "lib/Gnome/Gio/Notification.pm6",
     "Gnome::Gio::SimpleAction": "lib/Gnome/Gio/SimpleAction.pm6",
     "Gnome::Gio::SimpleActionGroup": "lib/Gnome/Gio/SimpleActionGroup.pm6"
   },
