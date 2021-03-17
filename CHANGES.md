@@ -1,4 +1,10 @@
 ## Release notes
+* 2021-03-17 0.8.0
+<!-- Wrong mods to implement
+  * Add module **Gnome::Gio::Icon**.
+  * Add module **Gnome::Gio::Emblem**.
+  * Add module **Gnome::Gio::EmblemedIcon**.
+-->
 
 * 2021-03-14 0.7.0
   * Add module **Gnome::Gio::ApplicationCommandLine**.

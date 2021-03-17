@@ -1,12 +1,20 @@
 {
   "description": "Raku Gnome GIO api, Please install Gnome::Gtk3",
   "name": "Gnome::Gio",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "authors": [ "Marcel Timmerman"],
   "tags": [ "gnome", "gio"],
 
   "perl": "6",
   "license": "Artistic-2.0",
+
+  "X-provides": {
+    "Gnome::Gio::Emblem": "lib/Gnome/Gio/Emblem.pm6",
+    "Gnome::Gio::EmblemedIcon": "lib/Gnome/Gio/EmblemedIcon.pm6",
+    "Gnome::Gio::Icon": "lib/Gnome/Gio/Icon.pm6",
+
+    "X": "x"
+  },
 
   "provides": {
     "Gnome::Gio::Action": "lib/Gnome/Gio/Action.pm6",
