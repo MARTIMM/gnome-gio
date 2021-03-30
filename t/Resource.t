@@ -51,7 +51,7 @@ subtest 'Manipulations', {
   for @parts -> $p {
     $path ~= "$p/";
     ( $e, $a) = $r.enumerate-children($path);
-    note "P: $path, $e.is-valid(), $a.gist()";
+    diag "Path: $path, $e.is-valid(), $a.gist()";
   }
 }
 
