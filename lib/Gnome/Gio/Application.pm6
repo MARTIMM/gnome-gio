@@ -83,8 +83,6 @@ use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
 use Gnome::Glib::Error;
-#use Gnome::Glib::OptionContext;
-use Gnome::Glib::N-GVariant;
 
 use Gnome::GObject::Object;
 
@@ -1435,7 +1433,7 @@ the default option processing continue.
 
 
   method handler (
-    N-GVariant $options,
+    N-GObject $options,
     Int :$_handle_id,
     Gnome::GObject::Object :_widget($application),
     *%user-options

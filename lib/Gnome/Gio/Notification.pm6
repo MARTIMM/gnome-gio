@@ -68,8 +68,6 @@ use Gnome::N::GlibToRakuTypes;
 
 use Gnome::GObject::Object;
 
-use Gnome::Glib::N-GVariant;
-
 use Gnome::Gio::Enums;
 
 #-------------------------------------------------------------------------------
@@ -232,16 +230,16 @@ Adds a button to the notification that activates I<action> when clicked. I<actio
 
 If I<target> is non-C<undefined>, I<action> will be activated with I<target> as its parameter.
 
-  method add-button-with-target-value ( Str $label, Str $action, N-GVariant $target )
+  method add-button-with-target-value ( Str $label, Str $action, N-GObject $target )
 
 =item Str $label; label of the button
 =item Str $action; an action name
-=item N-GVariant $target; a B<Gnome::Gio::Variant> to use as I<action>'s parameter, or C<undefined>
+=item N-GObject $target; a B<Gnome::Gio::Variant> to use as I<action>'s parameter, or C<undefined>
 
 =end pod
 
 method add-button-with-target-value ( Str $label, Str $action, $target is copy ) {
-  $target .= get-native-object-no-reffing unless $target ~~ N-GVariant;
+  $target .= get-native-object-no-reffing unless $target ~~ N-GObject;
 
   g_notification_add_button_with_target_value(
     self.get-native-object-no-reffing, $label, $action, $target
@@ -249,7 +247,7 @@ method add-button-with-target-value ( Str $label, Str $action, $target is copy )
 }
 
 sub g_notification_add_button_with_target_value (
-  N-GObject $notification, gchar-ptr $label, gchar-ptr $action, N-GVariant $target
+  N-GObject $notification, gchar-ptr $label, gchar-ptr $action, N-GObject $target
 ) is native(&gio-lib)
   { * }
 
@@ -350,15 +348,15 @@ If I<target> is non-C<undefined>, I<action> will be activated with I<target> as 
 
 When no default action is set, the application that the notification was sent on is activated.
 
-  method set-default-action-and-target-value ( Str $action, N-GVariant $target )
+  method set-default-action-and-target-value ( Str $action, N-GObject $target )
 
 =item Str $action; an action name
-=item N-GVariant $target; a B<Gnome::Gio::Variant> to use as I<action>'s parameter, or C<undefined>
+=item N-GObject $target; a B<Gnome::Gio::Variant> to use as I<action>'s parameter, or C<undefined>
 
 =end pod
 
 method set-default-action-and-target-value ( Str $action, $target is copy ) {
-  $target .= get-native-object-no-reffing unless $target ~~ N-GVariant;
+  $target .= get-native-object-no-reffing unless $target ~~ N-GObject;
 
   g_notification_set_default_action_and_target_value(
     self.get-native-object-no-reffing, $action, $target
@@ -366,7 +364,7 @@ method set-default-action-and-target-value ( Str $action, $target is copy ) {
 }
 
 sub g_notification_set_default_action_and_target_value (
-  N-GObject $notification, gchar-ptr $action, N-GVariant $target
+  N-GObject $notification, gchar-ptr $action, N-GObject $target
 ) is native(&gio-lib)
   { * }
 

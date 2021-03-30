@@ -2,7 +2,7 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::Glib::N-GVariant;
+#use Gnome::N::N-GObject;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 use Gnome::Gio::SimpleAction;
@@ -164,7 +164,7 @@ subtest 'Signals ...', {
     has Bool $!signal-processed = False;
 
     method ah (
-      N-GVariant $parameter,
+      N-GObject $parameter,
       Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($parameter));
@@ -174,7 +174,7 @@ subtest 'Signals ...', {
     }
 
     method ch (
-      N-GVariant $value,
+      N-GObject $value,
       Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($value));

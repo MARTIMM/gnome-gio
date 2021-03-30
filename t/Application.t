@@ -11,7 +11,6 @@ use Gnome::Gio::SimpleAction;
 
 use Gnome::Glib::Error;
 use Gnome::Glib::VariantType;
-use Gnome::Glib::N-GVariant;
 
 use Gnome::N::X;
 #Gnome::N::debug(:on);
@@ -203,7 +202,7 @@ subtest 'Signals ...', {
     }
 
     method action-activate (
-      N-GVariant $parameter,
+      N-GObject $parameter,
       Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($parameter));
@@ -213,7 +212,7 @@ subtest 'Signals ...', {
     }
 
     method change-state-activate (
-      N-GVariant $value,
+      N-GObject $value,
       Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($value));

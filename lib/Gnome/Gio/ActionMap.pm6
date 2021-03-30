@@ -33,8 +33,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariantType;
-
 use Gnome::Gio::Action;
 use Gnome::Gio::SimpleAction;
 
@@ -136,7 +134,7 @@ method add-action-entries ( Array $entries ) {
     }
 
     else {
-      $parameter-type .= new(:native-object(N-GVariantType));
+      $parameter-type .= new(:native-object(N-GObject));
     }
 
     if ? $entry<state> {

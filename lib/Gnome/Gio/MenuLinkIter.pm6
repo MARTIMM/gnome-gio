@@ -32,8 +32,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 

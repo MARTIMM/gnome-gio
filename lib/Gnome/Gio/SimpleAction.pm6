@@ -44,9 +44,6 @@ use Gnome::GObject::Object;
 
 use Gnome::Gio::Action;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
-
 use Gnome::Gio::Action;
 
 #-------------------------------------------------------------------------------
@@ -65,23 +62,23 @@ my Bool $signals-added = False;
 
 Create a new stateless SimpleAction object.
 
-  multi method new ( Str :$name!, N-GVariantType :$parameter-type )
+  multi method new ( Str :$name!, N-GObject :$parameter-type )
 
 =item  Str  $name; the name of the action
-=item N-GVariantType $parameter_type; the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
+=item N-GObject $parameter_type; the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
 
 
 =head3 :name, :parameter-type, :state
 
-Create a new stateful SimpleAction object. All future state values must have the same B<N-GVariantType> as the initial I<$state> variant object.
+Create a new stateful SimpleAction object. All future state values must have the same B<N-GObject> as the initial I<$state> variant object.
 
   multi method new (
-    Str :$name!, N-GVariantType :$parameter_type, N-GVariant :$state!
+    Str :$name!, N-GObject :$parameter_type, N-GObject :$state!
   )
 
 =item  Str  $name; the name of the action
-=item N-GVariantType $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
-=item N-GVariant $state; the initial state value of the action
+=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
+=item N-GObject $state; the initial state value of the action
 
 
 =head3 :native-object
@@ -127,17 +124,17 @@ submethod BUILD ( *%options ) {
     else {
       my $no;
       if ? %options<name> {
-        my $parameter-type = N-GVariantType;
+        my $parameter-type = N-GObject;
         if %options<parameter-type>.defined {
           $parameter-type = %options<parameter-type>;
           $parameter-type .= get-native-object-no-reffing
-            unless $parameter-type ~~ N-GVariantType;
+            unless $parameter-type ~~ N-GObject;
         }
 
         if %options<state>.defined {
           my $state = %options<state>;
           $state .= get-native-object-no-reffing
-            unless $state ~~ N-GVariant;
+            unless $state ~~ N-GObject;
 
           $no = _g_simple_action_new_stateful(
             %options<name>, $parameter-type, $state
@@ -216,22 +213,22 @@ sub g_simple_action_set_enabled ( N-GObject $simple, gboolean $enabled  )
 
 Sets the state of the action.  This directly updates the 'state' property to the given value.  This should only be called by the implementor of the action.  Users of the action should not attempt to directly modify the 'state' property.  Instead, they should call C<change-state()> to request the change.
 
-  method set-state ( N-GVariant $value )
+  method set-state ( N-GObject $value )
 
-=item N-GVariant $value; the new B<N-GVariant> for the state
+=item N-GObject $value; the new B<N-GObject> for the state
 
 =end pod
 
 method set-state ( $value ) {
   my $no = $value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_simple_action_set_state(
     self._f('GSimpleAction'), $no
   );
 }
 
-sub g_simple_action_set_state ( N-GObject $simple, N-GVariant $value  )
+sub g_simple_action_set_state ( N-GObject $simple, N-GObject $value  )
   is native(&gio-lib)
   { * }
 
@@ -242,22 +239,22 @@ sub g_simple_action_set_state ( N-GObject $simple, N-GVariant $value  )
 
 Sets the state hint for the action.  See C<get_state_hint()> in B<Gnome::Gio::Action> for more information about action state hints.
 
-  method set-state-hint ( N-GVariant $state_hint )
+  method set-state-hint ( N-GObject $state_hint )
 
-=item N-GVariant $state_hint; a B<N-GVariant> representing the state hint, may be an undefined value.
+=item N-GObject $state_hint; a B<N-GObject> representing the state hint, may be an undefined value.
 
 =end pod
 
 method set-state-hint ( $state_hint ) {
   my $no = $state_hint;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_simple_action_set_state_hint(
     self._f('GSimpleAction'), $no
   );
 }
 
-sub g_simple_action_set_state_hint ( N-GObject $simple, N-GVariant $state_hint  )
+sub g_simple_action_set_state_hint ( N-GObject $simple, N-GObject $state_hint  )
   is native(&gio-lib)
   { * }
 
@@ -271,15 +268,15 @@ Creates a new action.  The created action is stateless. See C<g_simple_action_ne
 
 Returns: a new B<GSimpleAction>
 
-  method _g_simple_action_new (  Str  $name, N-GVariantType $parameter_type --> N-GObject )
+  method _g_simple_action_new (  Str  $name, N-GObject $parameter_type --> N-GObject )
 
 =item  Str  $name; the name of the action
-=item N-GVariantType $parameter_type; (nullable): the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
+=item N-GObject $parameter_type; (nullable): the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
 
 =end pod
 }}
 
-sub _g_simple_action_new ( gchar-ptr $name, N-GVariantType $parameter_type --> N-GObject )
+sub _g_simple_action_new ( gchar-ptr $name, N-GObject $parameter_type --> N-GObject )
   is native(&gio-lib)
   is symbol('g_simple_action_new')
   { * }
@@ -290,21 +287,21 @@ sub _g_simple_action_new ( gchar-ptr $name, N-GVariantType $parameter_type --> N
 =begin pod
 =head2 _g_simple_action_new_stateful
 
-Creates a new stateful action.  All future state values must have the same B<N-GVariantType> as the initial I<state>.  If the I<state> B<N-GVariant> is floating, it is consumed.
+Creates a new stateful action.  All future state values must have the same B<N-GObject> as the initial I<state>.  If the I<state> B<N-GObject> is floating, it is consumed.
 
 Returns: a new B<GSimpleAction>
 
-  method _g_simple_action_new_stateful (  Str  $name, N-GVariantType $parameter_type, N-GVariant $state --> N-GObject )
+  method _g_simple_action_new_stateful (  Str  $name, N-GObject $parameter_type, N-GObject $state --> N-GObject )
 
 =item  Str  $name; the name of the action
-=item N-GVariantType $parameter_type; (nullable): the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
-=item N-GVariant $state; the initial state of the action
+=item N-GObject $parameter_type; (nullable): the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
+=item N-GObject $state; the initial state of the action
 
 =end pod
 }}
 
 sub _g_simple_action_new_stateful (
-  gchar-ptr $name, N-GVariantType $parameter_type, N-GVariant $state
+  gchar-ptr $name, N-GObject $parameter_type, N-GObject $state
   --> N-GObject
 ) is native(&gio-lib)
   is symbol('g_simple_action_new_stateful')
@@ -354,7 +351,7 @@ I<parameter> will always be of the expected type, i.e. the parameter type specif
 If no handler is connected to this signal then the default behaviour for boolean-stated actions with a C<undefined> parameter type is to toggle them via the  I<change-state> signal. For stateful actions where the state type is equal to the parameter type, the default is to forward them directly to  I<change-state>.  This should allow almost all users of B<N-GSimpleAction> to connect only one handler or the other.
 
   method handler (
-    N-GVariant $parameter,
+    N-GObject $parameter,
     Int :$_handle_id,
     Gnome::Gio::SimpleAction :_widget($simple),
     *%user-options
@@ -397,7 +394,7 @@ It could set it to any value at all, or take some other action.
 
 
   method handler (
-    N-GVariant $value,
+    N-GObject $value,
     Int :$_handle_id,
     Gnome::Gio::SimpleAction :_widget($simple),
     *%user-options
@@ -474,7 +471,7 @@ The B<Gnome::GObject::Value> type of property I<state> is C<G_TYPE_VARIANT>.
 =head3 State Type
 
 
-The B<N-GVariantType> of the state that the action has, or C<undefined> if the
+The B<N-GObject> of the state that the action has, or C<undefined> if the
 action is stateless.
 
 

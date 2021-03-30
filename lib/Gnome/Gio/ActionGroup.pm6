@@ -47,8 +47,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 
@@ -153,23 +151,23 @@ sub g_action_group_action_removed ( N-GObject $action_group, gchar-ptr $action_n
 
 Emits the  I<action-state-changed> signal on I<action-group>.  This function should only be called by B<GActionGroup> implementations.
 
-  method action-state-changed ( Str $action_name, N-GVariant $state )
+  method action-state-changed ( Str $action_name, N-GObject $state )
 
 =item Str $action_name; the name of an action in the group
-=item N-GVariant $state; the new state of the named action
+=item N-GObject $state; the new state of the named action
 
 =end pod
 
-method action-state-changed ( Str $action_name, N-GVariant $state ) {
+method action-state-changed ( Str $action_name, N-GObject $state ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_action_state_changed(
     self._f('GActionGroup'), $action_name, $state
   );
 }
 
-sub g_action_group_action_state_changed ( N-GObject $action_group, gchar-ptr $action_name, N-GVariant $state  )
+sub g_action_group_action_state_changed ( N-GObject $action_group, gchar-ptr $action_name, N-GObject $state  )
   is native(&gio-lib)
   { * }
 
@@ -180,23 +178,23 @@ sub g_action_group_action_state_changed ( N-GObject $action_group, gchar-ptr $ac
 
 Activate the named action within I<action-group>.  If the action is expecting a parameter, then the correct type of parameter must be given as I<$parameter>.  If the action is expecting no parameters then I<parameter> must be C<undefined>.  See `get-action-parameter-type()`.
 
-  method activate-action ( Str $action_name, N-GVariant $parameter )
+  method activate-action ( Str $action_name, N-GObject $parameter )
 
 =item Str $action_name; the name of the action to activate
-=item N-GVariant $parameter; (nullable): parameters to the activation
+=item N-GObject $parameter; (nullable): parameters to the activation
 
 =end pod
 
 method activate-action ( Str $action_name, $parameter ) {
   my $no = $parameter;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_activate_action(
     self._f('GActionGroup'), $action_name, $no
   );
 }
 
-sub g_action_group_activate_action ( N-GObject $action_group, gchar-ptr $action_name, N-GVariant $parameter  )
+sub g_action_group_activate_action ( N-GObject $action_group, gchar-ptr $action_name, N-GObject $parameter  )
   is native(&gio-lib)
   { * }
 
@@ -207,23 +205,23 @@ sub g_action_group_activate_action ( N-GObject $action_group, gchar-ptr $action_
 
 Request for the state of the named action within I<action-group> to be changed to I<value>.  The action must be stateful and I<value> must be of the correct type. See `get-action-state-type()`.  This call merely requests a change.  The action may refuse to change its state or may change its state to something other than I<value>. See `get-action-state-hint()`.  If the I<value> GVariant is floating, it is consumed.
 
-  method change-action-state ( Str $action_name, N-GVariant $value )
+  method change-action-state ( Str $action_name, N-GObject $value )
 
 =item Str $action_name; the name of the action to request the change on
-=item N-GVariant $value; the new state
+=item N-GObject $value; the new state
 
 =end pod
 
 method change-action-state ( Str $action_name, $value ) {
   my $no = $value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_change_action_state(
     self._f('GActionGroup'), $action_name, $no
   );
 }
 
-sub g_action_group_change_action_state ( N-GObject $action_group, gchar-ptr $action_name, N-GVariant $value  )
+sub g_action_group_change_action_state ( N-GObject $action_group, gchar-ptr $action_name, N-GObject $value  )
   is native(&gio-lib)
   { * }
 
@@ -282,7 +280,7 @@ method get-action-parameter-type (
   );
 }
 
-sub g_action_group_get_action_parameter_type ( N-GObject $action_group, gchar-ptr $action_name --> N-GVariantType )
+sub g_action_group_get_action_parameter_type ( N-GObject $action_group, gchar-ptr $action_name --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -313,7 +311,7 @@ method get-action-state ( Str $action_name --> Gnome::Glib::Variant ) {
   );
 }
 
-sub g_action_group_get_action_state ( N-GObject $action_group, gchar-ptr $action_name --> N-GVariant )
+sub g_action_group_get_action_state ( N-GObject $action_group, gchar-ptr $action_name --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -342,7 +340,7 @@ method get-action-state-hint ( Str $action_name --> Gnome::Glib::Variant ) {
   );
 }
 
-sub g_action_group_get_action_state_hint ( N-GObject $action_group, gchar-ptr $action_name --> N-GVariant )
+sub g_action_group_get_action_state_hint ( N-GObject $action_group, gchar-ptr $action_name --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -371,7 +369,7 @@ method get-action-state-type ( Str $action_name --> Gnome::Glib::VariantType ) {
   );
 }
 
-sub g_action_group_get_action_state_type ( N-GObject $action_group, gchar-ptr $action_name --> N-GVariantType )
+sub g_action_group_get_action_state_type ( N-GObject $action_group, gchar-ptr $action_name --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -466,10 +464,10 @@ The returned list holds;
 method query-action ( Str $action_name --> List ) {
 
   my gboolean $enabled;
-  my $parameter_type = CArray[N-GVariantType].new(N-GVariantType);
-  my $state_type = CArray[N-GVariantType].new(N-GVariantType);
-  my $state_hint = CArray[N-GVariant].new(N-GVariant);
-  my $state = CArray[N-GVariant].new(N-GVariant);
+  my $parameter_type = CArray[N-GObject].new(N-GObject);
+  my $state_type = CArray[N-GObject].new(N-GObject);
+  my $state_hint = CArray[N-GObject].new(N-GObject);
+  my $state = CArray[N-GObject].new(N-GObject);
 
   my Int $r = g_action_group_query_action(
     self._f('GActionGroup'), $action_name, $enabled, $parameter_type,
@@ -492,8 +490,8 @@ method query-action ( Str $action_name --> List ) {
 
 sub g_action_group_query_action (
   N-GObject $action_group, gchar-ptr $action_name, gboolean $enabled is rw,
-  CArray[N-GVariantType] $parameter_type, CArray[N-GVariantType] $state_type,
-  CArray[N-GVariant] $state_hint, CArray[N-GVariant] $state
+  CArray[N-GObject] $parameter_type, CArray[N-GObject] $state_type,
+  CArray[N-GObject] $state_hint, CArray[N-GObject] $state
   --> gboolean
 ) is native(&gio-lib)
   { * }

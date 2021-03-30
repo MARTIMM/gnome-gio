@@ -195,8 +195,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantDict;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantDict;
 
@@ -490,12 +488,12 @@ If no options were sent then an empty dictionary is returned so that you don't n
 
 Returns: (transfer none): a B<Gnome::Gio::VariantDict> with the options
 
-  method get-options-dict ( --> N-GVariantDict )
+  method get-options-dict ( --> N-GObject )
 
 
 =end pod
 
-method get-options-dict ( --> N-GVariantDict ) {
+method get-options-dict ( --> N-GObject ) {
 
   g_application_command_line_get_options_dict(
     self.get-native-object-no-reffing,
@@ -503,7 +501,7 @@ method get-options-dict ( --> N-GVariantDict ) {
 }
 
 sub g_application_command_line_get_options_dict (
-  N-GObject $cmdline --> N-GVariantDict
+  N-GObject $cmdline --> N-GObject
 ) is native(&gio-lib)
   { * }
 }}
@@ -522,12 +520,12 @@ For local invocation, it will be C<undefined>.
 
 Returns: the platform data, or C<undefined>
 
-  method get-platform-data ( --> N-GVariant )
+  method get-platform-data ( --> N-GObject )
 
 
 =end pod
 
-method get-platform-data ( --> N-GVariant ) {
+method get-platform-data ( --> N-GObject ) {
 
   g_application_command_line_get_platform_data(
     self.get-native-object-no-reffing,
@@ -535,7 +533,7 @@ method get-platform-data ( --> N-GVariant ) {
 }
 
 sub g_application_command_line_get_platform_data (
-  N-GObject $cmdline --> N-GVariant
+  N-GObject $cmdline --> N-GObject
 ) is native(&gio-lib)
   { * }
 }}

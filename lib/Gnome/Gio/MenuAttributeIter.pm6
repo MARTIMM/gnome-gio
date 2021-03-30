@@ -32,8 +32,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 
@@ -116,25 +114,25 @@ The value returned in I<name> remains valid for as long as the iterator remains 
 Returns: C<True> on success, or C<False> if there is no additional attribute
 
   method attribute-iter-get-next (
-    CArray[Str] $out_name, N-GVariant $value
+    CArray[Str] $out_name, N-GObject $value
     --> Int
   )
 
 =item CArray[Str] $out_name; (out) (optional) (transfer none): the type of the attribute
-=item N-GVariant $value; (out) (optional) (transfer full): the attribute value
+=item N-GObject $value; (out) (optional) (transfer full): the attribute value
 
 =end pod
 
-method attribute-iter-get-next ( CArray[Str] $out_name, N-GVariant $value --> Int ) {
+method attribute-iter-get-next ( CArray[Str] $out_name, N-GObject $value --> Int ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_attribute_iter_get_next(
     self._f('GMenuAttributeIter'), $out_name, $value
   );
 }
 
-sub g_menu_attribute_iter_get_next ( N-GObject $iter, gchar-pptr $out_name, N-GVariant $value --> gboolean )
+sub g_menu_attribute_iter_get_next ( N-GObject $iter, gchar-pptr $out_name, N-GObject $value --> gboolean )
   is native(&gio-lib)
   { * }
 
@@ -152,18 +150,18 @@ Returns: (transfer full): the value of the current attribute
 
 
 
-  method attribute-iter-get-value ( --> N-GVariant )
+  method attribute-iter-get-value ( --> N-GObject )
 
 =end pod
 
-method attribute-iter-get-value ( --> N-GVariant ) {
+method attribute-iter-get-value ( --> N-GObject ) {
 
   g_menu_attribute_iter_get_value(
     self._f('GMenuAttributeIter')
   );
 }
 
-sub g_menu_attribute_iter_get_value ( N-GObject $iter --> N-GVariant )
+sub g_menu_attribute_iter_get_value ( N-GObject $iter --> N-GObject )
   is native(&gio-lib)
   { * }
 

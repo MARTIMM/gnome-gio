@@ -94,8 +94,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 
@@ -286,24 +284,24 @@ Returns: (transfer full): the value of the attribute
 
 
 
-  method get-item-attribute-value ( Int $item_index, Str $attribute, N-GVariantType $expected_type --> N-GVariant )
+  method get-item-attribute-value ( Int $item_index, Str $attribute, N-GObject $expected_type --> N-GObject )
 
 =item Int $item_index; the index of the item
 =item Str $attribute; the attribute to query
-=item N-GVariantType $expected_type; (nullable): the expected type of the attribute, or C<undefined>
+=item N-GObject $expected_type; (nullable): the expected type of the attribute, or C<undefined>
 
 =end pod
 
-method get-item-attribute-value ( Int $item_index, Str $attribute, N-GVariantType $expected_type --> N-GVariant ) {
+method get-item-attribute-value ( Int $item_index, Str $attribute, N-GObject $expected_type --> N-GObject ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariantType;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_model_get_item_attribute_value(
     self._f('GMenuModel'), $item_index, $attribute, $expected_type
   );
 }
 
-sub g_menu_model_get_item_attribute_value ( N-GObject $model, gint $item_index, gchar-ptr $attribute, N-GVariantType $expected_type --> N-GVariant )
+sub g_menu_model_get_item_attribute_value ( N-GObject $model, gint $item_index, gchar-ptr $attribute, N-GObject $expected_type --> N-GObject )
   is native(&gio-lib)
   { * }
 

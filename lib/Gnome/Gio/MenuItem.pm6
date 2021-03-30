@@ -56,8 +56,6 @@ use Gnome::N::NativeLib;
 use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
-use Gnome::Glib::N-GVariant;
-use Gnome::Glib::N-GVariantType;
 use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 
@@ -300,13 +298,13 @@ If I<$expected-type> is specified and the attribute does not have this type, C<u
 Returns: the attribute value, or C<undefined>
 
   method get-attribute-value (
-    Str $attribute, N-GVariantType $expected_type
+    Str $attribute, N-GObject $expected_type
     --> Gnome::Glib::Variant
   )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $attribute; the attribute name to query
-=item N-GVariantType $expected_type; (nullable): the expected type of the attribute
+=item N-GObject $expected_type; (nullable): the expected type of the attribute
 
 =end pod
 
@@ -314,7 +312,7 @@ method get-attribute-value (
   Str $attribute, $expected_type --> Gnome::Glib::Variant
 ) {
   my $no = $expected_type;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariantType;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   Gnome::Glib::Variant.new(
     :native-object(
@@ -325,7 +323,7 @@ method get-attribute-value (
   )
 }
 
-sub g_menu_item_get_attribute_value ( N-GObject $menu_item, gchar-ptr $attribute, N-GVariantType $expected_type --> N-GVariant )
+sub g_menu_item_get_attribute_value ( N-GObject $menu_item, gchar-ptr $attribute, N-GObject $expected_type --> N-GObject )
   is native(&gio-lib)
   { * }
 
@@ -453,24 +451,24 @@ probably more convenient for most uses.
 
 
 
-  method set-action-and-target-value ( Str $action, N-GVariant $target_value )
+  method set-action-and-target-value ( Str $action, N-GObject $target_value )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $action; (nullable): the name of the action for this item
-=item N-GVariant $target_value; (nullable): a B<GVariant> to use as the action target
+=item N-GObject $target_value; (nullable): a B<GVariant> to use as the action target
 
 =end pod
 
-method set-action-and-target-value ( Str $action, N-GVariant $target_value ) {
+method set-action-and-target-value ( Str $action, N-GObject $target_value ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_item_set_action_and_target_value(
     self.get-native-object-no-reffing, $action, $target_value
   );
 }
 
-sub g_menu_item_set_action_and_target_value ( N-GObject $menu_item, gchar-ptr $action, N-GVariant $target_value  )
+sub g_menu_item_set_action_and_target_value ( N-GObject $menu_item, gchar-ptr $action, N-GObject $target_value  )
   is native(&gio-lib)
   { * }
 
@@ -549,24 +547,24 @@ the same.
 
 
 
-  method set-attribute-value ( Str $attribute, N-GVariant $value )
+  method set-attribute-value ( Str $attribute, N-GObject $value )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $attribute; the attribute to set
-=item N-GVariant $value; (nullable): a B<GVariant> to use as the value, or C<undefined>
+=item N-GObject $value; (nullable): a B<GVariant> to use as the value, or C<undefined>
 
 =end pod
 
-method set-attribute-value ( Str $attribute, N-GVariant $value ) {
+method set-attribute-value ( Str $attribute, N-GObject $value ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GVariant;
+  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_item_set_attribute_value(
     self.get-native-object-no-reffing, $attribute, $value
   );
 }
 
-sub g_menu_item_set_attribute_value ( N-GObject $menu_item, gchar-ptr $attribute, N-GVariant $value  )
+sub g_menu_item_set_attribute_value ( N-GObject $menu_item, gchar-ptr $attribute, N-GObject $value  )
   is native(&gio-lib)
   { * }
 
