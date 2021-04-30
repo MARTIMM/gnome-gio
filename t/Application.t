@@ -261,7 +261,7 @@ subtest 'Signals ...', {
 #  my Gnome::Gio::Application $a .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
-  #$w.container-add($m);
+  #$w.add($m);
 
   my SignalHandlers $sh .= new;
   my Int $ah-id = $a.register-signal( $sh, 'application-activate', 'activate');

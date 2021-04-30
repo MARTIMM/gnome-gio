@@ -149,7 +149,7 @@ subtest 'Signals ...', {
   my Gnome::Gio::MenuModel $mm .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
-  #$w.container-add($m);
+  #$w.add($m);
 
   my SignalHandlers $sh .= new;
   $mm.register-signal( $sh, 'method', 'signal');

@@ -153,7 +153,7 @@ subtest 'Signals ...', {
   my Gnome::Gio::Notification $n .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
-  #$w.container-add($m);
+  #$w.add($m);
 
   my SignalHandlers $sh .= new;
   $n.register-signal( $sh, 'method', 'signal');

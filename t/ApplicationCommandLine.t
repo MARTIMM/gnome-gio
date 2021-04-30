@@ -156,7 +156,7 @@ subtest 'Signals ...', {
   my Gnome::Gio::ApplicationCommandLine $acl .= new;
 
   #my Gnome::Gtk3::Window $w .= new;
-  #$w.container-add($m);
+  #$w.add($m);
 
   my SignalHandlers $sh .= new;
   $acl.register-signal( $sh, 'method', 'signal');
