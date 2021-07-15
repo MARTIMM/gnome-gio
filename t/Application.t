@@ -148,15 +148,14 @@ subtest 'Properties ...', {
 
   test-property( G_TYPE_STRING, 'application-id', 'get-string', 'io.mt.xyz');
   test-property( G_TYPE_UINT, 'inactivity-timeout', 'get-uint', 3600_000);
-  test-property( G_TYPE_BOOLEAN, 'is-busy', 'get-boolean', 0);
-  test-property( G_TYPE_BOOLEAN, 'is-registered', 'get-boolean', 1);
-  test-property( G_TYPE_BOOLEAN, 'is-remote', 'get-boolean', 0);
+  test-property( G_TYPE_BOOLEAN, 'is-busy', 'get-boolean', False);
+  test-property( G_TYPE_BOOLEAN, 'is-registered', 'get-boolean', True);
+  test-property( G_TYPE_BOOLEAN, 'is-remote', 'get-boolean', False);
   test-property(
     G_TYPE_STRING, 'resource-base-path', 'get-string', $a.get-resource-base-path
   );
 
   # example calls
-  #test-property( G_TYPE_BOOLEAN, 'homogeneous', 'get-boolean', 0);
   #test-property( G_TYPE_STRING, 'label', 'get-string', '...');
   #test-property( G_TYPE_FLOAT, 'xalign', 'get-float', 23e-2, :approx);
 }

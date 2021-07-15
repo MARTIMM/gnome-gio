@@ -136,11 +136,10 @@ subtest 'Properties ...', {
     $gv.clear-object;
   }
 
-  test-property( G_TYPE_BOOLEAN, 'enabled', 'get-boolean', 1);
+  test-property( G_TYPE_BOOLEAN, 'enabled', 'get-boolean', True);
   test-property( G_TYPE_STRING, 'name', 'get-string', 'my-action');
 
   # example calls
-  #test-property( G_TYPE_BOOLEAN, 'homogeneous', 'get-boolean', 0);
   #test-property( G_TYPE_STRING, 'label', 'get-string', '...');
   #test-property( G_TYPE_FLOAT, 'xalign', 'get-float', 23e-2, :approx);
 }
