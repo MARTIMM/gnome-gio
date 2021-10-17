@@ -1,4 +1,8 @@
 ## Release notes
+
+* 2021-10-      0.9.0
+  * Add **Gnome::Gio::AppInfo**.
+
 * 2021-07-15 0.8.1
   * Due to some changes in **Gnome::GObject::Value**, the `.get-boolean()` method returns `True` or `False` instead of `1` or `0`. `.set-boolean()` is unchanged because Raku could coerse `True` and `False` to integer automatically.
 <!-- Wrong mods to implement
