@@ -3,6 +3,8 @@ use NativeCall;
 use Test;
 
 use Gnome::Gio::AppInfo;
+use Gnome::Gio::AppLaunchContext;
+use Gnome::Glib::Error;
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
@@ -11,8 +13,16 @@ use Gnome::Gio::AppInfo;
 my Gnome::Gio::AppInfo $ai;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $ai .= new;
-  isa-ok $ai, Gnome::Gio::AppInfo, '.new()';
+  $ai .= new(
+    :command-line('ls %f'), :application-name('ls')
+  );
+  isa-ok $ai, Gnome::Gio::AppInfo,
+    '.new(:command-line, :application-name, :flags)';
+  nok $ai.last-error.is-valid, 'no error';
+
+  my Gnome::Gio::AppLaunchContext $alc .= new;
+  my Gnome::Glib::Error $e = $ai.launch( [<LICENSE appveyor.yml>], $alc);
+  note $e.raku;
 }
 
 #-------------------------------------------------------------------------------
@@ -170,4 +180,3 @@ subtest 'Signals ...', {
 
   is $p.result, 'done', 'emitter finished';
 }
-
