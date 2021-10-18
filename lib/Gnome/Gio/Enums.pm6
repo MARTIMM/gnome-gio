@@ -36,7 +36,7 @@ unit class Gnome::Gio::Enums:auth<github:MARTIMM>;
 =begin pod
 =head2 enum GAppInfoCreateFlags
 
-Flags used when creating a B<GAppInfo>.
+Flags used when creating a B<Gnome::Gio::AppInfo>.
 
 =item G_APP_INFO_CREATE_NONE: No flags.
 =item G_APP_INFO_CREATE_NEEDS_TERMINAL: Application opens in a terminal window.
@@ -45,7 +45,7 @@ Flags used when creating a B<GAppInfo>.
 
 =end pod
 
-#TE:0:GAppInfoCreateFlags:
+#TE:1:GAppInfoCreateFlags:
 enum GAppInfoCreateFlags is export (
   G_APP_INFO_CREATE_NONE                            => 0x00,
   G_APP_INFO_CREATE_NEEDS_TERMINAL                  => 0x01,
