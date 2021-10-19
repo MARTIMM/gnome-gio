@@ -4,32 +4,31 @@ use Test;
 
 use Gnome::Gio::AppInfo;
 use Gnome::Gio::AppLaunchContext;
-use Gnome::Glib::Error;
 
+use Gnome::Glib::Error;
+use Gnome::Glib::List;
+
+use Gnome::N::N-GObject;
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------
+my Gnome::Glib::Error $e;
 my Gnome::Gio::AppInfo $ai;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $ai .= new(
-    :command-line('ls %f'), :application-name('ls')
-  );
+  $ai .= new( :command-line('x'), :application-name('x'));
   isa-ok $ai, Gnome::Gio::AppInfo,
     '.new(:command-line, :application-name, :flags)';
   nok $ai.last-error.is-valid, 'no error';
-
-  my Gnome::Gio::AppLaunchContext $alc .= new;
-  my Gnome::Glib::Error $e = $ai.launch( [<LICENSE appveyor.yml>], $alc);
-  note $e.raku;
 }
 
 #-------------------------------------------------------------------------------
-done-testing;
-
-=finish
-
+# stop when on windows. rest is depending on linux
+unless $*KERNEL.name ~~ 'linux' {
+  done-testing;
+  exit;
+}
 
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
@@ -40,7 +39,42 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
+  $ai .= new( :command-line('ls -m'), :application-name('ls'));
+  is $ai.get-commandline, 'ls -m %f', '.get-commandline()';
+
+  subtest 'app info list', {
+    my Gnome::Glib::List $list = $ai.get-all;
+    ok $list.length > 1, '.get-all()';
+    my Gnome::Gio::AppInfo $ai3 .= new(
+      :native-object(nativecast( N-GObject, $list.nth-data(0)))
+    );
+    diag $ai3.get-commandline;
+  }
+
+#  my Gnome::Gio::AppLaunchContext $alc .= new;
+  $e = $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject);
+  nok $ai.last-error.is-valid, '.launch()';
+
+  $e = $ai.set-as-default-for-type('image/jpeg');
+#note $e.raku;
+  nok $ai.last-error.is-valid, '.set-as-default-for-type()';
+
+  my Gnome::Gio::AppInfo $ai2 = $ai.get-default-for-type-rk(
+    'image/jpeg', True
+  );
+  is $ai2.get-commandline, 'gwenview %U',
+    '.set-as-default-for-type() / get-default-for-type-rk';
+
+  $e = $ai2.launch-default-for-uri( 'LICENSE', N-GObject);
+#note $e.raku;
+  nok $ai.last-error.is-valid, '.launch-default-for-uri()';
 }
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
+
 
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::AppInfo', {

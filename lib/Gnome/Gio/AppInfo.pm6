@@ -260,7 +260,7 @@ Returns: An invalid error object on success, valid on error. Check the C<.messag
 method add-supports-type ( Str $content-type --> Gnome::Glib::Error ) {
   my CArray[N-GError] $error .= new;
   g_app_info_add_supports_type(
-    self._f('GAppInfo'), $content-type, $error
+    self.get-native-object-no-reffing, $content-type, $error
   ).Bool
 }
 
@@ -286,7 +286,7 @@ Returns: C<True> if I<appinfo> can be deleted
 method can-delete ( --> Bool ) {
 
   g_app_info_can_delete(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -311,7 +311,7 @@ Returns: C<True> if it is possible to remove supported content types from a give
 method can-remove-supports-type ( --> Bool ) {
 
   g_app_info_can_remove_supports_type(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -340,7 +340,7 @@ Returns: C<True> if I<appinfo> has been deleted
 method delete ( --> Bool ) {
 
   g_app_info_delete(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -365,7 +365,7 @@ Returns: a duplicate of I<appinfo>.
 method dup ( --> N-GObject ) {
 
   g_app_info_dup(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   )
 }
 
@@ -393,7 +393,7 @@ Returns: C<True> if I<appinfo1> is equal to I<appinfo2>. C<False> otherwise.
 method equal ( N-GObject $appinfo2 --> Bool ) {
 
   g_app_info_equal(
-    self._f('GAppInfo'), $appinfo2
+    self.get-native-object-no-reffing, $appinfo2
   ).Bool
 }
 
@@ -403,7 +403,7 @@ sub g_app_info_equal (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-all:
+#TM:1:get-all:
 =begin pod
 =head2 get-all
 
@@ -418,9 +418,7 @@ Returns a newly allocated list of references to B<Gnome::Gio::AppInfo>s.
 =end pod
 
 method get-all ( --> Gnome::Glib::List ) {
-  Gnome::Glib::List.new(
-    :native-object(g_app_info_get_all(self._f('GAppInfo')))
-  )
+  Gnome::Glib::List.new(:native-object(g_app_info_get_all()))
 }
 
 sub g_app_info_get_all (
@@ -435,25 +433,25 @@ sub g_app_info_get_all (
 
 Gets a list of all B<Gnome::Gio::AppInfo>s for a given content type, including the recommended and fallback GAppInfos. See C<.get-recommended-for-type()> and C<get-fallback-for-type()>.
 
-  method get-all-for-type ( Str $content_type --> Gnome::Glib::List )
+  method get-all-for-type ( Str $content-type --> Gnome::Glib::List )
 
-=item Str $content_type;
+=item Str $content-type;
 =end pod
 
-method get-all-for-type ( Str $content_type --> Gnome::Glib::List ) {
+method get-all-for-type ( Str $content-type --> Gnome::Glib::List ) {
   Gnome::Glib::List.new(:native-object(
-      g_app_info_get_all_for_type( self._f('GAppInfo'), $content_type)
+      g_app_info_get_all_for_type( self.get-native-object-no-reffing, $content-type)
     )
   )
 }
 
 sub g_app_info_get_all_for_type (
-  gchar-ptr $content_type --> N-GList
+  gchar-ptr $content-type --> N-GList
 ) is native(&gio-lib)
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-commandline:
+#TM:1:get-commandline:
 =begin pod
 =head2 get-commandline
 
@@ -466,7 +464,7 @@ Returns: (type filename): a string containing the I<appinfo>'s commandline, or C
 =end pod
 
 method get-commandline ( --> Str ) {
-  g_app_info_get_commandline(self._f('GAppInfo'))
+  g_app_info_get_commandline(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_commandline (
@@ -475,49 +473,47 @@ sub g_app_info_get_commandline (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-default-for-type:
-#TM:0:get-default-for-type-rk:
+#TM:1:get-default-for-type:
+#TM:1:get-default-for-type-rk:
 =begin pod
 =head2 get-default-for-type, get-default-for-type-rk
 
 Gets the default B<Gnome::Gio::AppInfo> for a given content type.
 
   method get-default-for-type (
-    Str $content_type, Bool $must_support_uris
+    Str $content-type, Bool $must_support_uris
     --> N-GObject
   )
 
   method get-default-for-type-rk (
-    Str $content_type, Bool $must_support_uris
+    Str $content-type, Bool $must_support_uris
     --> Gnome::Gio::AppInfo
   )
 
-=item Str $content_type;
+=item Str $content-type;
 =item Bool $must_support_uris;
 =end pod
 
 method get-default-for-type (
-  Str $content_type, Bool $must_support_uris --> N-GObject
+  Str $content-type, Bool $must_support_uris --> N-GObject
 ) {
   g_app_info_get_default_for_type(
-    self._f('GAppInfo'), $content_type, $must_support_uris
+    self.get-native-object-no-reffing, $content-type, $must_support_uris
   )
 }
 
 method get-default-for-type-rk (
-  Str $content_type, Bool $must_support_uris --> Gnome::Gio::AppInfo
+  Str $content-type, Bool $must_support_uris --> Gnome::Gio::AppInfo
 ) {
   Gnome::Gio::AppInfo.new(
     :native-object(
-      g_app_info_get_default_for_type(
-        self._f('GAppInfo'), $content_type, $must_support_uris
-      )
+      g_app_info_get_default_for_type( $content-type, $must_support_uris)
     )
   )
 }
 
 sub g_app_info_get_default_for_type (
-  gchar-ptr $content_type, gboolean $must_support_uris --> N-GObject
+  gchar-ptr $content-type, gboolean $must_support_uris --> N-GObject
 ) is native(&gio-lib)
   { * }
 
@@ -539,7 +535,7 @@ Gets the default application for handling URIs with the given URI scheme. A URI 
 =end pod
 
 method get-default-for-uri-scheme ( Str $uri_scheme --> N-GObject ) {
-  g_app_info_get_default_for_uri_scheme( self._f('GAppInfo'), $uri_scheme)
+  g_app_info_get_default_for_uri_scheme( self.get-native-object-no-reffing, $uri_scheme)
 }
 
 method get-default-for-uri-scheme-rk (
@@ -547,7 +543,7 @@ method get-default-for-uri-scheme-rk (
 ) {
   Gnome::Gio::AppInfo.new(
     :native-object(
-      g_app_info_get_default_for_uri_scheme( self._f('GAppInfo'), $uri_scheme)
+      g_app_info_get_default_for_uri_scheme( self.get-native-object-no-reffing, $uri_scheme)
     )
   )
 }
@@ -571,7 +567,7 @@ Returns: a string containing a description of the application I<appinfo>, or C<u
 =end pod
 
 method get-description ( --> Str ) {
-  g_app_info_get_description(self._f('GAppInfo'))
+  g_app_info_get_description(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_description (
@@ -593,7 +589,7 @@ Returns: the display name of the application for I<appinfo>, or the name if no d
 =end pod
 
 method get-display-name ( --> Str ) {
-  g_app_info_get_display_name(self._f('GAppInfo'))
+  g_app_info_get_display_name(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_display_name (
@@ -615,7 +611,7 @@ Returns: (type filename): a string containing the I<appinfo>'s application binar
 =end pod
 
 method get-executable ( --> Str ) {
-  g_app_info_get_executable(self._f('GAppInfo'))
+  g_app_info_get_executable(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_executable (
@@ -630,17 +626,17 @@ sub g_app_info_get_executable (
 
 Gets a list of fallback B<Gnome::Gio::AppInfo> for a given content type, i.e. those applications which claim to support the given content type by MIME type subclassing and not directly.
 
-  method get-fallback-for-type ( Str $content_type --> N-GList )
+  method get-fallback-for-type ( Str $content-type --> N-GList )
 
-=item Str $content_type;
+=item Str $content-type;
 =end pod
 
-method get-fallback-for-type ( Str $content_type --> N-GList ) {
-  g_app_info_get_fallback_for_type( self._f('GAppInfo'), $content_type)
+method get-fallback-for-type ( Str $content-type --> N-GList ) {
+  g_app_info_get_fallback_for_type( self.get-native-object-no-reffing, $content-type)
 }
 
 sub g_app_info_get_fallback_for_type (
-  gchar-ptr $content_type --> N-GList
+  gchar-ptr $content-type --> N-GList
 ) is native(&gio-lib)
   { * }
 
@@ -661,7 +657,7 @@ Returns: the default B<Gnome::Gio::Icon> for I<appinfo> or C<undefined> if there
 method get-icon ( --> GIcon ) {
 
   g_app_info_get_icon(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   )
 }
 
@@ -689,7 +685,7 @@ Returns: a string containing the application's ID.
 method get-id ( --> Str ) {
 
   g_app_info_get_id(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   )
 }
 
@@ -712,7 +708,7 @@ Returns: the name of the application for I<appinfo>.
 =end pod
 
 method get-name ( --> Str ) {
-  g_app_info_get_name(self._f('GAppInfo'))
+  g_app_info_get_name(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_name (
@@ -727,20 +723,20 @@ sub g_app_info_get_name (
 
 
 
-  method get-recommended-for-type ( Str $content_type --> N-GList )
+  method get-recommended-for-type ( Str $content-type --> N-GList )
 
-=item Str $content_type;
+=item Str $content-type;
 =end pod
 
-method get-recommended-for-type ( Str $content_type --> N-GList ) {
+method get-recommended-for-type ( Str $content-type --> N-GList ) {
 
   g_app_info_get_recommended_for_type(
-    self._f('GAppInfo'), $content_type
+    self.get-native-object-no-reffing, $content-type
   )
 }
 
 sub g_app_info_get_recommended_for_type (
-  gchar-ptr $content_type --> N-GList
+  gchar-ptr $content-type --> N-GList
 ) is native(&gio-lib)
   { * }
 
@@ -760,7 +756,7 @@ Returns:   (element-type utf8): a list of content types.
 method get-supported-types ( --> CArray[Str] ) {
 
   g_app_info_get_supported_types(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   )
 }
 
@@ -770,19 +766,21 @@ sub g_app_info_get_supported_types (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:launch:
+#TM:1:launch:
 =begin pod
 =head2 launch
 
-Launches the application. Passes I<files> to the launched application as arguments, using the optional I<context> to get information about the details of the launcher (like what screen it is on). On error, I<error> will be set accordingly.
+Launches the application. Passes I<f@iles> to the launched application as arguments, using the optional I<$context> to get information about the details of the launcher (like what screen it is on). On error, I<error> will be set accordingly.
 
-To launch the application without arguments pass a C<undefined> I<files> list.
+To launch the application without arguments pass an empty I<@files> list.
 
 Note that even if the launch is successful the application launched can fail to start if it runs into problems during startup. There is no way to detect this.
 
+=begin comment
 Some URIs can be changed when passed through a GFile (for instance unsupported URIs with strange formats like mailto:), so if you have a textual URI you want to pass in as argument, consider using C<launch-uris()> instead.
+=end comment
 
-The launched application inherits the environment of the launching process, but it can be modified with C<g-app-launch-context-setenv()> and C<g-app-launch-context-unsetenv()>.
+The launched application inherits the environment of the launching process, but it can be modified with C<Gnome::Gio::AppLaunchContext.setenv()> and C<Gnome::Gio::AppLaunchContext.unsetenv()>.
 
 On UNIX, this function sets the `GIO-LAUNCHED-DESKTOP-FILE` environment variable with the path of the launched desktop file and `GIO-LAUNCHED-DESKTOP-FILE-PID` to the process id of the launched process. This can be used to ignore `GIO-LAUNCHED-DESKTOP-FILE`, should it be inherited by further processes. The `DISPLAY` and `DESKTOP-STARTUP-ID` environment variables are also set, based on information provided in I<context>.
 
@@ -793,25 +791,42 @@ Returns: An error object which will be invalid on successful launch, valid other
     --> Gnome::Glib::Error
   )
 
-=item N-GList $files;  (element-type GFile): a B<Gnome::Gio::List> of B<Gnome::Gio::File> objects
+=item @files; list of filenames
 =item N-GObject $context; a native B<Gnome::Gio::AppLaunchContext> or C<undefined>
 =end pod
 
-method launch (
-  @files, $context is copy
-  --> Gnome::Glib::Error
-) {
+method launch ( @files, $context is copy --> Gnome::Glib::Error ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
   my Gnome::Glib::List $flist .= new;
   my CArray[N-GError] $error;
 
   for @files -> $f {
-    $flist .= append(Gnome::Gio::File.new(:path($f)));
+    my Gnome::Gio::File $gfile .= new(:path($f));
+#note "launch: $f, ", $gfile.get-uri; #, ', ', $gfile.query-info();
+
+    # appending like this keeps the location at the end so it is not
+    # a big problem as gnome wants you to believe.
+    $flist .= append(nativecast( Pointer, $gfile.get-native-object-no-reffing));
+  }
+  $flist .= first;
+#note "nbr files: ", $flist.length();
+
+  # launch the application with the provided files
+  my Bool $r = g_app_info_launch(
+    self.get-native-object-no-reffing, $flist.get-native-object,
+    $context, $error
+  ).Bool;
+
+  # clear all elements in the list
+  for ^$flist.length -> $i {
+    my Gnome::Gio::File $gfile .= new(
+      :native-object(nativecast( N-GFile, $flist.nth-data($i)))
+    );
+    $gfile.clear-object;
   }
 
-  my Bool $r = g_app_info_launch(
-    self._f('GAppInfo'), $flist, $context, $error
-  ).Bool;
+  # and the list itself
+  $flist.clear-object;
 
   if $r {
     Gnome::Glib::Error.new(:native-object(N-GError))
@@ -828,9 +843,8 @@ sub g_app_info_launch (
 ) is native(&gio-lib)
   { * }
 
-#`{{
 #-------------------------------------------------------------------------------
-#TM:0:launch-default-for-uri:
+#TM:1:launch-default-for-uri:
 =begin pod
 =head2 launch-default-for-uri
 
@@ -838,28 +852,39 @@ Utility function that launches the default application registered to handle the 
 
 The D-Bus–activated applications don't have to be started if your application terminates too soon after this function. To prevent this, use C<launch-default-for-uri()> instead.
 
-Returns: C<True> on success, C<False> on error.
+Returns an invalid error object on success, valid on error. Check the error object for failures.
 
-  method launch-default-for-uri ( Str $uri, GAppLaunchContext $context, N-GError $error --> Bool )
+  method launch-default-for-uri (
+    Str $uri, N-GObject $context --> Gnome::Glib::Error
+  )
 
 =item Str $uri; the uri to show
-=item GAppLaunchContext $context; an optional B<Gnome::Gio::AppLaunchContext>
+=item N-GObject $context; an optional B<Gnome::Gio::AppLaunchContext>
 =item N-GError $error; return location for an error, or C<undefined>
 =end pod
 
-method launch-default-for-uri ( Str $uri, GAppLaunchContext $context, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method launch-default-for-uri (
+  Str $uri, N-GObject $context --> Gnome::Glib::Error
+) {
+  my CArray[N-GError] $error;
 
-  g_app_info_launch_default_for_uri(
-    self._f('GAppInfo'), $uri, $context, $error
-  ).Bool
+  my Bool $r = g_app_info_launch_default_for_uri( $uri, $context, $error).Bool;
+
+  if $r {
+    Gnome::Glib::Error.new(:native-object(N-GObject))
+  }
+
+  else {
+    Gnome::Glib::Error.new(:native-object($error[0]))
+  }
 }
 
 sub g_app_info_launch_default_for_uri (
-  gchar-ptr $uri, GAppLaunchContext $context, N-GError $error --> gboolean
+  gchar-ptr $uri, N-GObject $context, CArray[N-GError] $error --> gboolean
 ) is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:launch-default-for-uri-async:
 =begin pod
@@ -883,7 +908,7 @@ This is also useful if you want to be sure that the D-Bus–activated applicatio
 method launch-default-for-uri-async ( Str $uri, GAppLaunchContext $context, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_app_info_launch_default_for_uri_async(
-    self._f('GAppInfo'), $uri, $context, $cancellable, $callback, $user_data
+    self.get-native-object-no-reffing, $uri, $context, $cancellable, $callback, $user_data
   );
 }
 
@@ -913,7 +938,7 @@ method launch-default-for-uri-finish ( GAsyncResult $result, $error is copy --> 
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_launch_default_for_uri_finish(
-    self._f('GAppInfo'), $result, $error
+    self.get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -949,7 +974,7 @@ method launch-uris ( $uris is copy, GAppLaunchContext $context, $error is copy -
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_launch_uris(
-    self._f('GAppInfo'), $uris, $context, $error
+    self.get-native-object-no-reffing, $uris, $context, $error
   ).Bool
 }
 
@@ -982,7 +1007,7 @@ method launch-uris-async ( $uris is copy, GAppLaunchContext $context, GCancellab
   $uris .= get-native-object-no-reffing unless $uris ~~ N-GList;
 
   g_app_info_launch_uris_async(
-    self._f('GAppInfo'), $uris, $context, $cancellable, $callback, $user_data
+    self.get-native-object-no-reffing, $uris, $context, $cancellable, $callback, $user_data
   );
 }
 
@@ -1012,7 +1037,7 @@ method launch-uris-finish ( GAsyncResult $result, $error is copy --> Bool ) {
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_launch_uris_finish(
-    self._f('GAppInfo'), $result, $error
+    self.get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -1031,22 +1056,22 @@ Removes a supported type from an application, if possible.
 
 Returns: C<True> on success, C<False> on error.
 
-  method remove-supports-type ( Str $content_type, N-GError $error --> Bool )
+  method remove-supports-type ( Str $content-type, N-GError $error --> Bool )
 
-=item Str $content_type; a string.
+=item Str $content-type; a string.
 =item N-GError $error; a B<Gnome::Gio::Error>.
 =end pod
 
-method remove-supports-type ( Str $content_type, $error is copy --> Bool ) {
+method remove-supports-type ( Str $content-type, $error is copy --> Bool ) {
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_remove_supports_type(
-    self._f('GAppInfo'), $content_type, $error
+    self.get-native-object-no-reffing, $content-type, $error
   ).Bool
 }
 
 sub g_app_info_remove_supports_type (
-  N-GObject $appinfo, gchar-ptr $content_type, N-GError $error --> gboolean
+  N-GObject $appinfo, gchar-ptr $content-type, N-GError $error --> gboolean
 ) is native(&gio-lib)
   { * }
 
@@ -1057,17 +1082,17 @@ sub g_app_info_remove_supports_type (
 
 Removes all changes to the type associations done by C<.set_as_default_for_type()>, C<.set_as_default_for_extension()>, C<.add_supports_type()> or C<.remove_supports_type()>.
 
-  method reset-type-associations ( Str $content_type )
+  method reset-type-associations ( Str $content-type )
 
-=item Str $content_type;
+=item Str $content-type;
 =end pod
 
-method reset-type-associations ( Str $content_type ) {
-  g_app_info_reset_type_associations( self._f('GAppInfo'), $content_type);
+method reset-type-associations ( Str $content-type ) {
+  g_app_info_reset_type_associations( self.get-native-object-no-reffing, $content-type);
 }
 
 sub g_app_info_reset_type_associations (
-  gchar-ptr $content_type
+  gchar-ptr $content-type
 ) is native(&gio-lib)
   { * }
 
@@ -1090,7 +1115,7 @@ method set-as-default-for-extension ( Str $extension, $error is copy --> Bool ) 
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_set_as_default_for_extension(
-    self._f('GAppInfo'), $extension, $error
+    self.get-native-object-no-reffing, $extension, $error
   ).Bool
 }
 
@@ -1100,30 +1125,37 @@ sub g_app_info_set_as_default_for_extension (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:set-as-default-for-type:
+#TM:1:set-as-default-for-type:
 =begin pod
 =head2 set-as-default-for-type
 
 Sets the application as the default handler for a given type.
 
-Returns: C<True> on success, C<False> on error.
+Returns: An error object which will be invalid on successful launch, valid otherwise and the error object must be checked for the error.
 
-  method set-as-default-for-type ( Str $content_type, N-GError $error --> Bool )
+  method set-as-default-for-type ( Str $content-type, N-GError $error --> Bool )
 
-=item Str $content_type; the content type.
-=item N-GError $error; a B<Gnome::Gio::Error>.
+=item Str $content-type; the content type.
 =end pod
 
-method set-as-default-for-type ( Str $content_type, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method set-as-default-for-type ( Str $content-type --> Gnome::Glib::Error ) {
+  my CArray[N-GError] $error .= new;
 
-  g_app_info_set_as_default_for_type(
-    self._f('GAppInfo'), $content_type, $error
-  ).Bool
+  my Bool $r = g_app_info_set_as_default_for_type(
+    self.get-native-object-no-reffing, $content-type, $error
+  ).Bool;
+
+  if $r {
+    Gnome::Glib::Error.new(:native-object(N-GError))
+  }
+
+  else {
+    Gnome::Glib::Error.new(:native-object($error[0]))
+  }
 }
 
 sub g_app_info_set_as_default_for_type (
-  N-GObject $appinfo, gchar-ptr $content_type, N-GError $error --> gboolean
+  N-GObject $appinfo, gchar-ptr $content-type, CArray[N-GError] $error --> gboolean
 ) is native(&gio-lib)
   { * }
 
@@ -1136,22 +1168,22 @@ Sets the application as the last used application for a given type. This will ma
 
 Returns: C<True> on success, C<False> on error.
 
-  method set-as-last-used-for-type ( Str $content_type, N-GError $error --> Bool )
+  method set-as-last-used-for-type ( Str $content-type, N-GError $error --> Bool )
 
-=item Str $content_type; the content type.
+=item Str $content-type; the content type.
 =item N-GError $error; a B<Gnome::Gio::Error>.
 =end pod
 
-method set-as-last-used-for-type ( Str $content_type, $error is copy --> Bool ) {
+method set-as-last-used-for-type ( Str $content-type, $error is copy --> Bool ) {
   $error .= get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_set_as_last_used_for_type(
-    self._f('GAppInfo'), $content_type, $error
+    self.get-native-object-no-reffing, $content-type, $error
   ).Bool
 }
 
 sub g_app_info_set_as_last_used_for_type (
-  N-GObject $appinfo, gchar-ptr $content_type, N-GError $error --> gboolean
+  N-GObject $appinfo, gchar-ptr $content-type, N-GError $error --> gboolean
 ) is native(&gio-lib)
   { * }
 
@@ -1171,7 +1203,7 @@ Returns: C<True> if the I<appinfo> should be shown, C<False> otherwise.
 method should-show ( --> Bool ) {
 
   g_app_info_should_show(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -1196,7 +1228,7 @@ Returns: C<True> if the I<appinfo> supports files.
 method supports-files ( --> Bool ) {
 
   g_app_info_supports_files(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -1221,7 +1253,7 @@ Returns: C<True> if the I<appinfo> supports URIs.
 method supports-uris ( --> Bool ) {
 
   g_app_info_supports_uris(
-    self._f('GAppInfo'),
+    self.get-native-object-no-reffing,
   ).Bool
 }
 
@@ -1249,7 +1281,7 @@ method _create-from-commandline (
 ) {
   my CArray[N-GError] $error .= new;
   g_app_info_create_from_commandline(
-    self._f('GAppInfo'), $commandline, $application_name, $flags, $error
+    self.get-native-object-no-reffing, $commandline, $application_name, $flags, $error
   )
 }
 }}
