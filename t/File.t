@@ -26,11 +26,20 @@ my Gnome::Gio::File $f;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
   $f .= new(:path<t/data/g-resources/rtest>);
-  isa-ok $f, Gnome::Gio::File, '.new(:path)';
+  like $f.get-path, / 't/data/g-resources/rtest' /, '.new(:path)';
+  $f.clear-object;
+
+  $f .= new(:commandline-arg<t/somepath>);
+  like $f.get-path, / 't/somepath' /, '.new(:commandline-arg)';
+  $f.clear-object;
+
+  $f .= new( :commandline-arg<t/data>, :cwd</tmp>);
+  is $f.get-path, '/tmp/t/data', '.new( :commandline-arg, :cwd)';
   $f.clear-object;
 
   $f .= new(:uri<https://developer.gnome.org/gio/2.62/GFile.html>);
-  isa-ok $f, Gnome::Gio::File, '.new(:uri)';
+  is $f.get-uri, 'https://developer.gnome.org/gio/2.62/GFile.html',
+     '.new(:uri)';
   $f.clear-object;
 }
 
@@ -43,21 +52,50 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
-  $f .= new(:uri<https://developer.gnome.org/gio/2.62/GFile.html>);
-  is $f.get-basename, 'GFile.html', '.get-basename()';
+  $f .= new(:uri<https://developer.gnome.org/gio>);
+  is $f.get-basename, 'gio', '.get-basename()';
   is $f.get-path, Str, '.get-path() no path for uri';
-  is $f.get-uri, 'https://developer.gnome.org/gio/2.62/GFile.html',
+  is $f.get-uri, 'https://developer.gnome.org/gio',
      '.get-uri()';
   is $f.is-native, False, '.is-native()';
 #  is $f.has-uri-scheme('ftp'), 0, '.has-uri-scheme() no ftp';
-#  is $f.has-uri-scheme('http'), 1, '.has-uri-scheme() has http';
-#  is $f.get-uri-scheme, 'http', '.get-uri-scheme()';
-  $f.clear-object;
+  nok $f.has-uri-scheme('http'), '.has-uri-scheme() does not have http';
+  ok $f.has-uri-scheme('https'), '.has-uri-scheme() has https';
+  is $f.get-uri-scheme, 'https', '.get-uri-scheme()';
 
+  my Gnome::Gio::File $f2 = $f.get-child-rk('2.62/GFile.html');
+  is $f2.get-uri, 'https://developer.gnome.org/gio/2.62/GFile.html',
+     '.get-child-rk()';
+
+  $f.clear-object;
+  $f2.clear-object;
+  $f .= new(:path<t/data/g-resources>);
+  $f2 = $f.get-child-for-display-name-rk('rtest');
+  like $f2.get-path, / 't/data/g-resources/rtest' /,
+      '.get-child-for-display-name-rk()';
+  ok $f2.has-parent($f), '.has-parent()';
+  ok $f2.has-prefix($f), '.has-prefix()';
+
+  $f2.clear-object;
+  $f2 = $f.get-parent-rk;
+  like $f2.get-path, / 't/data' /, '.get-parent-rk()';
+  like $f2.get-parse-name, / 't/data' /, '.get-parse-name()';
+
+  $f2.clear-object;
+  $f.clear-object;
   $f .= new(:path<t/data/g-resources/rtest>);
   like $f.get-path,
     / t <[/\\]> data <[/\\]> g\-resources <[/\\]> rtest $/, '.get-path()';
+
+  $f2 .= new(:path<t/data/g-resources/ActionMap.t>);
+  nok $f.get-relative-path($f2).defined, '.get-relative-path() undefined';
+  $f2.clear-object;
+  $f2 .= new(:path<t/data/g-resources/rtest/abc/def>);
+  is $f.get-relative-path($f2), 'abc/def', '.get-relative-path() defined';
+
+
   $f.clear-object;
+  $f2.clear-object;
 }
 
 
