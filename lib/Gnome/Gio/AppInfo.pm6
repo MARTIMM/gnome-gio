@@ -209,59 +209,28 @@ submethod BUILD ( *%options ) {
 }
 
 #-------------------------------------------------------------------------------
-=begin pod
-=head1 Methods
-=end pod
-
-# interfaces are not instantiated
-#submethod BUILD ( *%options ) { }
-
-#`{{
-# All interface calls should become methods
-#-------------------------------------------------------------------------------
-# no pod. user does not have to know about it.
-method _g_app_info_interface ( $native-sub --> Callable ) {
-
-  my Callable $s;
-  try { $s = &:("g_app_info_$native-sub"); };
-# check for gtk_, gdk_, g_, pango_, cairo_ !!!
-  try { $s = &:("gtk_$native-sub"); } unless ?$s;
-  try { $s = &:($native-sub); } if !$s and $native-sub ~~ m/^ 'gtk_' /;
-
-  $s;
-}
-}}
-
-#`{{
-#-------------------------------------------------------------------------------
-# setup signals from interface
-method _add_g_app_info_interface_signal_types ( Str $class-name ) {
-  # add signal info in the form of w*<signal-name>.
-  self.add-signal-types( $?CLASS.^name,
-    :w0<changed>, :w1<launch-failed>, :w2<launched>,
-  );
-}
-}}
-
-#-------------------------------------------------------------------------------
-#TM:0:add-supports-type:
+#TM:1:add-supports-type:
 =begin pod
 =head2 add-supports-type
 
 Adds a content type to the application information to indicate the application is capable of opening files with the given content type.
 
-Returns: An invalid error object on success, valid on error. Check the C<.message()> of this object to see what happened.
+Returns C<True> if successful, C<False> if an error is set. When False, Check the error attribute C<$.last-error> for failures.
 
-  method add-supports-type ( Str $content-type --> Gnome::Glib::Error )
+  method add-supports-type ( Str $content-type --> Bool )
 
 =item Str $content-type; a string.
 =end pod
 
-method add-supports-type ( Str $content-type --> Gnome::Glib::Error ) {
+method add-supports-type ( Str $content-type --> Bool ) {
   my CArray[N-GError] $error .= new;
-  g_app_info_add_supports_type(
+  my Bool $r = g_app_info_add_supports_type(
     self.get-native-object-no-reffing, $content-type, $error
-  ).Bool
+  ).Bool;
+
+  $!last-error .= new(:native-object($r ?? $error[0] !! N-GError));
+
+  $r
 }
 
 sub g_app_info_add_supports_type (
@@ -271,7 +240,7 @@ sub g_app_info_add_supports_type (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:can-delete:
+#TM:1:can-delete:
 =begin pod
 =head2 can-delete
 
@@ -284,10 +253,7 @@ Returns: C<True> if I<appinfo> can be deleted
 =end pod
 
 method can-delete ( --> Bool ) {
-
-  g_app_info_can_delete(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_can_delete(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_can_delete (
@@ -296,7 +262,7 @@ sub g_app_info_can_delete (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:can-remove-supports-type:
+#TM:1:can-remove-supports-type:
 =begin pod
 =head2 can-remove-supports-type
 
@@ -309,10 +275,7 @@ Returns: C<True> if it is possible to remove supported content types from a give
 =end pod
 
 method can-remove-supports-type ( --> Bool ) {
-
-  g_app_info_can_remove_supports_type(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_can_remove_supports_type(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_can_remove_supports_type (
@@ -321,7 +284,7 @@ sub g_app_info_can_remove_supports_type (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:delete:
+#TM:1:delete:
 =begin pod
 =head2 delete
 
@@ -329,7 +292,7 @@ Tries to delete a B<Gnome::Gio::AppInfo>.
 
 On some platforms, there may be a difference between user-defined B<Gnome::Gio::AppInfos> which can be deleted, and system-wide ones which cannot. See C<can-delete()>.
 
-Virtual: do-delete
+=comment TODO Virtual: do-delete
 
 Returns: C<True> if I<appinfo> has been deleted
 
@@ -338,10 +301,7 @@ Returns: C<True> if I<appinfo> has been deleted
 =end pod
 
 method delete ( --> Bool ) {
-
-  g_app_info_delete(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_delete(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_delete (
@@ -349,6 +309,7 @@ sub g_app_info_delete (
 ) is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:dup:
 =begin pod
@@ -373,7 +334,9 @@ sub g_app_info_dup (
   N-GObject $appinfo --> N-GObject
 ) is native(&gio-lib)
   { * }
+}}
 
+#`{{
 #-------------------------------------------------------------------------------
 #TM:0:equal:
 =begin pod
@@ -391,16 +354,14 @@ Returns: C<True> if I<appinfo1> is equal to I<appinfo2>. C<False> otherwise.
 =end pod
 
 method equal ( N-GObject $appinfo2 --> Bool ) {
-
-  g_app_info_equal(
-    self.get-native-object-no-reffing, $appinfo2
-  ).Bool
+  g_app_info_equal( self.get-native-object-no-reffing, $appinfo2).Bool
 }
 
 sub g_app_info_equal (
   N-GObject $appinfo1, N-GObject $appinfo2 --> gboolean
 ) is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:1:get-all:
@@ -427,7 +388,7 @@ sub g_app_info_get_all (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-all-for-type:
+#TM:1:get-all-for-type:
 =begin pod
 =head2 get-all-for-type
 
@@ -440,7 +401,7 @@ Gets a list of all B<Gnome::Gio::AppInfo>s for a given content type, including t
 
 method get-all-for-type ( Str $content-type --> Gnome::Glib::List ) {
   Gnome::Glib::List.new(:native-object(
-      g_app_info_get_all_for_type( self.get-native-object-no-reffing, $content-type)
+      g_app_info_get_all_for_type($content-type)
     )
   )
 }
@@ -784,18 +745,17 @@ The launched application inherits the environment of the launching process, but 
 
 On UNIX, this function sets the `GIO-LAUNCHED-DESKTOP-FILE` environment variable with the path of the launched desktop file and `GIO-LAUNCHED-DESKTOP-FILE-PID` to the process id of the launched process. This can be used to ignore `GIO-LAUNCHED-DESKTOP-FILE`, should it be inherited by further processes. The `DISPLAY` and `DESKTOP-STARTUP-ID` environment variables are also set, based on information provided in I<context>.
 
-Returns: An error object which will be invalid on successful launch, valid otherwise and the error object must be checked for the error.
+Returns C<True> if the launch was successful, C<False> if an error is set. When False, Check the error attribute C<$.last-error> for failures.
 
   method launch (
-    Str @files, N-GObject $context
-    --> Gnome::Glib::Error
+    Str @files, N-GObject $context --> Bool
   )
 
 =item @files; list of filenames
 =item N-GObject $context; a native B<Gnome::Gio::AppLaunchContext> or C<undefined>
 =end pod
 
-method launch ( @files, $context is copy --> Gnome::Glib::Error ) {
+method launch ( @files, $context is copy --> Bool ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
   my Gnome::Glib::List $flist .= new;
   my CArray[N-GError] $error;
@@ -827,14 +787,9 @@ method launch ( @files, $context is copy --> Gnome::Glib::Error ) {
 
   # and the list itself
   $flist.clear-object;
+  $!last-error .= new(:native-object($r ?? $error[0] !! N-GError));
 
-  if $r {
-    Gnome::Glib::Error.new(:native-object(N-GError))
-  }
-
-  else {
-    Gnome::Glib::Error.new(:native-object($error[0]))
-  }
+  $r
 }
 
 sub g_app_info_launch (
@@ -852,10 +807,10 @@ Utility function that launches the default application registered to handle the 
 
 The D-Bus–activated applications don't have to be started if your application terminates too soon after this function. To prevent this, use C<launch-default-for-uri()> instead.
 
-Returns an invalid error object on success, valid on error. Check the error object for failures.
+Returns C<True> if the launch was successful, C<False> if an error is set. When False, Check the error attribute C<$.last-error> for failures.
 
   method launch-default-for-uri (
-    Str $uri, N-GObject $context --> Gnome::Glib::Error
+    Str $uri, N-GObject $context --> Bool
   )
 
 =item Str $uri; the uri to show
@@ -863,20 +818,15 @@ Returns an invalid error object on success, valid on error. Check the error obje
 =item N-GError $error; return location for an error, or C<undefined>
 =end pod
 
-method launch-default-for-uri (
-  Str $uri, N-GObject $context --> Gnome::Glib::Error
-) {
-  my CArray[N-GError] $error;
+method launch-default-for-uri ( Str $uri, $context is copy --> Bool ) {
+  $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
+  my CArray[N-GError] $error .= new;
 
   my Bool $r = g_app_info_launch_default_for_uri( $uri, $context, $error).Bool;
-
-  if $r {
-    Gnome::Glib::Error.new(:native-object(N-GObject))
-  }
-
-  else {
-    Gnome::Glib::Error.new(:native-object($error[0]))
-  }
+  $!last-error .= new(:native-object($r ?? $error[0] !! N-GError));
+#TODO returns false but there's no error
+#note "launch-default-for-uri: $uri, ", $r, ', ', $!last-error.raku;
+  $r
 }
 
 sub g_app_info_launch_default_for_uri (
@@ -1076,7 +1026,7 @@ sub g_app_info_remove_supports_type (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:reset-type-associations:
+#TM:1:reset-type-associations:
 =begin pod
 =head2 reset-type-associations
 
@@ -1088,7 +1038,7 @@ Removes all changes to the type associations done by C<.set_as_default_for_type(
 =end pod
 
 method reset-type-associations ( Str $content-type ) {
-  g_app_info_reset_type_associations( self.get-native-object-no-reffing, $content-type);
+  g_app_info_reset_type_associations($content-type);
 }
 
 sub g_app_info_reset_type_associations (
@@ -1097,30 +1047,33 @@ sub g_app_info_reset_type_associations (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:set-as-default-for-extension:
+#TM:1:set-as-default-for-extension:
 =begin pod
 =head2 set-as-default-for-extension
 
 Sets the application as the default handler for the given file extension.
 
-Returns: C<True> on success, C<False> on error.
+Returns: C<True> on success, C<False> on error. When False, Check the error attribute C<$.last-error> for failures.
 
   method set-as-default-for-extension ( Str $extension, N-GError $error --> Bool )
 
-=item Str $extension; (type filename): a string containing the file extension (without the dot).
-=item N-GError $error; a B<Gnome::Gio::Error>.
+=item Str $extension; a string containing the file extension (without the dot).
 =end pod
 
-method set-as-default-for-extension ( Str $extension, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method set-as-default-for-extension ( Str $extension --> Bool ) {
+  my CArray[N-GError] $error .= new;
 
-  g_app_info_set_as_default_for_extension(
+  my Bool $r = g_app_info_set_as_default_for_extension(
     self.get-native-object-no-reffing, $extension, $error
-  ).Bool
+  ).Bool;
+
+  $!last-error .= new(:native-object($error[0] // N-GError));
+
+  $r;
 }
 
 sub g_app_info_set_as_default_for_extension (
-  N-GObject $appinfo, gchar-ptr $extension, N-GError $error --> gboolean
+  N-GObject $appinfo, gchar-ptr $extension, CArray[N-GError] $error --> gboolean
 ) is native(&gio-lib)
   { * }
 
@@ -1131,14 +1084,22 @@ sub g_app_info_set_as_default_for_extension (
 
 Sets the application as the default handler for a given type.
 
-Returns: An error object which will be invalid on successful launch, valid otherwise and the error object must be checked for the error.
+Sets the C<$.last-error> attribute which will be invalid on successful launch, valid otherwise and the error object must be checked for the error. Check the C<.message()> of this object to see what happened.
 
-  method set-as-default-for-type ( Str $content-type, N-GError $error --> Bool )
+  method set-as-default-for-type ( Str $content-type )
+
+=head3 Example
+
+This example shows how to set the default command of a jpeg image to the execution of C<ls -m>, a unix directory list command.
+
+  $ai .= new( :command-line('ls -m'), :application-name('ls'));
+  $ai.set-as-default-for-type('image/jpeg');
+  die $ai.last-error.message if $ai.last-error.is-valid;
 
 =item Str $content-type; the content type.
 =end pod
 
-method set-as-default-for-type ( Str $content-type --> Gnome::Glib::Error ) {
+method set-as-default-for-type ( Str $content-type ) {
   my CArray[N-GError] $error .= new;
 
   my Bool $r = g_app_info_set_as_default_for_type(
@@ -1146,11 +1107,11 @@ method set-as-default-for-type ( Str $content-type --> Gnome::Glib::Error ) {
   ).Bool;
 
   if $r {
-    Gnome::Glib::Error.new(:native-object(N-GError))
+    $!last-error = Gnome::Glib::Error.new(:native-object(N-GError))
   }
 
   else {
-    Gnome::Glib::Error.new(:native-object($error[0]))
+    $!last-error = Gnome::Glib::Error.new(:native-object($error[0]))
   }
 }
 
@@ -1263,7 +1224,7 @@ sub g_app_info_supports_uris (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:_g_app_info_create_from_commandline:
+#TM:1:_g_app_info_create_from_commandline:
 #`{{
 =begin pod
 =head2 create-from-commandline

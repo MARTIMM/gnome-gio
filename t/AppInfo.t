@@ -41,33 +41,50 @@ unless %*ENV<raku_test_all>:exists {
 subtest 'Manipulations', {
   $ai .= new( :command-line('ls -m'), :application-name('ls'));
   is $ai.get-commandline, 'ls -m %f', '.get-commandline()';
+  nok $ai.can-delete, '.can-delete()';
+  nok $ai.delete, '.delete()';
+  ok $ai.add-supports-type('text/x-yaml'), '.add-supports-type()';
+#$ai.get-name, ', ', $ai.get-display-name;
 
-  subtest 'app info list', {
+  my Gnome::Gio::AppLaunchContext $alc .= new;
+#TODO
+#  ok $ai.launch-default-for-uri( 'LICENSE', $alc),
+#     '.launch-default-for-uri()';
+#note $ai.last-error.message;
+
+  subtest 'app info lists', {
     my Gnome::Glib::List $list = $ai.get-all;
     ok $list.length > 1, '.get-all()';
     my Gnome::Gio::AppInfo $ai3 .= new(
       :native-object(nativecast( N-GObject, $list.nth-data(0)))
     );
     diag $ai3.get-commandline;
+
+    $list = $ai.get-all-for-type('text/x-yaml');
+    ok $list.length > 1, '.get-all-for-type()';
+    $ai3 .= new( :native-object(nativecast( N-GObject, $list.nth-data(0))));
+    diag $ai3.get-commandline;
   }
 
+  ok $ai.can-remove-supports-type, '.can-remove-supports-type()';
+
 #  my Gnome::Gio::AppLaunchContext $alc .= new;
-  $e = $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject);
-  nok $ai.last-error.is-valid, '.launch()';
+  ok $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject), '.launch()';
 
-  $e = $ai.set-as-default-for-type('image/jpeg');
-#note $e.raku;
+  # this will set the file type options of a jpeg image. after this
+  # ls will run instead of gwenview (or other image viewer).
+  $ai.set-as-default-for-type('image/jpeg');
   nok $ai.last-error.is-valid, '.set-as-default-for-type()';
+  $ai.set-as-default-for-extension('jpg');
+#note $e.raku;
 
-  my Gnome::Gio::AppInfo $ai2 = $ai.get-default-for-type-rk(
-    'image/jpeg', True
-  );
+  my Gnome::Gio::AppInfo $ai2;
+  $ai2 = $ai.get-default-for-type-rk( 'image/jpeg', True);
   is $ai2.get-commandline, 'gwenview %U',
     '.set-as-default-for-type() / get-default-for-type-rk';
 
-  $e = $ai2.launch-default-for-uri( 'LICENSE', N-GObject);
-#note $e.raku;
-  nok $ai.last-error.is-valid, '.launch-default-for-uri()';
+  # remove previous set associations
+  $ai.reset-type-associations('image/jpeg');
 }
 
 #-------------------------------------------------------------------------------
