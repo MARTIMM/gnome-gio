@@ -107,6 +107,7 @@ use Gnome::N::TopLevelClassSupport;
 use Gnome::N::GlibToRakuTypes;
 
 use Gnome::Glib::Error;
+use Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::File:auth<github:MARTIMM>:ver<0.2.0>;
@@ -2596,9 +2597,8 @@ sub g_file_poll_mountable_finish (
   { * }
 }}
 
-#`{{
 #-------------------------------------------------------------------------------
-# TM:0:query-default-handler:
+#TM:1:query-default-handler:
 =begin pod
 =head2 query-default-handler
 
@@ -2606,27 +2606,35 @@ Returns the B<Gnome::Gio::AppInfo> that is registered as the default application
 
 If I<cancellable> is not C<undefined>, then the operation can be cancelled by triggering the cancellable object from another thread. If the operation was cancelled, the error C<G-IO-ERROR-CANCELLED> will be returned.
 
-Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there were errors. When you are done with it, release it with C<clear-object()>
+Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there were errors and C<$.last-error> becomes valid. When you are done with it, release it with C<clear-object()>
 
-  method query-default-handler ( GCancellable $cancellable, N-GError $error --> GAppInfo )
+  method query-default-handler (
+    N-GObject $cancellable --> Gnome::Gio::AppInfo
+  )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item N-GObject $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore. (TODO: Cancellable not defined yet)
 =end pod
 
-method query-default-handler ( GCancellable $cancellable, $error is copy --> GAppInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method query-default-handler (
+  $cancellable is copy --> Gnome::GObject::Object
+) {
+  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  my CArray[N-GError] $error;
 
-  g_file_query_default_handler(
+  my N-GObject $no = g_file_query_default_handler(
     self.get-native-object-no-reffing, $cancellable, $error
-  )
+  );
+
+  $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
+  self._wrap-native-type-from-no( $no, :child-type<Gnome::Gio::AppInfo>);
 }
 
 sub g_file_query_default_handler (
-  N-GFile $file, GCancellable $cancellable, N-GError $error --> GAppInfo
+  N-GFile $file, N-GObject $cancellable, N-GError $error --> N-GObject
 ) is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 # TM:0:query-default-handler-async:
 =begin pod

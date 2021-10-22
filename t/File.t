@@ -2,7 +2,10 @@ use v6;
 use NativeCall;
 use Test;
 
+use Gnome::N::N-GObject;
+
 use Gnome::Gio::File;
+use Gnome::Gio::AppInfo;
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
@@ -93,6 +96,14 @@ subtest 'Manipulations', {
   $f2 .= new(:path<t/data/g-resources/rtest/abc/def>);
   is $f.get-relative-path($f2), 'abc/def', '.get-relative-path() defined';
 
+  $f.clear-object;
+  $f .= new(:uri<file:///LICENSE>);
+  my Gnome::Gio::AppInfo $ai = $f.query-default-handler(N-GObject);
+  diag $ai.is-valid;
+#  diag (
+#    "  " ~ $ai.get-name, $ai.get-display-name, $ai.get-id,
+#    $ai.get-description, $ai.get-commandline, $ai.get-executable
+#  ).join("\n  ");
 
   $f.clear-object;
   $f2.clear-object;
