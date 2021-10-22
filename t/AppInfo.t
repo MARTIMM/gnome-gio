@@ -15,6 +15,9 @@ use Gnome::N::N-GObject;
 #-------------------------------------------------------------------------------
 my Gnome::Glib::Error $e;
 my Gnome::Gio::AppInfo $ai;
+my Gnome::Gio::AppInfo $ai2;
+#my Gnome::Gio::AppLaunchContext $alc .= new;
+
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
   $ai .= new( :command-line('x'), :application-name('x'));
@@ -43,14 +46,23 @@ subtest 'Manipulations', {
   is $ai.get-commandline, 'ls -m %f', '.get-commandline()';
   nok $ai.can-delete, '.can-delete()';
   nok $ai.delete, '.delete()';
-  ok $ai.add-supports-type('text/x-yaml'), '.add-supports-type()';
-#$ai.get-name, ', ', $ai.get-display-name;
 
-  my Gnome::Gio::AppLaunchContext $alc .= new;
-#TODO
-#  ok $ai.launch-default-for-uri( 'LICENSE', $alc),
-#     '.launch-default-for-uri()';
-#note $ai.last-error.message;
+
+  # this will set the file type options of a yaml file. after this
+  # ls will show in the list of possible programs for this file type.
+  ok $ai.add-supports-type('text/x-yaml'), '.add-supports-type()';
+
+  # works, but starts my filebrowser
+  #ok $ai.launch-default-for-uri( 'file:///tmp', N-GObject),
+  #   '.launch-default-for-uri()';
+ok $ai.launch-default-for-uri( 'file:///no-dir', N-GObject),
+note $ai.last-error.message;
+
+  $ai2 = $ai.get-default-for-uri-scheme-rk('http');
+  diag $ai2.get-commandline;
+
+  ok $ai.set-as-last-used-for-type('text/x-yaml'),
+     '.set-as-last-used-for-type()';
 
   subtest 'app info lists', {
     my Gnome::Glib::List $list = $ai.get-all;
@@ -58,32 +70,63 @@ subtest 'Manipulations', {
     my Gnome::Gio::AppInfo $ai3 .= new(
       :native-object(nativecast( N-GObject, $list.nth-data(0)))
     );
-    diag $ai3.get-commandline;
+    diag (
+      "  " ~ $ai3.get-name, $ai3.get-display-name, $ai3.get-id,
+      $ai3.get-description, $ai3.get-commandline, $ai3.get-executable
+    ).join("\n  ");
+    $list.clear-object; #TODO no items cleared
 
     $list = $ai.get-all-for-type('text/x-yaml');
     ok $list.length > 1, '.get-all-for-type()';
     $ai3 .= new( :native-object(nativecast( N-GObject, $list.nth-data(0))));
-    diag $ai3.get-commandline;
+    diag (
+      "  " ~ $ai3.get-name, $ai3.get-display-name, $ai3.get-id,
+      $ai3.get-description, $ai3.get-commandline, $ai3.get-executable
+    ).join("\n  ");
+    $list.clear-object;
+
+    # no fallback for this type
+    $list = $ai.get-fallback-for-type('text/plain');
+    ok $list.length == 0, '.get-fallback-for-type()';
+
+    $list = $ai.get-fallback-for-type('text/html');
+    ok $list.length > 1, '.get-fallback-for-type()';
+    $ai3 .= new( :native-object(nativecast( N-GObject, $list.nth-data(0))));
+    diag (
+      "  " ~ $ai3.get-name, $ai3.get-display-name, $ai3.get-id,
+      $ai3.get-description, $ai3.get-commandline, $ai3.get-executable
+    ).join("\n  ");
+    $list.clear-object;
+
+    $list = $ai.get-recommended-for-type('text/html');
+    ok $list.length > 1, '.get-recommended-for-type()';
+    $ai3 .= new( :native-object(nativecast( N-GObject, $list.nth-data(0))));
+    diag (
+      "  " ~ $ai3.get-name, $ai3.get-display-name, $ai3.get-id,
+      $ai3.get-description, $ai3.get-commandline, $ai3.get-executable
+    ).join("\n  ");
+    $list.clear-object;
+
+    ok $ai3.get-supported-types.elems > 1, '.get-supported-types()';
   }
 
+  # remove it from the list
   ok $ai.can-remove-supports-type, '.can-remove-supports-type()';
+  ok $ai.remove-supports-type('text/x-yaml'), '.remove-supports-type()';
 
 #  my Gnome::Gio::AppLaunchContext $alc .= new;
   ok $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject), '.launch()';
 
   # this will set the file type options of a jpeg image. after this
   # ls will run instead of gwenview (or other image viewer).
-  $ai.set-as-default-for-type('image/jpeg');
-  nok $ai.last-error.is-valid, '.set-as-default-for-type()';
-  $ai.set-as-default-for-extension('jpg');
+  ok $ai.set-as-default-for-type('image/jpeg'), '.set-as-default-for-type()';
+  ok $ai.set-as-default-for-extension('jpg'), '.set-as-default-for-extension()';
 #note $e.raku;
 
-  my Gnome::Gio::AppInfo $ai2;
   $ai2 = $ai.get-default-for-type-rk( 'image/jpeg', True);
-  is $ai2.get-commandline, 'gwenview %U',
-    '.set-as-default-for-type() / get-default-for-type-rk';
+  is $ai2.get-commandline, 'gwenview %U', '.get-default-for-type-rk';
 
-  # remove previous set associations
+  # remove previous set default associations
   $ai.reset-type-associations('image/jpeg');
 }
 
