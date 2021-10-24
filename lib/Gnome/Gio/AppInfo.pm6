@@ -755,18 +755,18 @@ On UNIX, this function sets the `GIO-LAUNCHED-DESKTOP-FILE` environment variable
 Returns C<True> if the launch was successful, C<False> if an error is set. When False, Check the error attribute C<$.last-error> for failures.
 
   method launch (
-    Str @files, N-GObject $context --> Bool
+    @files, N-GObject $context --> Bool
   )
 
-=item @files; list of filenames
+=item Str @files; list of filenames
 =item N-GObject $context; a native B<Gnome::Gio::AppLaunchContext> or C<undefined>
 =end pod
 
 method launch ( @files, $context is copy --> Bool ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
-  my Gnome::Glib::List $flist .= new;
   my CArray[N-GError] $error;
 
+  my Gnome::Glib::List $flist .= new;
   for @files -> $f {
     my Gnome::Gio::File $gfile .= new(:path($f));
 
@@ -821,6 +821,8 @@ Returns C<True> if the launch was successful, C<False> if an error is set. When 
 =item Str $uri; the uri to show
 =item N-GObject $context; an optional B<Gnome::Gio::AppLaunchContext>
 =item N-GError $error; return location for an error, or C<undefined>
+
+B<Note> There are situations where a C<False> value is returned but the error object was not set. C<False> is returned correctly in those cases and there is really something wrong but the function doesn't reveal what.
 =end pod
 
 method launch-default-for-uri ( Str $uri, $context is copy --> Bool ) {
@@ -906,9 +908,8 @@ sub g_app_info_launch_default_for_uri_finish (
   { * }
 }}
 
-#`{{
 #-------------------------------------------------------------------------------
-#TM:0:launch-uris:
+#TM:1:launch-uris:
 =begin pod
 =head2 launch-uris
 
@@ -918,29 +919,46 @@ To launch the application without arguments pass a C<undefined> I<uris> list.
 
 Note that even if the launch is successful the application launched can fail to start if it runs into problems during startup. There is no way to detect this.
 
-Returns: C<True> on successful launch, C<False> otherwise.
+Returns C<True> if the launch was successful, C<False> if an error is set. When False, Check the error attribute C<$.last-error> for failures.
 
-  method launch-uris ( N-GList $uris, GAppLaunchContext $context, N-GError $error --> Bool )
+  method launch-uris ( @uris, N-GObject $context --> Bool )
 
-=item N-GList $uris;  (element-type utf8): a B<Gnome::Gio::List> containing URIs to launch.
-=item GAppLaunchContext $context; a B<Gnome::Gio::AppLaunchContext> or C<undefined>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item Str @uris; an array containing URIs to launch.
+=item N-GObject $context; a B<Gnome::Gio::AppLaunchContext> or C<undefined>
 =end pod
 
-method launch-uris ( $uris is copy, GAppLaunchContext $context, $error is copy --> Bool ) {
-  $uris .= get-native-object-no-reffing unless $uris ~~ N-GList;
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method launch-uris ( @uris, $context is copy --> Bool ) {
+  $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
+  my CArray[N-GError] $error .= new;
 
-  g_app_info_launch_uris(
-    self.get-native-object-no-reffing, $uris, $context, $error
-  ).Bool
+  my Gnome::Glib::List $ulist .= new;
+  for @uris -> $u {
+    my $cu = CArray[byte].new($u.encode);
+
+    # appending like this keeps the location at the end so it is not
+    # a big problem as gnome wants you to believe.
+    $ulist .= append(nativecast( Pointer, $cu));
+  }
+  $ulist .= first;
+
+  # launch the application with the provided uris
+  my Bool $r = g_app_info_launch_uris(
+    self.get-native-object-no-reffing, $ulist.get-native-object,
+    $context, $error
+  ).Bool;
+
+  #TODO clear strings too ?
+  $ulist.clear-object;
+  $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
+
+  $r
 }
 
 sub g_app_info_launch_uris (
-  N-GObject $appinfo, N-GList $uris, GAppLaunchContext $context, N-GError $error --> gboolean
+  N-GObject $appinfo, N-GList $uris, N-GObject $context,
+  CArray[N-GError] $error --> gboolean
 ) is native(&gio-lib)
   { * }
-}}
 
 #`{{
 #-------------------------------------------------------------------------------
@@ -1163,7 +1181,7 @@ sub g_app_info_set_as_last_used_for_type (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:should-show:
+#TM:1:should-show:
 =begin pod
 =head2 should-show
 
@@ -1176,10 +1194,7 @@ Returns: C<True> if the I<appinfo> should be shown, C<False> otherwise.
 =end pod
 
 method should-show ( --> Bool ) {
-
-  g_app_info_should_show(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_should_show(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_should_show (
@@ -1188,7 +1203,7 @@ sub g_app_info_should_show (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:supports-files:
+#TM:1:supports-files:
 =begin pod
 =head2 supports-files
 
@@ -1201,10 +1216,7 @@ Returns: C<True> if the I<appinfo> supports files.
 =end pod
 
 method supports-files ( --> Bool ) {
-
-  g_app_info_supports_files(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_supports_files(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_supports_files (
@@ -1213,7 +1225,7 @@ sub g_app_info_supports_files (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:supports-uris:
+#TM:1:supports-uris:
 =begin pod
 =head2 supports-uris
 
@@ -1226,10 +1238,7 @@ Returns: C<True> if the I<appinfo> supports URIs.
 =end pod
 
 method supports-uris ( --> Bool ) {
-
-  g_app_info_supports_uris(
-    self.get-native-object-no-reffing,
-  ).Bool
+  g_app_info_supports_uris(self.get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_supports_uris (

@@ -47,19 +47,28 @@ subtest 'Manipulations', {
   nok $ai.can-delete, '.can-delete()';
   nok $ai.delete, '.delete()';
 
-
   # this will set the file type options of a yaml file. after this
   # ls will show in the list of possible programs for this file type.
   ok $ai.add-supports-type('text/x-yaml'), '.add-supports-type()';
 
+  ok $ai.supports-files, '.supports-files()';
+  diag 'supports uris: ' ~ $ai.supports-uris ~ ' but it can launch !?';
+
   # works, but starts my filebrowser
   #ok $ai.launch-default-for-uri( 'file:///tmp', N-GObject),
   #   '.launch-default-for-uri()';
-ok $ai.launch-default-for-uri( 'file:///no-dir', N-GObject),
-note $ai.last-error.message;
 
+  # when false returned error object not set
+  #ok $ai.launch-default-for-uri( 'file:///no-dir', N-GObject),
+#note $ai.last-error.message;
+
+  # works but disturbes test
+  #ok $ai.launch-uris( ('file:///usr/local',), N-GObject), '.launch-uris()';
+
+  # on my system: firefox
   $ai2 = $ai.get-default-for-uri-scheme-rk('http');
   diag $ai2.get-commandline;
+  diag 'should show: ' ~ $ai2.should-show;
 
   ok $ai.set-as-last-used-for-type('text/x-yaml'),
      '.set-as-last-used-for-type()';
@@ -114,14 +123,13 @@ note $ai.last-error.message;
   ok $ai.can-remove-supports-type, '.can-remove-supports-type()';
   ok $ai.remove-supports-type('text/x-yaml'), '.remove-supports-type()';
 
-#  my Gnome::Gio::AppLaunchContext $alc .= new;
-  ok $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject), '.launch()';
+  # works but disturbes test
+  #ok $ai.launch( [ 'LICENSE', 'appveyor.yml' ], N-GObject), '.launch()';
 
   # this will set the file type options of a jpeg image. after this
   # ls will run instead of gwenview (or other image viewer).
   ok $ai.set-as-default-for-type('image/jpeg'), '.set-as-default-for-type()';
   ok $ai.set-as-default-for-extension('jpg'), '.set-as-default-for-extension()';
-#note $e.raku;
 
   $ai2 = $ai.get-default-for-type-rk( 'image/jpeg', True);
   is $ai2.get-commandline, 'gwenview %U', '.get-default-for-type-rk';
