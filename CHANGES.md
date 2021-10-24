@@ -1,6 +1,6 @@
 ## Release notes
 
-* 2021-10-      0.9.0
+* 2021-10-24 0.9.0
   * Add **Gnome::Gio::AppInfo**, **Gnome::Gio::AppInfoManager**, **Gnome::Gio::AppLaunchContext**.
   * Modified pod doc of **Gnome::Gio::File**.
 
