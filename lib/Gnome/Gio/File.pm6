@@ -1247,7 +1247,7 @@ For the C<-rk()> version, when an error takes place, an error object is set and 
 =end pod
 
 method get-child-for-display-name ( Str $display_name --> N-GFile ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   g_file_get_child_for_display_name(
     self.get-native-object-no-reffing, $display_name, $error
@@ -1259,7 +1259,7 @@ method get-child-for-display-name ( Str $display_name --> N-GFile ) {
 method get-child-for-display-name-rk (
   Str $display_name --> Gnome::Gio::File
 ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my N-GFile $no = g_file_get_child_for_display_name(
     self.get-native-object-no-reffing, $display_name, $error
@@ -2619,18 +2619,19 @@ method query-default-handler (
   $cancellable is copy --> Gnome::GObject::Object
 ) {
   $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
-  my CArray[N-GError] $error;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my N-GObject $no = g_file_query_default_handler(
     self.get-native-object-no-reffing, $cancellable, $error
   );
+#note 'qdh: ', $no.raku, ', ', $error[0].raku;
 
   $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
   self._wrap-native-type-from-no( $no, :child-type<Gnome::Gio::AppInfo>);
 }
 
 sub g_file_query_default_handler (
-  N-GFile $file, N-GObject $cancellable, N-GError $error --> N-GObject
+  N-GFile $file, N-GObject $cancellable, CArray[N-GError] $error --> N-GObject
 ) is native(&gio-lib)
   { * }
 
@@ -2845,9 +2846,10 @@ sub g_file_query_filesystem_info_finish (
   N-GFile $file, GAsyncResult $res, N-GError $error --> GFileInfo
 ) is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
-# TM:0:query-info:
+#TM:0:query-info:
 =begin pod
 =head2 query-info
 
@@ -2866,24 +2868,53 @@ Returns: a B<Gnome::Gio::FileInfo> for the given I<file>, or C<undefined> on err
   method query-info ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> GFileInfo )
 
 =item Str $attributes; an attribute query string
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item UInt $flags; a set of GFileQueryInfoFlags
+=item N-GObject $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+
 =end pod
 
-method query-info ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> GFileInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method query-info (
+  Str $attributes, GFlag $flags, N-GObject $cancellable is copy
+  --> N-GObject
+) {
+  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  my CArray[N-GError] $error .= new(N-GError);
 
-  g_file_query_info(
+  my N-GObject $no = g_file_query_info(
     self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
-  )
+  );
+
+  $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
+#note 'qi: ', $no.raku, ', ', ?$no, ', ', $error[0].raku, ', ', $!last-error.get-native-object.raku;
+
+  $no
 }
 
+#`{{
+method query-info-rk (
+  Str $attributes, GFlag $flags, N-GObject $cancellable is copy
+  -->Gnome::Gio::FileInfo
+) {
+  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  my CArray[N-GError] $error .= new(N-GError);
+
+  my N-GObject $no = g_file_query_info(
+    self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
+  );
+
+  $!last-error .= new(?$no ?? N-GError !! $error[0]);
+
+  $no
+}
+}}
+
 sub g_file_query_info (
-  N-GFile $file, gchar-ptr $attributes, GFlag $flags, GCancellable $cancellable, N-GError $error --> GFileInfo
+  N-GFile $file, gchar-ptr $attributes, GFlag $flags, N-GObject $cancellable,
+  CArray[N-GError] $error --> N-GObject
 ) is native(&gio-lib)
   { * }
 
+#`{{
 #-------------------------------------------------------------------------------
 # TM:0:query-info-async:
 =begin pod

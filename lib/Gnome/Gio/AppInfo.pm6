@@ -57,7 +57,7 @@ B<Gnome::Gio::AppInfoMonitor> and B<Gnome::Gio::AppLaunchContext>
   also is Gnome::GObject::Object;
 
 
-=chead2 Uml Diagram
+=head2 Uml Diagram
 
 ![](plantuml/AppInfo.svg)
 
@@ -164,7 +164,7 @@ submethod BUILD ( *%options ) {
     # process all other options
     else {
       my $no;
-      my CArray[N-GError] $error .= new;
+      my CArray[N-GError] $error .= new(N-GError);
       if %options<command-line>:exists and ?%options<application-name> {
         $no = _g_app_info_create_from_commandline(
           %options<command-line>, %options<application-name>,
@@ -223,7 +223,7 @@ Returns C<True> if successful, C<False> if an error is set. When False, Check th
 =end pod
 
 method add-supports-type ( Str $content-type --> Bool ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
   my Bool $r = g_app_info_add_supports_type(
     self.get-native-object-no-reffing, $content-type, $error
   ).Bool;
@@ -764,7 +764,7 @@ Returns C<True> if the launch was successful, C<False> if an error is set. When 
 
 method launch ( @files, $context is copy --> Bool ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
-  my CArray[N-GError] $error;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Gnome::Glib::List $flist .= new;
   for @files -> $f {
@@ -827,7 +827,7 @@ B<Note> There are situations where a C<False> value is returned but the error ob
 
 method launch-default-for-uri ( Str $uri, $context is copy --> Bool ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_launch_default_for_uri( $uri, $context, $error).Bool;
   $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
@@ -929,7 +929,7 @@ Returns C<True> if the launch was successful, C<False> if an error is set. When 
 
 method launch-uris ( @uris, $context is copy --> Bool ) {
   $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Gnome::Glib::List $ulist .= new;
   for @uris -> $u {
@@ -1040,7 +1040,7 @@ Returns C<True> if successful, C<False> if an error is set. When False, Check th
 =end pod
 
 method remove-supports-type ( Str $content-type --> Bool ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_remove_supports_type(
     self.get-native-object-no-reffing, $content-type, $error
@@ -1093,7 +1093,7 @@ Returns: C<True> on success, C<False> on error. When False, Check the error attr
 =end pod
 
 method set-as-default-for-extension ( Str $extension --> Bool ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_default_for_extension(
     self.get-native-object-no-reffing, $extension, $error
@@ -1132,7 +1132,7 @@ This example shows how to set the default command of a jpeg image to the executi
 =end pod
 
 method set-as-default-for-type ( Str $content-type --> Bool ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_default_for_type(
     self.get-native-object-no-reffing, $content-type, $error
@@ -1163,7 +1163,7 @@ Returns C<True> if successful, C<False> if an error is set. When False, Check th
 =end pod
 
 method set-as-last-used-for-type ( Str $content-type --> Bool ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_last_used_for_type(
     self.get-native-object-no-reffing, $content-type, $error
@@ -1263,7 +1263,7 @@ method _create-from-commandline (
   Str $commandline, Str $application_name, GFlag $flags, $error is copy
   --> N-GObject
 ) {
-  my CArray[N-GError] $error .= new;
+  my CArray[N-GError] $error .= new(N-GError);
   g_app_info_create_from_commandline(
     self.get-native-object-no-reffing, $commandline, $application_name, $flags, $error
   )

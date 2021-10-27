@@ -886,7 +886,7 @@ Returns: Gnome::Glib::Error. if registration succeeded the error object is inval
 
 method register ( N-GObject $cancellable = N-GObject --> Gnome::Glib::Error ) {
 
-  my CArray[N-GError] $e .= new;
+  my CArray[N-GError] $e .= new(N-GError);
   my $r = g_application_register(
     self.get-native-object-no-reffing, $cancellable, $e
   );
