@@ -2844,8 +2844,14 @@ sub g_file_query_filesystem_info_finish (
   { * }
 }}
 
+#`{{
 #-------------------------------------------------------------------------------
-#TM:1:query-info:
+# TM:1:query-info:
+
+# Works but not usefull because the FileInfo will not be implemented. The
+# reason is that Raku has proper tools to get all necessary information of a
+# file as well as change them.
+
 =begin pod
 =head2 query-info
 
@@ -2910,6 +2916,7 @@ sub g_file_query_info (
   CArray[N-GError] $error --> N-GObject
 ) is native(&gio-lib)
   { * }
+}}
 
 #`{{
 #-------------------------------------------------------------------------------

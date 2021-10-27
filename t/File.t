@@ -104,13 +104,13 @@ subtest 'Manipulations', {
   ok $f.last-error.is-valid, '.query-default-handler()';
   diag $f.last-error.message;
 
-  # "standard::symbolic-icon" is G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE
-  # but is not yt defined. It belongs to FileInfo
-  my $no = $f.query-info(
-    "standard::symbolic-icon", G_FILE_QUERY_INFO_NONE, N-GObject
-  );
-  ok $f.last-error.is-valid, '.query-info()';
-  diag $f.last-error.message;
+#  # "standard::symbolic-icon" is G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE
+#  # but is not yt defined. It belongs to FileInfo
+#  my $no = $f.query-info(
+#    "standard::symbolic-icon", G_FILE_QUERY_INFO_NONE, N-GObject
+#  );
+#  ok $f.last-error.is-valid, '.query-info()';
+#  diag $f.last-error.message;
 
   $f.clear-object;
   $f2.clear-object;
