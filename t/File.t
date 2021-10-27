@@ -6,6 +6,7 @@ use Gnome::N::N-GObject;
 
 use Gnome::Gio::File;
 use Gnome::Gio::AppInfo;
+use Gnome::Gio::Enums;
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
@@ -96,14 +97,20 @@ subtest 'Manipulations', {
   $f2 .= new(:path<t/data/g-resources/rtest/abc/def>);
   is $f.get-relative-path($f2), 'abc/def', '.get-relative-path() defined';
 
+  # test wrong url
   $f.clear-object;
   $f .= new(:uri<file:///LICENSE>);
   my Gnome::Gio::AppInfo $ai = $f.query-default-handler(N-GObject);
-  diag $ai.is-valid;
-#  diag (
-#    "  " ~ $ai.get-name, $ai.get-display-name, $ai.get-id,
-#    $ai.get-description, $ai.get-commandline, $ai.get-executable
-#  ).join("\n  ");
+  ok $f.last-error.is-valid, '.query-default-handler()';
+  diag $f.last-error.message;
+
+  # "standard::symbolic-icon" is G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE
+  # but is not yt defined. It belongs to FileInfo
+  my $no = $f.query-info(
+    "standard::symbolic-icon", G_FILE_QUERY_INFO_NONE, N-GObject
+  );
+  ok $f.last-error.is-valid, '.query-info()';
+  diag $f.last-error.message;
 
   $f.clear-object;
   $f2.clear-object;

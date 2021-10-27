@@ -1239,7 +1239,7 @@ For the C<-rk()> version, when an error takes place, an error object is set and 
 =head3 Example
 
   my Gnome::Gio::File $f .= new(:path<t/data/g-resources>);
-  my Gnome::Gio::File $f2 = $f.get-child-for-display-name-rk('rtest
+  my Gnome::Gio::File $f2 = $f.get-child-for-display-name-rk('rtest')
   die $f.last-error.message unless $f2.is-valid;
 
 
@@ -1253,6 +1253,7 @@ method get-child-for-display-name ( Str $display_name --> N-GFile ) {
     self.get-native-object-no-reffing, $display_name, $error
   );
 
+  $!last-error.clear-object;
   $!last-error = Gnome::Glib::Error.new(:native-object($error[0]));
 }
 
@@ -1265,14 +1266,9 @@ method get-child-for-display-name-rk (
     self.get-native-object-no-reffing, $display_name, $error
   );
 
+  $!last-error.clear-object;
   $!last-error = Gnome::Glib::Error.new(:native-object($error[0]));
-  if $!last-error.is-valid {
-    Gnome::Gio::File.new(:native-object(N-GFile))
-  }
-
-  else {
-    Gnome::Gio::File.new(:native-object($no))
-  }
+  Gnome::Gio::File.new(:native-object($no))
 }
 
 sub g_file_get_child_for_display_name (
@@ -2624,10 +2620,10 @@ method query-default-handler (
   my N-GObject $no = g_file_query_default_handler(
     self.get-native-object-no-reffing, $cancellable, $error
   );
-#note 'qdh: ', $no.raku, ', ', $error[0].raku;
 
+  $!last-error.clear-object;
   $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
-  self._wrap-native-type-from-no( $no, :child-type<Gnome::Gio::AppInfo>);
+  self._wrap-native-type-from-no( $no, :child-type<Gnome::Gio::AppInfo>)
 }
 
 sub g_file_query_default_handler (
@@ -2849,7 +2845,7 @@ sub g_file_query_filesystem_info_finish (
 }}
 
 #-------------------------------------------------------------------------------
-#TM:0:query-info:
+#TM:1:query-info:
 =begin pod
 =head2 query-info
 
@@ -2884,8 +2880,8 @@ method query-info (
     self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
   );
 
+  $!last-error.clear-object;
   $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
-#note 'qi: ', $no.raku, ', ', ?$no, ', ', $error[0].raku, ', ', $!last-error.get-native-object.raku;
 
   $no
 }
@@ -2902,6 +2898,7 @@ method query-info-rk (
     self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
   );
 
+  $!last-error.clear-object;
   $!last-error .= new(?$no ?? N-GError !! $error[0]);
 
   $no
