@@ -218,16 +218,14 @@ enum GFileAttributeStatus is export (
 =begin pod
 =head2 enum GFileQueryInfoFlags
 
-Flags used when querying a B<GFileInfo>.
-
+Flags used when querying a B<Gnome::Gio::FileInfo>.
 
 =item G_FILE_QUERY_INFO_NONE: No flags set.
 =item G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS: Don't follow symlinks.
 
-
 =end pod
 
-#TE:0:GFileQueryInfoFlags:
+#TE:1:GFileQueryInfoFlags:
 enum GFileQueryInfoFlags is export (
   'G_FILE_QUERY_INFO_NONE'              => 0,
   'G_FILE_QUERY_INFO_NOFOLLOW_SYMLINKS' => (1 +< 0)
