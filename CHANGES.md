@@ -1,5 +1,8 @@
 ## Release notes
 
+* 2021-10-27 0.9.1
+  * Bug fix: initialization of error objects done wrong.
+
 * 2021-10-24 0.9.0
   * Add **Gnome::Gio::AppInfo**, **Gnome::Gio::AppInfoManager**, **Gnome::Gio::AppLaunchContext**.
   * Modified pod doc of **Gnome::Gio::File**.
