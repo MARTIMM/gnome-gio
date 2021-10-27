@@ -1,5 +1,8 @@
 ## Release notes
 
+* 2021-10-27 0.9.2
+  * Removed `query-info()` from File because returned native object is of type GFileInfo which is not to be implemented as **Gnome::Gio::FileInfo**. This is done because the file attribute information returned can easily be retrieved in Raku itself.
+
 * 2021-10-27 0.9.1
   * Bug fix: initialization of error objects done wrong.
 
