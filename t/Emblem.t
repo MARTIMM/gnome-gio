@@ -7,7 +7,6 @@ use Gnome::Gio::Icon;
 
 ok 1, 'loads ok';
 done-testing;
-
 =finish
 
 use Gnome::N::N-GObject;

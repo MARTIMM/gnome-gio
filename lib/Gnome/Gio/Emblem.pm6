@@ -92,18 +92,15 @@ Create a new Emblem object.
 
   multi method new ( N-GObject :$icon!, UInt :$origin? )
 
+=item N-GObject $icon; an object containing the icon.
+=item UInt $origin; a GEmblemOrigin enum defining the emblem's origin
+
 
 =head3 :native-object
 
 Create a Emblem object using a native object from elsewhere. See also B<Gnome::N::TopLevelClassSupport>.
 
   multi method new ( N-GObject :$native-object! )
-
-=head3 :build-id
-
-Create a Emblem object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
-
-  multi method new ( Str :$build-id! )
 
 =end pod
 
@@ -122,7 +119,6 @@ submethod BUILD ( *%options ) {
 
     # check if common options are handled by some parent
     elsif %options<native-object>:exists { }
-    elsif %options<build-id>:exists { }
 
     # process all other options
     else {
