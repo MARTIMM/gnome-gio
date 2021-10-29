@@ -1,4 +1,11 @@
 ## Release notes
+<!-- Wrong mods to implement
+  * Add module **Gnome::Gio::Emblem**.
+  * Add module **Gnome::Gio::EmblemedIcon**.
+-->
+
+* 2021-10-   0.10.0
+  * Add module **Gnome::Gio::Icon**.
 
 * 2021-10-27 0.9.2
   * Removed `query-info()` from File because returned native object is of type GFileInfo which is not to be implemented as **Gnome::Gio::FileInfo**. This is done because the file attribute information returned can easily be retrieved in Raku itself.
@@ -12,11 +19,6 @@
 
 * 2021-07-15 0.8.1
   * Due to some changes in **Gnome::GObject::Value**, the `.get-boolean()` method returns `True` or `False` instead of `1` or `0`. `.set-boolean()` is unchanged because Raku could coerse `True` and `False` to integer automatically.
-<!-- Wrong mods to implement
-  * Add module **Gnome::Gio::Icon**.
-  * Add module **Gnome::Gio::Emblem**.
-  * Add module **Gnome::Gio::EmblemedIcon**.
--->
 
 * 2021-03-14 0.7.0
   * Add module **Gnome::Gio::ApplicationCommandLine**.
