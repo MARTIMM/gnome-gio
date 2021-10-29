@@ -717,8 +717,6 @@ enum GIOStreamSpliceFlags is export (
 GEmblemOrigin is used to add information about the origin of the emblem
 to B<GEmblem>.
 
-Since: 2.18
-
 
 =item G_EMBLEM_ORIGIN_UNKNOWN: Emblem of unknown origin
 =item G_EMBLEM_ORIGIN_DEVICE: Emblem adds device-specific information
@@ -728,7 +726,7 @@ Since: 2.18
 
 =end pod
 
-#TE:0:GEmblemOrigin:
+#TE:2:GEmblemOrigin:
 enum GEmblemOrigin is export (
   'G_EMBLEM_ORIGIN_UNKNOWN',
   'G_EMBLEM_ORIGIN_DEVICE',
