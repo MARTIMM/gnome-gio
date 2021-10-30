@@ -4,10 +4,11 @@ use Test;
 
 use Gnome::Gio::Emblem;
 use Gnome::Gio::Icon;
+use Gnome::Gio::Enums;
+use Gnome::Gio::File;
+use Gnome::Gio::FileIcon;
 
 ok 1, 'loads ok';
-done-testing;
-=finish
 
 use Gnome::N::N-GObject;
 
@@ -16,10 +17,27 @@ use Gnome::N::N-GObject;
 
 #-------------------------------------------------------------------------------
 my Gnome::Gio::Emblem $e;
+my Gnome::Gio::File $f .= new(:path<LICENSE>);
+my Gnome::Gio::FileIcon $fi;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $e .= new(:icon(...));
-  isa-ok $e, Gnome::Gio::Emblem, '.new()';
+  my Gnome::Gio::FileIcon $fi2 .= new(:file($f));
+  $e .= new(:icon($fi2), :origin(G_EMBLEM_ORIGIN_TAG));
+#note 'S: ', $e.to-string;
+  isa-ok $e, Gnome::Gio::Emblem, '.new(:icon)';
+}
+
+
+#-------------------------------------------------------------------------------
+subtest 'Manipulations', {
+  my Str $estring = $e.to-string;
+  my Gnome::Gio::Emblem $e2 .= new(:string($estring));
+  ok $e2.equal($e), '.new(:string)';
+#note 'S: ', $e2.to-string;
+
+  is $e2.get-icon-rk.to-string, $estring, '.get-icon-rk()';
+
+  is $e2.get-origin, G_EMBLEM_ORIGIN_TAG, '.get-origin()';
 }
 
 #-------------------------------------------------------------------------------

@@ -96,6 +96,17 @@ Create a new Emblem object.
 =item UInt $origin; a GEmblemOrigin enum defining the emblem's origin
 
 
+=head3 :string
+
+Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fail if the string is not valid - see C<Gnome::Gio::Icon.to-string()> for discussion. When it fails, the error object in the attribute C<$.last-error> will be set.
+
+=comment If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Glib::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
+
+  method new ( Str :$strinng! )
+
+=item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
+
+
 =head3 :native-object
 
 Create a Emblem object using a native object from elsewhere. See also B<Gnome::N::TopLevelClassSupport>.
@@ -107,8 +118,6 @@ Create a Emblem object using a native object from elsewhere. See also B<Gnome::N
 # TM:0:new():inheriting
 #TM:1:new(:icon):
 #TM:4:new(:native-object):Gnome::N::TopLevelClassSupport
-#TM:4:new(:build-id):Gnome::GObject::Object
-
 submethod BUILD ( *%options ) {
 
   # prevent creating wrong native-objects
@@ -133,6 +142,10 @@ submethod BUILD ( *%options ) {
         else {
           $no = _g_emblem_new($no);
         }
+      }
+
+      elsif ? %options<string> {
+        $no = self._g_icon_new_for_string(%options<string>);
       }
 
       ##`{{ use this when the module is not made inheritable
@@ -170,23 +183,38 @@ submethod BUILD ( *%options ) {
 }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-icon:
+#TM:1:get-icon:
+#TM:1:get-icon-rk:
 =begin pod
-=head2 get-icon
+=head2 get-icon, get-icon-rk
 
-Gives back the icon from I<emblem>.
+Gives back the icon from this I<emblem>.
 
-Returns: a B<Gnome::Gio::Icon>. The returned object belongs to the emblem and should not be modified or freed.
+Returns: a B<Gnome::Gio::Emblem>. The returned object belongs to the emblem and should not be modified or freed.
 
   method get-icon ( --> N-GObject )
+  method get-icon-rk ( --> Gnome::Gio::Emblem )
 
 =end pod
 
 method get-icon ( --> N-GObject ) {
+  g_emblem_get_icon(self.get-native-object-no-reffing)
+}
 
-  g_emblem_get_icon(
-    self.get-native-object-no-reffing,
-  )
+method get-icon-rk ( --> Gnome::Gio::Emblem ) {
+  my GEnum $origin = g_emblem_get_origin(self.get-native-object-no-reffing);
+  if ?$origin {
+    Gnome::Gio::Emblem.new(
+      :icon(g_emblem_get_icon(self.get-native-object-no-reffing))
+      :$origin
+    )
+  }
+
+  else {
+    Gnome::Gio::Emblem.new(
+      :icon(g_emblem_get_icon(self.get-native-object-no-reffing))
+    )
+  }
 }
 
 sub g_emblem_get_icon (
@@ -195,23 +223,20 @@ sub g_emblem_get_icon (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-origin:
+#TM:1:get-origin:
 =begin pod
 =head2 get-origin
 
 Gets the origin of the emblem.
 
-Returns: the origin of the emblem
+Returns: the origin of the emblem as an GEmblemOrigin enum
 
   method get-origin ( --> GEmblemOrigin )
 
 =end pod
 
 method get-origin ( --> GEmblemOrigin ) {
-
-  g_emblem_get_origin(
-    self.get-native-object-no-reffing,
-  )
+  GEmblemOrigin(g_emblem_get_origin(self.get-native-object-no-reffing))
 }
 
 sub g_emblem_get_origin (
