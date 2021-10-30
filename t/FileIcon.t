@@ -27,7 +27,7 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
-  like my $fstring = $fi.to-string, / 'LICENSE' /, '.to-string()';
+  like my Str $fstring = $fi.to-string, / 'LICENSE' /, '.to-string()';
 
   my Gnome::Gio::FileIcon $fi2 .= new(:string($fstring));
   ok $fi2.equal($fi), '.new(:string)';
