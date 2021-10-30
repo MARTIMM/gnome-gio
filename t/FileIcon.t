@@ -17,11 +17,6 @@ subtest 'ISA test', {
   isa-ok $fi, Gnome::Gio::FileIcon, '.new(:file)';
 }
 
-#-------------------------------------------------------------------------------
-done-testing;
-
-=finish
-
 
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
@@ -32,7 +27,27 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
+  like my $fstring = $fi.to-string, / 'LICENSE' /, '.to-string()';
+
+  my Gnome::Gio::FileIcon $fi2 .= new(:string($fstring));
+  ok $fi2.equal($fi), '.new(:string)';
+
+  is $fi.get-file-rk.get-basename, 'LICENSE', '.get-file-rk()';
 }
+
+#`{{ N-GFile not supported
+#-------------------------------------------------------------------------------
+subtest 'Properties ...', {
+  my @r = $fi.get-properties( 'file', N-GFile);
+  my Gnome::Gio::File $f .= new(:native-object(@r[0]));
+  is $f.get-basename, 'LICENSE', 'file';
+}
+}}
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
 
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::FileIcon', {

@@ -75,7 +75,8 @@ use Gnome::N::GlibToRakuTypes;
 use Gnome::GObject::Object;
 
 use Gnome::Gio::Icon;
-use Gnome::Gio::Enums;
+use Gnome::Gio::File;
+#use Gnome::Gio::Enums;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::FileIcon:auth<github:MARTIMM>:ver<0.1.0>;
@@ -92,6 +93,17 @@ also does Gnome::Gio::Icon;
 Create a new FileIcon object.
 
   multi method new ( N-GObject :$file! )
+
+
+=head3 :string
+
+Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fail if the string is not valid - see C<Gnome::Gio::Icon.to-string()> for discussion. When it fails, the error object in the attribute C<$.last-error> will be set.
+
+=comment If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Glib::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
+
+  method new ( Str :$strinng! )
+
+=item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
 
 
 =head3 :native-object
@@ -123,6 +135,10 @@ submethod BUILD ( *%options ) {
         $no = %options<file>;
         $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_file_icon_new($no);
+      }
+
+      elsif ? %options<string> {
+        $no = self._g_icon_new_for_string(%options<string>);
       }
 
       ##`{{ use this when the module is not made inheritable
@@ -161,27 +177,32 @@ submethod BUILD ( *%options ) {
 
 
 #-------------------------------------------------------------------------------
-#TM:0:get-file:
+#TM:1:get-file:
+#TM:1:get-file-rk:
 =begin pod
-=head2 get-file
+=head2 get-file, get-file-rk
 
 Gets the B<Gnome::Gio::File> associated with the given I<icon>.
 
 Returns: a B<Gnome::Gio::File>, or C<undefined>.
 
-  method get-file ( --> N-GObject )
+  method get-file ( --> N-GFile )
+  method get-file-rk ( --> Gnome::Gio::File )
 
 =end pod
 
-method get-file ( --> N-GObject ) {
+method get-file ( --> N-GFile ) {
+  g_file_icon_get_file(self.get-native-object-no-reffing)
+}
 
-  g_file_icon_get_file(
-    self.get-native-object-no-reffing,
+method get-file-rk ( --> Gnome::Gio::File ) {
+  Gnome::Gio::File.new(
+    :native-object(g_file_icon_get_file(self.get-native-object-no-reffing))
   )
 }
 
 sub g_file_icon_get_file (
-  N-GObject $icon --> N-GObject
+  N-GObject $icon --> N-GFile
 ) is native(&gio-lib)
   { * }
 
@@ -223,8 +244,7 @@ An example of using a string type property of a B<Gnome::Gtk3::Label> object. Th
 =comment #TP:0:file:
 =head3 file: file
 
-
-   * The file containing the icon.Widget type: G_TYPE_FILE
+The file containing the icon.Widget type: G_TYPE_FILE
 
 The B<Gnome::GObject::Value> type of property I<file> is C<G_TYPE_OBJECT>.
 =end pod
