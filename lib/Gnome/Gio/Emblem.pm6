@@ -102,7 +102,7 @@ Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fai
 
 =comment If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Glib::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
 
-  method new ( Str :$strinng! )
+  method new ( Str :$string! )
 
 =item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
 
@@ -182,9 +182,10 @@ submethod BUILD ( *%options ) {
   }
 }
 
+##`{{ TODO gnome instantiation of interfaces, what is returned?? 
 #-------------------------------------------------------------------------------
-#TM:1:get-icon:
-#TM:1:get-icon-rk:
+# TM:1:get-icon:
+# TM:1:get-icon-rk:
 =begin pod
 =head2 get-icon, get-icon-rk
 
@@ -221,6 +222,7 @@ sub g_emblem_get_icon (
   N-GObject $emblem --> N-GObject
 ) is native(&gio-lib)
   { * }
+#}}
 
 #-------------------------------------------------------------------------------
 #TM:1:get-origin:

@@ -21,8 +21,8 @@ my Gnome::Gio::File $f .= new(:path<LICENSE>);
 my Gnome::Gio::FileIcon $fi;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  my Gnome::Gio::FileIcon $fi2 .= new(:file($f));
-  $e .= new(:icon($fi2), :origin(G_EMBLEM_ORIGIN_TAG));
+  $fi .= new(:file($f));
+  $e .= new(:icon($fi), :origin(G_EMBLEM_ORIGIN_TAG));
 #note 'S: ', $e.to-string;
   isa-ok $e, Gnome::Gio::Emblem, '.new(:icon)';
 }
