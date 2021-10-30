@@ -45,9 +45,12 @@ use Gnome::N::N-GObject;
 use Gnome::N::GlibToRakuTypes;
 
 use Gnome::Glib::Error;
+#use Gnome::Glib::Variant;
 
 #-------------------------------------------------------------------------------
 unit role Gnome::Gio::Icon:auth<github:MARTIMM>:ver<0.1.0>;
+
+has Gnome::Glib::Error $.last-error;
 
 #`{{
 #-------------------------------------------------------------------------------
@@ -112,7 +115,7 @@ method _g_icon_interface ( $native-sub --> Callable ) {
 
 
 #-------------------------------------------------------------------------------
-#TM:0:deserialize:
+#TM:1:deserialize:
 =begin pod
 =head2 deserialize
 
@@ -122,12 +125,12 @@ Returns: a B<Gnome::Gio::Icon>, or C<undefined> when deserialization fails.
 
   method deserialize ( N-GObject $value --> N-GObject )
 
-=item N-GObject $value; a B<Gnome::Gio::Variant> created with C<serialize()>
+=item N-GObject $value; a B<Gnome::Glib::Variant> created with C<serialize()>
 =end pod
 
 method deserialize ( $value is copy --> N-GObject ) {
   $value .= get-native-object-no-reffing unless $value ~~ N-GObject;
-  g_icon_deserialize( self._f('GIcon'), $value)
+  g_icon_deserialize($value)
 }
 
 sub g_icon_deserialize (
@@ -136,7 +139,7 @@ sub g_icon_deserialize (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:equal:
+#TM:1:equal:
 =begin pod
 =head2 equal
 
@@ -187,13 +190,13 @@ sub g_icon_hash (
 }}
 
 #-------------------------------------------------------------------------------
-#TM:0:serialize:
+#TM:1:serialize:
 =begin pod
 =head2 serialize
 
-Serializes a B<Gnome::Gio::Icon> into a B<Gnome::Gio::Variant>. An equivalent B<Gnome::Gio::Icon> can be retrieved back by calling C<deserialize()> on the returned value. As serialization will avoid using raw icon data when possible, it only makes sense to transfer the B<Gnome::Gio::Variant> between processes on the same machine, (as opposed to over the network), and within the same file system namespace.
+Serializes a B<Gnome::Gio::Icon> into a B<Gnome::Glib::Variant>. An equivalent B<Gnome::Gio::Icon> can be retrieved back by calling C<deserialize()> on the returned value. As serialization will avoid using raw icon data when possible, it only makes sense to transfer the B<Gnome::Glib::Variant> between processes on the same machine, (as opposed to over the network), and within the same file system namespace.
 
-Returns: a B<Gnome::Gio::Variant>, or C<undefined> when serialization fails.
+Returns: a B<Gnome::Glib::Variant>, or C<undefined> when serialization fails.
 
   method serialize ( --> N-GObject )
 
@@ -209,7 +212,7 @@ sub g_icon_serialize (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:to-string:
+#TM:1:to-string:
 =begin pod
 =head2 to-string
 
@@ -246,7 +249,7 @@ sub g_icon_to_string (
 
 Generate a B<Gnome::Gio::Icon> instance from I<str>. This function can fail if I<str> is not valid - see C<to-string()> for discussion.
 
-If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Gio::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
+If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Glib::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
 
 Returns: An object implementing the B<Gnome::Gio::Icon> interface or C<undefined> if I<error> is set.
 
@@ -257,7 +260,16 @@ Returns: An object implementing the B<Gnome::Gio::Icon> interface or C<undefined
 =end pod
 }}
 
-sub _g_icon_new_for_string ( gchar-ptr $str, N-GError $error --> N-GObject )
+# Only to use from BUILD routines in classes using this role!
+method _g_icon_new_for_string ( Str $string --> N-GObject ) {
+  my CArray[N-GError] $error .= new(N-GError);
+  my N-GObject $no = g_icon_new_for_string( $string, $error);
+  $!last-error.clear-object if $!last-error.defined;
+  $!last-error .= new(:native-object(?$no ?? N-GError !! $error[0]));
+
+  $no
+}
+
+sub g_icon_new_for_string ( gchar-ptr $str, CArray[N-GError] $error --> N-GObject )
   is native(&gio-lib)
-  is symbol('g_icon_new_for_string')
   { * }

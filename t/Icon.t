@@ -2,30 +2,22 @@ use v6;
 use NativeCall;
 use Test;
 
+use Gnome::Gio::File;
+use Gnome::Gio::FileIcon;
 use Gnome::Gio::Icon;
-ok 1, 'loads ok';
 
-#-------------------------------------------------------------------------------
-done-testing;
+use Gnome::Glib::Variant;
 
-=finish
-
+use Gnome::N::N-GObject;
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------
+my Gnome::Gio::File $f .= new(:path<LICENSE>);
+my Gnome::Gio::FileIcon $fi;
 my Gnome::Gio::Icon $i;
-#-------------------------------------------------------------------------------
-subtest 'ISA test', {
-  $i .= new;
-  isa-ok $i, Gnome::Gio::Icon, '.new()';
-}
 
-#-------------------------------------------------------------------------------
-done-testing;
-
-=finish
-
+ok 1, 'loads ok';
 
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
@@ -35,8 +27,29 @@ unless %*ENV<raku_test_all>:exists {
 }
 
 #-------------------------------------------------------------------------------
-subtest 'Manipulations', {
+subtest 'Interface ...', {
+  $fi .= new(:file($f));
+  isa-ok $fi, Gnome::Gio::FileIcon, '.new(:file)';
+
+  my N-GObject $variant = $fi.serialize;
+  my Gnome::Gio::FileIcon $fi2 .= new(
+    :native-object($fi.deserialize($variant))
+  );
+  ok $fi2.equal($fi), '.serialize() / .deserialize() / .equal()';
+
+  like my $fstring = $fi2.to-string, / 'LICENSE' /, '.to-string()';
+
+  my Gnome::Gio::FileIcon $fi3 .= new(
+    :native-object($fi2._g_icon_new_for_string($fstring))
+  );
+  ok $fi3.equal($fi), '._g_icon_new_for_string()';
 }
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
+
 
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::Icon', {
@@ -52,10 +65,6 @@ subtest 'Inherit Gnome::Gio::Icon', {
 
   my MyClass $mgc .= new;
   isa-ok $mgc, Gnome::Gio::Icon, 'MyClass.new()';
-}
-
-#-------------------------------------------------------------------------------
-subtest 'Interface ...', {
 }
 
 #-------------------------------------------------------------------------------
