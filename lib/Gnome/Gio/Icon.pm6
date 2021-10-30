@@ -230,7 +230,11 @@ Returns: A UTF8 string or C<undefined> if I<icon> can't be serialized.
 
 =head3 Example
 
-
+  my Gnome::Gio::File $file .= new(:path<LICENSE>);
+  my Gnome::Gio::FileIcon $fi .= new(:$file);
+  my Str $fstring = $fi.to-string;
+  …
+  my Gnome::Gio::FileIcon $fi2 .= new(:string($fstring));
 
 =end pod
 
