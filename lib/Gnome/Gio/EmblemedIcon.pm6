@@ -90,14 +90,25 @@ also does Gnome::Gio::Icon;
 =head1 Methods
 =head2 new
 
-=head3 :icon
+=head3 :icon, :emblem
 
 Create a new EmblemedIcon object.
 
-  multi method new ( N-GObject :$icon, UInt :$origin? )
+  multi method new ( N-GObject :$icon!, N-GObject :$emblem! )
 
 =item N-GObject $icon; an object containing the icon.
 =item UInt $origin; a GEmblemOrigin enum defining the emblem's origin
+
+
+=head3 :string
+
+Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fail if the string is not valid - see C<Gnome::Gio::Icon.to-string()> for discussion. When it fails, the error object in the attribute C<$.last-error> will be set.
+
+=comment If your application or library provides one or more B<Gnome::Gio::Icon> implementations you need to ensure that each B<Gnome::Glib::Type> is registered with the type system prior to calling C<g-icon-new-for-string()>.
+
+  method new ( Str :$strinng! )
+
+=item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
 
 
 =head3 :native-object
@@ -109,9 +120,8 @@ Create a EmblemedIcon object using a native object from elsewhere. See also B<Gn
 =end pod
 
 # TM:0:new():inheriting
-#TM:1:new(:icon):
+#TM:1:new( :icon, :emblem):
 #TM:4:new(:native-object):Gnome::N::TopLevelClassSupport
-#TM:4:new(:build-id):Gnome::GObject::Object
 submethod BUILD ( *%options ) {
 
   # prevent creating wrong native-objects
@@ -126,10 +136,16 @@ submethod BUILD ( *%options ) {
     # process all other options
     else {
       my $no;
-      if ? %options<icon> {
-        $no = %options<icon>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
-        $no = _g_emblemed_icon_new( $no, %options<origin> // GEnum);
+      if %options<icon>:exists and %options<emblem>:exists {
+        my $no1 = %options<icon>;
+        $no1 .= get-native-object-no-reffing unless $no1 ~~ N-GObject;
+        my $no2 = %options<emblem>;
+        $no2 .= get-native-object-no-reffing unless $no2 ~~ N-GObject;
+        $no = _g_emblemed_icon_new( $no1, $no2);
+      }
+
+      elsif ? %options<string> {
+        $no = self._g_icon_new_for_string(%options<string>);
       }
 
       ##`{{ use this when the module is not made inheritable
@@ -168,7 +184,7 @@ submethod BUILD ( *%options ) {
 
 
 #-------------------------------------------------------------------------------
-#TM:0:add-emblem:
+#TM:1:add-emblem:
 =begin pod
 =head2 add-emblem
 
@@ -193,7 +209,7 @@ sub g_emblemed_icon_add_emblem (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:clear-emblems:
+#TM:1:clear-emblems:
 =begin pod
 =head2 clear-emblems
 
@@ -204,10 +220,7 @@ Removes all the emblems from I<icon>.
 =end pod
 
 method clear-emblems ( ) {
-
-  g_emblemed_icon_clear_emblems(
-    self.get-native-object-no-reffing,
-  );
+  g_emblemed_icon_clear_emblems(self.get-native-object-no-reffing);
 }
 
 sub g_emblemed_icon_clear_emblems (
@@ -216,22 +229,26 @@ sub g_emblemed_icon_clear_emblems (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-emblems:
+#TM:1:get-emblems:
+#TM:1:get-emblems-rk:
 =begin pod
-=head2 get-emblems
+=head2 get-emblems, get-emblems-rk
 
-Gets the list of emblems for the I<icon>.
-
-Returns: (element-type Gio.Emblem) : a B<Gnome::Gio::List> of B<Gnome::Gio::Emblems> that is owned by I<emblemed>
+Gets the list a B<Gnome::Glib::List> of emblems for the I<icon>.
 
   method get-emblems ( --> N-GList )
+  method get-emblems-rk ( --> Gnome::Glib::List )
 
 =end pod
 
 method get-emblems ( --> N-GList ) {
+  g_emblemed_icon_get_emblems(self.get-native-object-no-reffing)
+}
 
-  g_emblemed_icon_get_emblems(
-    self.get-native-object-no-reffing,
+method get-emblems-rk ( --> Gnome::Glib::List ) {
+  Gnome::Glib::List.new(:native-object(
+      g_emblemed_icon_get_emblems(self.get-native-object-no-reffing)
+    )
   )
 }
 
@@ -240,23 +257,28 @@ sub g_emblemed_icon_get_emblems (
 ) is native(&gio-lib)
   { * }
 
+##`{{ TODO gnome instantiation of interfaces, what is returned??
 #-------------------------------------------------------------------------------
-#TM:0:get-icon:
+# TM:1:get-icon:
+# TM:1:get-icon-rk:
 =begin pod
 =head2 get-icon
 
 Gets the main icon for I<emblemed>.
 
-Returns: a B<Gnome::Gio::Icon> that is owned by I<emblemed>
-
   method get-icon ( --> N-GObject )
+  method get-icon-rk ( --> Gnome::Gio::EmblemedIcon )
 
 =end pod
 
 method get-icon ( --> N-GObject ) {
+  g_emblemed_icon_get_icon(self.get-native-object-no-reffing)
+}
 
-  g_emblemed_icon_get_icon(
-    self.get-native-object-no-reffing,
+method get-icon-rk ( --> Gnome::Gio::EmblemedIcon ) {
+  Gnome::Gio::EmblemedIcon.new(
+    :icon(g_emblemed_icon_get_icon(self.get-native-object-no-reffing)),
+    :emblem(N-GObject)
   )
 }
 
@@ -264,6 +286,7 @@ sub g_emblemed_icon_get_icon (
   N-GObject $emblemed --> N-GObject
 ) is native(&gio-lib)
   { * }
+#}}
 
 #-------------------------------------------------------------------------------
 #TM:1:_g_emblemed_icon_new:

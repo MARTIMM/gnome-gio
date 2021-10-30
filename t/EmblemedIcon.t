@@ -2,28 +2,34 @@ use v6;
 use NativeCall;
 use Test;
 
+use Gnome::Gio::Emblem;
 use Gnome::Gio::EmblemedIcon;
+use Gnome::Gio::Icon;
+use Gnome::Gio::File;
+use Gnome::Gio::FileIcon;
+use Gnome::Gio::Enums;
+
+use Gnome::Glib::List;
 
 ok 1, 'loads ok';
-done-testing;
-=finish
 
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------
 my Gnome::Gio::EmblemedIcon $ei;
+my Gnome::Gio::Emblem $e;
+my Gnome::Gio::File $f .= new(:path<LICENSE>);
+my Gnome::Gio::FileIcon $fi;
+
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $ei .= new;
-  isa-ok $ei, Gnome::Gio::EmblemedIcon, '.new()';
+  $fi .= new(:file($f));
+  $e .= new(:icon($fi), :origin(G_EMBLEM_ORIGIN_TAG));
+  $ei .= new(:icon($fi), :emblem($e));
+#note 'S: ', $ei.to-string;
+  ok $ei.is-valid, '.new( :icon, :origin)';
 }
-
-#-------------------------------------------------------------------------------
-done-testing;
-
-=finish
-
 
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
@@ -34,7 +40,37 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
+  my Str $eistring = $ei.to-string;
+  my Gnome::Gio::EmblemedIcon $ei2 .= new(:string($eistring));
+  ok $ei2.equal($ei), '.new(:string)';
+#note 'S: ', $e2.to-string;
+
+  $f .= new(:path<appveyor.yml>);
+  my Gnome::Gio::FileIcon $fi2 .= new(:file($f));
+  $e .= new(:icon($fi2), :origin(G_EMBLEM_ORIGIN_TAG));
+  lives-ok {
+    $ei2.add-emblem($e);
+  }, '.add-emblem()';
+
+  my Gnome::Glib::List $l = $ei2.get-emblems-rk;
+  is $l.length, 2, '.get-emblems-rk()';
+  $ei2.clear-emblems;
+  $l = $ei2.get-emblems-rk;
+  is $l.length, 0, '.clear-emblems()';
+
+  $fi .= new(:file($f));
+  $e .= new(:icon($fi), :origin(G_EMBLEM_ORIGIN_TAG));
+  $ei .= new(:icon($fi), :emblem($e));
+
+#  my Gnome::Gio::EmblemedIcon $ei3 = $ei.get-icon-rk;
+#  $l = $ei3.get-emblems-rk;
+#  is $l.length, 0, '.get-icon-rk()';
 }
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
 
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::EmblemedIcon', {
