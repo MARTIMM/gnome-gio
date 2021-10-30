@@ -34,9 +34,9 @@ B<Gnome::Gio::Icon>, B<Gnome::Gio::LoadableIcon>
   also does Gnome::Gio::Icon;
 
 
-=comment head2 Uml Diagram
+=head2 Uml Diagram
 
-=comment ![](plantuml/.svg)
+![](plantuml/FileIcon.svg)
 
 
 =begin comment

@@ -35,6 +35,12 @@ To check if two B<Gnome::Gio::Icons> are equal, see C<equal()>.
 
   unit role Gnome::Gio::Icon;
 
+
+=head2 Uml Diagram
+
+![](plantuml/Icon.svg)
+
+
 =end pod
 #-------------------------------------------------------------------------------
 use NativeCall;

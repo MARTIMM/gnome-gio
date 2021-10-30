@@ -33,9 +33,9 @@ B<Gnome::Gio::Icon>, B<Gnome::Gio::EmblemedIcon>, B<Gnome::Gio::LoadableIcon>, B
   also does Gnome::Gio::Icon;
 
 
-=comment head2 Uml Diagram
+=head2 Uml Diagram
 
-=comment ![](plantuml/.svg)
+![](plantuml/Emblem.svg)
 
 
 =begin comment
@@ -182,7 +182,7 @@ submethod BUILD ( *%options ) {
   }
 }
 
-##`{{ TODO gnome instantiation of interfaces, what is returned?? 
+##`{{ TODO gnome instantiation of interfaces, what is returned??
 #-------------------------------------------------------------------------------
 # TM:1:get-icon:
 # TM:1:get-icon-rk:
