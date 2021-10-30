@@ -216,19 +216,21 @@ sub g_icon_serialize (
 =begin pod
 =head2 to-string
 
-Generates a textual representation of I<icon> that can be used for serialization such as when passing I<icon> to a different process or saving it to persistent storage. Use C<new-for-string()> to get I<icon> back from the returned string.
+Generates a textual representation of this I<icon> that can be used for serialization such as when passing an I<icon> to a different process or saving it to persistent storage. Use C<Some-Icon-Child.new(:string)> to get this I<icon> back from the returned string.
 
 The encoding of the returned string is proprietary to B<Gnome::Gio::Icon> except in the following two cases
 
-- If I<icon> is a B<Gnome::Gio::FileIcon>, the returned string is a native path (such as `/path/to/my icon.png`) without escaping if the B<Gnome::Gio::File> for I<icon> is a native file. If the file is not native, the returned string is the result of C<g-file-get-uri()> (such as `sftp://path/to/myC<20icon>.png`).
+=item If the icon is a B<Gnome::Gio::FileIcon>, the returned string is a native path (such as `/path/to/my icon.png`) without escaping if the B<Gnome::Gio::File> for this icon is a native file. If the file is not native, the returned string is the result of C<.get-uri()> (such as `sftp://path/to/myC<20icon>.png`).
 
-- If I<icon> is a B<Gnome::Gio::ThemedIcon> with exactly one name and no fallbacks, the encoding is simply the name (such as `network-server`).
+=item If I<icon> is a B<Gnome::Gio::ThemedIcon> with exactly one name and no fallbacks, the encoding is simply the name (such as `network-server`).
 
-Virtual: to-tokens
-
-Returns: An allocated NUL-terminated UTF8 string or C<undefined> if I<icon> can't be serialized. Use C<g-free()> to free.
+Returns: A UTF8 string or C<undefined> if I<icon> can't be serialized.
 
   method to-string ( --> Str )
+
+=head3 Example
+
+
 
 =end pod
 
