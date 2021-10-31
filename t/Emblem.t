@@ -8,6 +8,8 @@ use Gnome::Gio::Enums;
 use Gnome::Gio::File;
 use Gnome::Gio::FileIcon;
 
+use Gnome::GObject::Type;
+
 ok 1, 'loads ok';
 
 use Gnome::N::N-GObject;
@@ -36,8 +38,26 @@ subtest 'Manipulations', {
 #note 'S: ', $e2.to-string;
 
   is $e2.get-icon-rk.to-string, $estring, '.get-icon-rk()';
-
   is $e2.get-origin, G_EMBLEM_ORIGIN_TAG, '.get-origin()';
+
+#`{{ Experiment
+  my Gnome::GObject::Type $type .= new;
+
+  # check if $icon is of type GIcon
+  my UInt $gtype = $type.from-name('GIcon');
+  my N-GObject $icon = $e2.get-icon;
+  note "is an icon: $gtype = ", $type.check-instance-is-a( $icon, $gtype);
+
+  # check if $e2 is a GIcon
+  note "emblem is an icon: $e2.get-class-gtype(), $gtype = ", $type.is-a(
+    $e2.get-class-gtype, $gtype
+  );
+
+  # check if $emblem is of type GEmblem
+  $gtype = $type.from-name('GEmblem');
+  note "is an emblem: $gtype = ", $type.check-instance-is-a(
+    $e2.get-native-object-no-reffing, $gtype);
+}}
 }
 
 #-------------------------------------------------------------------------------
