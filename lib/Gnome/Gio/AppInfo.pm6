@@ -602,9 +602,8 @@ sub g_app_info_get_fallback_for_type (
 ) is native(&gio-lib)
   { * }
 
-#`{{
 #-------------------------------------------------------------------------------
-#TM:0:get-icon:
+#TM:1:get-icon:
 =begin pod
 =head2 get-icon
 
@@ -612,22 +611,19 @@ Gets the icon for the application.
 
 Returns: the default B<Gnome::Gio::Icon> for I<appinfo> or C<undefined> if there is no default icon.
 
-  method get-icon ( --> GIcon )
+  method get-icon ( --> N-GObject )
 
 =end pod
 
-method get-icon ( --> GIcon ) {
-
-  g_app_info_get_icon(
-    self.get-native-object-no-reffing,
-  )
+method get-icon ( --> N-GObject ) {
+  g_app_info_get_icon(self.get-native-object-no-reffing)
 }
 
 sub g_app_info_get_icon (
-  N-GObject $appinfo --> GIcon
+  N-GObject $appinfo --> N-GObject
 ) is native(&gio-lib)
   { * }
-}}
+
 
 #-------------------------------------------------------------------------------
 #TM:1:get-id:

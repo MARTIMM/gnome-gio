@@ -136,6 +136,10 @@ subtest 'Manipulations', {
 
   # remove previous set default associations
   $ai.reset-type-associations('image/jpeg');
+
+  lives-ok {
+    $ai.get-icon;
+  }, '.get-icon()';
 }
 
 #-------------------------------------------------------------------------------
