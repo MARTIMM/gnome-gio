@@ -228,7 +228,6 @@ submethod BUILD ( *%options ) {
 
     # check if common options are handled by some parent
     elsif %options<native-object>:exists { }
-    elsif %options<build-id>:exists { }
 
 
     # process all named arguments
