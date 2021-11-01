@@ -52,6 +52,6 @@ There are always some problems! If you find one please help by filing an issue a
 * Other helpful modules for their insight and use.
 
 [//]: # (---- [refs] ----------------------------------------------------------)
-[changes]: https://github.com/MARTIMM/perl6-gnome-gobject/blob/master/CHANGES.md
+[changes]: https://github.com/MARTIMM/perl6-gnome-gio/blob/master/CHANGES.md
 [logo]: https://martimm.github.io/gnome-gtk3/content-docs/images/gtk-perl6.png
 [issues]: https://github.com/MARTIMM/perl6-gnome-gtk3/issues
