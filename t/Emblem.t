@@ -49,14 +49,15 @@ subtest 'Manipulations', {
   note "is an icon: $gtype = ", $type.check-instance-is-a( $icon, $gtype);
 
   # check if $e2 is a GIcon
-  note "emblem is an icon: $e2.get-class-gtype(), $gtype = ", $type.is-a(
-    $e2.get-class-gtype, $gtype
-  );
+  note "emblem is an icon: $e2.get-class-gtype(), $gtype = ",
+    $type.is-a( $e2.get-class-gtype, $gtype);
 
   # check if $emblem is of type GEmblem
   $gtype = $type.from-name('GEmblem');
-  note "is an emblem: $gtype = ", $type.check-instance-is-a(
-    $e2.get-native-object-no-reffing, $gtype);
+  note "is an emblem: $gtype = ",
+  ` $type.check-instance-is-a( $e2.get-native-object-no-reffing, $gtype);
+
+  note $e2.^name;
 }}
 }
 
