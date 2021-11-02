@@ -16,31 +16,10 @@ Application information and launch contexts
 
 B<Gnome::Gio::AppInfo> and B<Gnome::Gio::AppLaunchContext> are used for describing and launching applications installed on the system.
 
-As of GLib 2.20, URIs will always be converted to POSIX paths (using C<g-file-get-path()>) when using C<launch()> even if the application requested a URI and not a POSIX path. For example, for a desktop-file based application with the C<Exec> key C<totem %U> and a single URI, C<sftp://foo/file.avi>, then C</home/user/.gvfs/sftp> on C<foo/file.avi> will be passed. This will only work if a set of suitable GIO extensions (such as gvfs 2.26 compiled with FUSE support), is available and operational; if this is not the case, the URI will be passed unmodified to the application. Some URIs, such as `mailto:`, of course cannot be mapped to a POSIX path (in gvfs there's no FUSE mount for it); such URIs will be passed unmodified to the application.
+As of GLib 2.20, URIs will always be converted to POSIX paths (using C<Gnome::Gio::File.get-path()>) when using C<launch()> even if the application requested a URI and not a POSIX path. For example, for a desktop-file based application with the C<Exec> key C<totem %U> and a single URI, C<sftp://foo/file.avi>, then C</home/user/.gvfs/sftp> on C<foo/file.avi> will be passed. This will only work if a set of suitable GIO extensions (such as gvfs 2.26 compiled with FUSE support), is available and operational; if this is not the case, the URI will be passed unmodified to the application. Some URIs, such as `mailto:`, of course cannot be mapped to a POSIX path (in gvfs there's no FUSE mount for it); such URIs will be passed unmodified to the application.
 
 =begin comment
-Specifically for gvfs 2.26 and later, the POSIX URI will be mapped back to the GIO URI in the B<Gnome::Gio::File> constructors (since gvfs implements the B<Gnome::Gio::Vfs> extension point). As such, if the application needs to examine the URI, it needs to use C<g-file-get-uri()> or similar on B<Gnome::Gio::File>. In other words, an application cannot assume that the URI passed to e.g. C<g-file-new-for-commandline-arg()> is equal to the result of C<g-file-get-uri()>. The following snippet illustrates this:
-=end comment
-
-=begin comment
-|[
-GFile *f;
-char *uri;
-
-file = g-file-new-for-commandline-arg (uri-from-commandline);
-
-uri = g-file-get-uri (file);
-strcmp (uri, uri-from-commandline) == 0;
-g-free (uri);
-
-if (g-file-has-uri-scheme (file, "cdda"))
-  {
-    // do something special with uri
-  }
-g-object-unref (file);
-]|
-
-This code will work when both `cdda://sr0/Track 1.wav` and `/home/user/.gvfs/cdda on sr0/Track 1.wav` is passed to the application. It should be noted that it's generally not safe for applications to rely on the format of a particular URIs. Different launcher applications (e.g. file managers) may have  different ideas of what a given URI means.
+Specifically for gvfs 2.26 and later, the POSIX URI will be mapped back to the GIO URI in the B<Gnome::Gio::File> constructors (since gvfs implements the B<Gnome::Gio::Vfs> extension point). As such, if the application needs to examine the URI, it needs to use C<Gnome::Gio::File.get-uri()> or similar on B<Gnome::Gio::File>. In other words, an application cannot assume that the URI passed to e.g. C<Gnome::Gio::File.new(:commandline-arg)> is equal to the result of C<Gnome::Gio::File.get-uri()>. The following snippet illustrates this:
 =end comment
 
 
@@ -65,6 +44,22 @@ B<Gnome::Gio::AppInfoMonitor> and B<Gnome::Gio::AppLaunchContext>
 =head2 Note
 
 B<Gnome::Gio::AppInfo> is defined as an interface in the Gnome libraries and therefore should be defined as a Raku role. However, the Gtk modules like B<Gnome::Gtk3::AppChooser > returns B<Gnome::Gio::AppInfo> objects as if they are class objects. The only one which use the module as an interface, is GDesktopAppInfo which will not be implemented for the time being. When it does, it will inherit it as a class.
+
+=head3 Example
+
+Below code will work when both `cdda://sr0/Track 1.wav` and `/home/user/.gvfs/cdda on sr0/Track 1.wav` is passed to the application. It should be noted that it's generally not safe for applications to rely on the format of a particular URIs. Different launcher applications (e.g. file managers) may have  different ideas of what a given URI means.
+
+  my Gnome::Gio::File $file .= new(
+    :commandline-arg($uri-from-commandline)
+  );
+
+  # you might compare $uri with $uri-from-commandline
+  # to see that they are equal;
+  my Str $uri = $file.get-uri;
+
+  if ( $file.has-uri-scheme('cdda') ) {
+      … do something special with uri …
+  }
 
 =end pod
 
