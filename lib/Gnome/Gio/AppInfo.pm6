@@ -45,7 +45,7 @@ B<Gnome::Gio::AppInfoMonitor> and B<Gnome::Gio::AppLaunchContext>
 
 B<Gnome::Gio::AppInfo> is defined as an interface in the Gnome libraries and therefore should be defined as a Raku role. However, the Gtk modules like B<Gnome::Gtk3::AppChooser > returns B<Gnome::Gio::AppInfo> objects as if they are class objects. The only one which use the module as an interface, is GDesktopAppInfo which will not be implemented for the time being. When it does, it will inherit it as a class.
 
-=head3 Example
+=head2 Example
 
 Below code will work when both `cdda://sr0/Track 1.wav` and `/home/user/.gvfs/cdda on sr0/Track 1.wav` is passed to the application. It should be noted that it's generally not safe for applications to rely on the format of a particular URIs. Different launcher applications (e.g. file managers) may have  different ideas of what a given URI means.
 
@@ -60,6 +60,8 @@ Below code will work when both `cdda://sr0/Track 1.wav` and `/home/user/.gvfs/cd
   if ( $file.has-uri-scheme('cdda') ) {
       … do something special with uri …
   }
+
+  $file.clear-object;
 
 =end pod
 
