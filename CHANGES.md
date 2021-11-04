@@ -4,7 +4,7 @@
   * Add module **Gnome::Gio::EmblemedIcon**.
 -->
 
-* 2021-10-   0.10.0
+* 2021-11-04 0.10.0
   * Add modules **Gnome::Gio::Icon**, **Gnome::Gio::Emblem**, **Gnome::Gio::EmblemedIcon**, **Gnome::Gio::FileIcon** and **Gnome::Gio::ThemedIcon**.
 
 * 2021-10-27 0.9.2
