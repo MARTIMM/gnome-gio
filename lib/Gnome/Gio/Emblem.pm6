@@ -178,7 +178,7 @@ submethod BUILD ( *%options ) {
     }
 
     # only after creating the native-object, the gtype is known
-    self.set-class-info('GEmblem');
+    self._set-class-info('GEmblem');
   }
 }
 

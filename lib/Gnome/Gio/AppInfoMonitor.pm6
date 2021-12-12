@@ -186,7 +186,7 @@ submethod BUILD ( *%options ) {
     }
 
     # only after creating the native-object, the gtype is known
-    self.set-class-info('GAppInfoMonitor');
+    self._set-class-info('GAppInfoMonitor');
   }
 }
 

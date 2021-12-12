@@ -171,7 +171,7 @@ submethod BUILD ( *%options ) {
     }
 
     # only after creating the native-object, the gtype is known
-    self.set-class-info('GFileIcon');
+    self._set-class-info('GFileIcon');
   }
 }
 

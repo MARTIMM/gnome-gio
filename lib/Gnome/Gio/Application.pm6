@@ -282,7 +282,7 @@ submethod BUILD ( *%options ) {
     }
 
     # only after creating the widget, the gtype is known
-    self.set-class-info('GApplication');
+    self._set-class-info('GApplication');
   }
 }
 
@@ -296,7 +296,7 @@ method _fallback ( $native-sub is copy --> Callable ) {
   try { $s = &::("g_$native-sub"); } unless ?$s;
   try { $s = &::($native-sub); }
 
-  self.set-class-name-of-sub('GApplication');
+  self._set-class-name-of-sub('GApplication');
 
   $s = callsame unless ?$s;
 

@@ -67,7 +67,7 @@ submethod BUILD ( *%options ) {
     #elsif %options<native-object>:exists or %options<widget>:exists { }
 
     # only after creating the native-object, the gtype is known
-    self.set-class-info('GMenuAttributeIter');
+    self._set-class-info('GMenuAttributeIter');
   }
 }
 

@@ -218,7 +218,7 @@ submethod BUILD ( *%options ) {
     }
 
     # only after creating the native-object, the gtype is known
-    self.set-class-info('GResource');
+    self._set-class-info('GResource');
   }
 }
 
@@ -231,7 +231,7 @@ method _fallback ( $native-sub is copy --> Callable ) {
   try { $s = &::("g_$native-sub"); } unless ?$s;
   try { $s = &::($native-sub); } if !$s and $native-sub ~~ m/^ 'gtk_' /;
 
-  self.set-class-name-of-sub('GResource');
+  self._set-class-name-of-sub('GResource');
   $s = callsame unless ?$s;
 
   $s;
