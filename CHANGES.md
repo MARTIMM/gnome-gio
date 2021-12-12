@@ -3,6 +3,8 @@
   * Add module **Gnome::Gio::Emblem**.
   * Add module **Gnome::Gio::EmblemedIcon**.
 -->
+* 2021-12-12 0.10.1
+  * Changes for renamed methods in **Gnome::N::TopLevelClassSupport**.
 
 * 2021-11-04 0.10.0
   * Add modules **Gnome::Gio::Icon**, **Gnome::Gio::Emblem**, **Gnome::Gio::EmblemedIcon**, **Gnome::Gio::FileIcon** and **Gnome::Gio::ThemedIcon**.
