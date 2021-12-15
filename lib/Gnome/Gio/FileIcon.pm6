@@ -133,7 +133,7 @@ submethod BUILD ( *%options ) {
       my $no;
       if ? %options<file> {
         $no = %options<file>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_file_icon_new($no);
       }
 
@@ -167,7 +167,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -192,12 +192,12 @@ Returns: a B<Gnome::Gio::File>, or C<undefined>.
 =end pod
 
 method get-file ( --> N-GFile ) {
-  g_file_icon_get_file(self.get-native-object-no-reffing)
+  g_file_icon_get_file(self._get-native-object-no-reffing)
 }
 
 method get-file-rk ( --> Gnome::Gio::File ) {
   Gnome::Gio::File.new(
-    :native-object(g_file_icon_get_file(self.get-native-object-no-reffing))
+    :native-object(g_file_icon_get_file(self._get-native-object-no-reffing))
   )
 }
 

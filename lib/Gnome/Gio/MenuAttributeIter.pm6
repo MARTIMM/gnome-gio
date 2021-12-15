@@ -125,7 +125,7 @@ Returns: C<True> on success, or C<False> if there is no additional attribute
 
 method attribute-iter-get-next ( CArray[Str] $out_name, N-GObject $value --> Int ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_attribute_iter_get_next(
     self._f('GMenuAttributeIter'), $out_name, $value

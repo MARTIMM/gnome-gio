@@ -113,7 +113,7 @@ submethod BUILD ( *%options ) {
       my $no;
       if ? %options<___x___> {
         #$no = %options<___x___>;
-        #$no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        #$no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         #$no = _g_menu_new___x___($no);
       }
 
@@ -143,7 +143,7 @@ submethod BUILD ( *%options ) {
       }
       #}}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -170,7 +170,7 @@ Convenience function for appending a normal menu item to the end of I<menu>.  Co
 method append ( Str $label, Str $detailed_action ) {
 
   g_menu_append(
-    self.get-native-object-no-reffing, $label, $detailed_action
+    self._get-native-object-no-reffing, $label, $detailed_action
   );
 }
 
@@ -192,9 +192,9 @@ Appends I<$item> to the end of I<menu>. See C<insert-item()> for more informatio
 =end pod
 
 method append-item ( $item is copy ) {
-  $item .= get-native-object-no-reffing unless $item ~~ N-GObject;
+  $item .= _get-native-object-no-reffing unless $item ~~ N-GObject;
 
-  g_menu_append_item( self.get-native-object-no-reffing, $item);
+  g_menu_append_item( self._get-native-object-no-reffing, $item);
 }
 
 sub g_menu_append_item ( N-GObject $menu, N-GObject $item  )
@@ -216,10 +216,10 @@ Convenience function for appending a section menu item to the end of I<menu>.  C
 =end pod
 
 method append-section ( Str $label, $section is copy ) {
-  $section .= get-native-object-no-reffing unless $section ~~ N-GObject;
+  $section .= _get-native-object-no-reffing unless $section ~~ N-GObject;
 
   g_menu_append_section(
-    self.get-native-object-no-reffing, $label, $section
+    self._get-native-object-no-reffing, $label, $section
   );
 }
 
@@ -243,10 +243,10 @@ Convenience function for appending a submenu menu item to the end of I<menu>.  C
 =end pod
 
 method append-submenu ( Str $label, $submenu is copy ) {
-  $submenu .= get-native-object-no-reffing unless $submenu ~~ N-GObject;
+  $submenu .= _get-native-object-no-reffing unless $submenu ~~ N-GObject;
 
   g_menu_append_submenu(
-    self.get-native-object-no-reffing, $label, $submenu
+    self._get-native-object-no-reffing, $label, $submenu
   );
 }
 
@@ -270,7 +270,7 @@ This function causes C<model-is-mutable()> to begin returning C<False>, which ha
 =end pod
 
 method freeze ( ) {
-  g_menu_freeze( self.get-native-object-no-reffing);
+  g_menu_freeze( self._get-native-object-no-reffing);
 }
 
 sub g_menu_freeze ( N-GObject $menu )
@@ -295,7 +295,7 @@ Convenience function for inserting a normal menu item into I<menu>. Combine C<Gn
 method insert ( Int $position, Str $label, Str $detailed_action ) {
 
   g_menu_insert(
-    self.get-native-object-no-reffing, $position, $label, $detailed_action
+    self._get-native-object-no-reffing, $position, $label, $detailed_action
   );
 }
 
@@ -326,10 +326,10 @@ There are many convenience functions to take care of common cases. See C<insert(
 =end pod
 
 method insert-item ( Int $position, $item is copy ) {
-  $item .= get-native-object-no-reffing unless $item ~~ N-GObject;
+  $item .= _get-native-object-no-reffing unless $item ~~ N-GObject;
 
   g_menu_insert_item(
-    self.get-native-object-no-reffing, $position, $item
+    self._get-native-object-no-reffing, $position, $item
   );
 }
 
@@ -353,10 +353,10 @@ Convenience function for inserting a section menu item into I<menu>. Combine C<G
 =end pod
 
 method insert-section ( Int $position, Str $label, $section is copy ) {
-  $section .= get-native-object-no-reffing unless $section ~~ N-GObject;
+  $section .= _get-native-object-no-reffing unless $section ~~ N-GObject;
 
   g_menu_insert_section(
-    self.get-native-object-no-reffing, $position, $label, $section
+    self._get-native-object-no-reffing, $position, $label, $section
   );
 }
 
@@ -380,10 +380,10 @@ Convenience function for inserting a submenu menu item into I<menu>. Combine C<G
 =end pod
 
 method insert-submenu ( Int $position, Str $label, $submenu is copy ) {
-  $submenu .= get-native-object-no-reffing unless $submenu ~~ N-GObject;
+  $submenu .= _get-native-object-no-reffing unless $submenu ~~ N-GObject;
 
   g_menu_insert_submenu(
-    self.get-native-object-no-reffing, $position, $label, $submenu
+    self._get-native-object-no-reffing, $position, $label, $submenu
   );
 }
 
@@ -408,7 +408,7 @@ Convenience function for prepending a normal menu item to the start of I<menu>. 
 method prepend ( Str $label, Str $detailed_action ) {
 
   g_menu_prepend(
-    self.get-native-object-no-reffing, $label, $detailed_action
+    self._get-native-object-no-reffing, $label, $detailed_action
   );
 }
 
@@ -432,10 +432,10 @@ See C<insert-item()> for more information.
 =end pod
 
 method prepend-item ( $item is copy ) {
-  $item .= get-native-object-no-reffing unless $item ~~ N-GObject;
+  $item .= _get-native-object-no-reffing unless $item ~~ N-GObject;
 
   g_menu_prepend_item(
-    self.get-native-object-no-reffing, $item
+    self._get-native-object-no-reffing, $item
   );
 }
 
@@ -458,10 +458,10 @@ Convenience function for prepending a section menu item to the start of I<menu>.
 =end pod
 
 method prepend-section ( Str $label, $section is copy ) {
-  $section .= get-native-object-no-reffing unless $section ~~ N-GObject;
+  $section .= _get-native-object-no-reffing unless $section ~~ N-GObject;
 
   g_menu_prepend_section(
-    self.get-native-object-no-reffing, $label, $section
+    self._get-native-object-no-reffing, $label, $section
   );
 }
 
@@ -484,10 +484,10 @@ Convenience function for prepending a submenu menu item to the start of I<menu>.
 =end pod
 
 method prepend-submenu ( Str $label, $submenu is copy ) {
-  $submenu .= get-native-object-no-reffing unless $submenu ~~ N-GObject;
+  $submenu .= _get-native-object-no-reffing unless $submenu ~~ N-GObject;
 
   g_menu_prepend_submenu(
-    self.get-native-object-no-reffing, $label, $submenu
+    self._get-native-object-no-reffing, $label, $submenu
   );
 }
 
@@ -517,7 +517,7 @@ It is not possible to remove items by identity since items are added to the menu
 method remove ( Int $position ) {
 
   g_menu_remove(
-    self.get-native-object-no-reffing, $position
+    self._get-native-object-no-reffing, $position
   );
 }
 
@@ -539,7 +539,7 @@ Removes all items in the menu.
 method remove-all ( ) {
 
   g_menu_remove_all(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 

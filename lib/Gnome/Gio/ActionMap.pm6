@@ -82,7 +82,7 @@ Adds an action to the action map.  If the action map already contains an action 
 
 method add-action ( $action ) {
   my $no = $action;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_map_add_action( self._f('GActionMap'), $no);
 }

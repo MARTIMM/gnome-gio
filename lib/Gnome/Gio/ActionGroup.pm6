@@ -160,7 +160,7 @@ Emits the  I<action-state-changed> signal on I<action-group>.  This function sho
 
 method action-state-changed ( Str $action_name, N-GObject $state ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_action_state_changed(
     self._f('GActionGroup'), $action_name, $state
@@ -187,7 +187,7 @@ Activate the named action within I<action-group>.  If the action is expecting a 
 
 method activate-action ( Str $action_name, $parameter ) {
   my $no = $parameter;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_activate_action(
     self._f('GActionGroup'), $action_name, $no
@@ -214,7 +214,7 @@ Request for the state of the named action within I<action-group> to be changed t
 
 method change-action-state ( Str $action_name, $value ) {
   my $no = $value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_group_change_action_state(
     self._f('GActionGroup'), $action_name, $no

@@ -278,7 +278,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the widget, the gtype is known
@@ -316,7 +316,7 @@ Activates the application. In essence, this results in the I<activate> signal be
 =end pod
 
 method activate ( ) {
-  g_application_activate(self.get-native-object-no-reffing);
+  g_application_activate(self._get-native-object-no-reffing);
 }
 
 sub g_application_activate ( N-GObject $application  )
@@ -360,7 +360,7 @@ method add-main-option ( Str $long_name, Str $short_name, GOptionFlags $flags,
 ) {
 
   g_application_add_main_option(
-    self.get-native-object-no-reffing, $long_name, $short_name.encode[0],
+    self._get-native-object-no-reffing, $long_name, $short_name.encode[0],
     $flags.Int, $arg, $description, $arg_description
   );
 }
@@ -409,7 +409,7 @@ It is important to use the proper GVariant format when retrieving the options wi
 method add-main-option-entries ( GOptionEntry $entries ) {
 
   g_application_add_main_option_entries(
-    self.get-native-object-no-reffing, $entries
+    self._get-native-object-no-reffing, $entries
   );
 }
 
@@ -434,7 +434,7 @@ Adds a B<GOptionGroup> to the commandline handling of the application.  This fun
 method add-option-group ( GOptionGroup $group ) {
 
   g_application_add_option_group(
-    self.get-native-object-no-reffing, $group
+    self._get-native-object-no-reffing, $group
   );
 }
 
@@ -461,7 +461,7 @@ Marks the application as busy (see C<g_application_mark_busy()>) while I<$proper
 method bind-busy-property ( Pointer $object, Str $property ) {
 
   g_application_bind_busy_property(
-    self.get-native-object-no-reffing, $object, $property
+    self._get-native-object-no-reffing, $object, $property
   );
 }
 
@@ -486,7 +486,7 @@ Returns: the identifier for the application, owned by the application
 method get-application-id ( --> Str ) {
 
   g_application_get_application_id(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -512,7 +512,7 @@ Returns: (transfer none): a B<GDBusConnection>, or C<undefined>
 method get-dbus-connection ( --> GDBusConnection ) {
 
   g_application_get_dbus_connection(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -538,7 +538,7 @@ Returns: the object path, or C<undefined>
 method get-dbus-object-path ( --> Str ) {
 
   g_application_get_dbus_object_path(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -588,7 +588,7 @@ Returns: a mask of ored GApplicationFlags flags for the application
 
 method get-flags ( --> Int ) {
 
-  g_application_get_flags(self.get-native-object-no-reffing)
+  g_application_get_flags(self._get-native-object-no-reffing)
 }
 
 sub g_application_get_flags ( N-GObject $application --> GEnum )
@@ -612,7 +612,7 @@ Returns: the timeout, in milliseconds
 method get-inactivity-timeout ( --> UInt ) {
 
   g_application_get_inactivity_timeout(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -637,7 +637,7 @@ Returns: C<True> if the application is currenty marked as busy
 method get-is-busy ( --> Int ) {
 
   g_application_get_is_busy(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -659,7 +659,7 @@ Returns: C<True> if the application is registered
 =end pod
 
 method get-is-registered ( --> Bool ) {
-  g_application_get_is_registered(self.get-native-object-no-reffing).Bool
+  g_application_get_is_registered(self._get-native-object-no-reffing).Bool
 }
 
 sub g_application_get_is_registered ( N-GObject $application --> gboolean )
@@ -682,7 +682,7 @@ Returns: C<True> if the application is remote
 method get-is-remote ( --> Bool ) {
 
   g_application_get_is_remote(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   ).Bool
 }
 
@@ -707,7 +707,7 @@ Returns: (nullable): the base resource path, if one is set
 method get-resource-base-path ( --> Str ) {
 
   g_application_get_resource_base_path(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -730,7 +730,7 @@ Increases the use count of the application.  Use this function to indicate that 
 method hold ( ) {
 
   g_application_hold(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -790,7 +790,7 @@ Increases the busy count of the application.  Use this function to indicate that
 method mark-busy ( ) {
 
   g_application_mark_busy(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -822,17 +822,17 @@ method open ( Array $files, Str $hint ) {
   for @$files -> $file {
     if $file ~~ m/ '://' / {
       $fa[$i++] =
-        Gnome::Gio::File.new(:uri($file)).get-native-object-no-reffing;
+        Gnome::Gio::File.new(:uri($file))._get-native-object-no-reffing;
     }
 
     else {
       $fa[$i++] =
-        Gnome::Gio::File.new(:path($file)).get-native-object-no-reffing;
+        Gnome::Gio::File.new(:path($file))._get-native-object-no-reffing;
     }
   }
 
   g_application_open(
-    self.get-native-object-no-reffing, $fa, $n_files, $hint
+    self._get-native-object-no-reffing, $fa, $n_files, $hint
   );
 }
 
@@ -855,7 +855,7 @@ Upon return to the mainloop, C<run()> will return, calling only the 'shutdown' f
 
 method quit ( ) {
   g_application_quit(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -887,7 +887,7 @@ method register ( N-GObject $cancellable = N-GObject --> Gnome::Glib::Error ) {
 
   my CArray[N-GError] $e .= new(N-GError);
   my $r = g_application_register(
-    self.get-native-object-no-reffing, $cancellable, $e
+    self._get-native-object-no-reffing, $cancellable, $e
   );
 
   my Gnome::Glib::Error $error;
@@ -923,7 +923,7 @@ Decrease the use count of the application.  When the use count reaches zero, the
 method release ( ) {
 
   g_application_release(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -980,7 +980,7 @@ method run ( --> Int ) {
   }
 
   g_application_run(
-    self.get-native-object-no-reffing, $argc, $argv
+    self._get-native-object-no-reffing, $argc, $argv
   );
 }
 
@@ -1004,11 +1004,11 @@ Sends a notification on behalf of the application to the desktop shell. There is
 =end pod
 
 method send-notification ( Str $id, $notification is copy ) {
-  $notification .= get-native-object-no-reffing
+  $notification .= _get-native-object-no-reffing
     unless $notification ~~ N-GObject;
 
   g_application_send_notification(
-    self.get-native-object-no-reffing, $id, $notification
+    self._get-native-object-no-reffing, $id, $notification
   );
 }
 
@@ -1032,7 +1032,7 @@ Sets the unique identifier for the application.  The application id can only be 
 method set-application-id ( Str $application_id ) {
 
   g_application_set_application_id(
-    self.get-native-object-no-reffing, $application_id
+    self._get-native-object-no-reffing, $application_id
   );
 }
 
@@ -1055,7 +1055,7 @@ Sets or unsets the default application for the process, as returned by C<g_appli
 method set-default ( ) {
 
   g_application_set_default(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -1078,7 +1078,7 @@ Sets the flags for the application.  The flags can only be modified if the appli
 
 method set-flags ( Int $flags ) {
   g_application_set_flags(
-    self.get-native-object-no-reffing, $flags.Int
+    self._get-native-object-no-reffing, $flags.Int
   );
 }
 
@@ -1102,7 +1102,7 @@ Sets the current inactivity timeout for the application.  This is the amount of 
 method set-inactivity-timeout ( UInt $inactivity_timeout ) {
 
   g_application_set_inactivity_timeout(
-    self.get-native-object-no-reffing, $inactivity_timeout
+    self._get-native-object-no-reffing, $inactivity_timeout
   );
 }
 
@@ -1127,7 +1127,7 @@ Adds a description to the the application option context.  See C<g_option_contex
 method set-option-context-description ( Str $description ) {
 
   g_application_set_option_context_description(
-    self.get-native-object-no-reffing, $description
+    self._get-native-object-no-reffing, $description
   );
 }
 
@@ -1152,7 +1152,7 @@ Sets the parameter string to be used by the commandline handling of the applicat
 method set-option-context-parameter-string ( Str $parameter_string ) {
 
   g_application_set_option_context_parameter_string(
-    self.get-native-object-no-reffing, $parameter_string
+    self._get-native-object-no-reffing, $parameter_string
   );
 }
 
@@ -1176,7 +1176,7 @@ Adds a summary to the the application option context.  See C<g_option_context_se
 method set-option-context-summary ( Str $summary ) {
 
   g_application_set_option_context_summary(
-    self.get-native-object-no-reffing, $summary
+    self._get-native-object-no-reffing, $summary
   );
 }
 
@@ -1201,7 +1201,7 @@ Sets (or unsets) the base resource path of the application.  The path is used to
 method set-resource-base-path ( Str $resource_path ) {
 
   g_application_set_resource_base_path(
-    self.get-native-object-no-reffing, $resource_path
+    self._get-native-object-no-reffing, $resource_path
   );
 }
 
@@ -1226,7 +1226,7 @@ Destroys a binding between I<property> and the busy state of the application tha
 method unbind-busy-property ( Pointer $object, Str $property ) {
 
   g_application_unbind_busy_property(
-    self.get-native-object-no-reffing, $object, $property
+    self._get-native-object-no-reffing, $object, $property
   );
 }
 
@@ -1249,7 +1249,7 @@ Decreases the busy count of the application.  When the busy count reaches zero, 
 method unmark-busy ( ) {
 
   g_application_unmark_busy(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -1273,7 +1273,7 @@ Withdraws a notification that was sent with C<g_application_send_notification()>
 method withdraw-notification ( Str $id ) {
 
   g_application_withdraw_notification(
-    self.get-native-object-no-reffing, $id
+    self._get-native-object-no-reffing, $id
   );
 }
 

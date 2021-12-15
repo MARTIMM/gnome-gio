@@ -152,7 +152,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -181,7 +181,7 @@ See C<Gnome::Gio::Action.parse-detailed-name()> for a description of the format 
 method add-button ( Str $label, Str $detailed_action ) {
 
   g_notification_add_button(
-    self.get-native-object-no-reffing, $label, $detailed_action
+    self._get-native-object-no-reffing, $label, $detailed_action
   );
 }
 
@@ -211,7 +211,7 @@ If I<target-format> is given, it is used to collect remaining positional paramet
 method add-button-with-target ( Str $label, Str $action, Str $target_format ) {
 
   g_notification_add_button_with_target(
-    self.get-native-object-no-reffing, $label, $action, $target_format
+    self._get-native-object-no-reffing, $label, $action, $target_format
   );
 }
 
@@ -239,10 +239,10 @@ If I<target> is non-C<undefined>, I<action> will be activated with I<target> as 
 =end pod
 
 method add-button-with-target-value ( Str $label, Str $action, $target is copy ) {
-  $target .= get-native-object-no-reffing unless $target ~~ N-GObject;
+  $target .= _get-native-object-no-reffing unless $target ~~ N-GObject;
 
   g_notification_add_button_with_target_value(
-    self.get-native-object-no-reffing, $label, $action, $target
+    self._get-native-object-no-reffing, $label, $action, $target
   );
 }
 
@@ -267,7 +267,7 @@ Sets the body of the notification to I<body>.
 method set-body ( Str $body ) {
 
   g_notification_set_body(
-    self.get-native-object-no-reffing, $body
+    self._get-native-object-no-reffing, $body
   );
 }
 
@@ -296,7 +296,7 @@ When no default action is set, the application that the notification was sent on
 method set-default-action ( Str $detailed_action ) {
 
   g_notification_set_default_action(
-    self.get-native-object-no-reffing, $detailed_action
+    self._get-native-object-no-reffing, $detailed_action
   );
 }
 
@@ -327,7 +327,7 @@ When no default action is set, the application that the notification was sent on
 method set-default-action-and-target ( Str $action, Str $target_format ) {
 
   g_notification_set_default_action_and_target(
-    self.get-native-object-no-reffing, $action, $target_format
+    self._get-native-object-no-reffing, $action, $target_format
   );
 }
 
@@ -356,10 +356,10 @@ When no default action is set, the application that the notification was sent on
 =end pod
 
 method set-default-action-and-target-value ( Str $action, $target is copy ) {
-  $target .= get-native-object-no-reffing unless $target ~~ N-GObject;
+  $target .= _get-native-object-no-reffing unless $target ~~ N-GObject;
 
   g_notification_set_default_action_and_target_value(
-    self.get-native-object-no-reffing, $action, $target
+    self._get-native-object-no-reffing, $action, $target
   );
 }
 
@@ -385,7 +385,7 @@ Sets the icon of the notification to I<icon>.
 method set-icon ( GIcon $icon ) {
 
   g_notification_set_icon(
-    self.get-native-object-no-reffing, $icon
+    self._get-native-object-no-reffing, $icon
   );
 }
 
@@ -411,7 +411,7 @@ Sets the priority of the notification to I<priority>. See B<Gnome::Gio::Notifica
 method set-priority ( GNotificationPriority $priority ) {
 
   g_notification_set_priority(
-    self.get-native-object-no-reffing, $priority
+    self._get-native-object-no-reffing, $priority
   );
 }
 
@@ -436,7 +436,7 @@ Sets the title of the notification to I<title>.
 method set-title ( Str $title ) {
 
   g_notification_set_title(
-    self.get-native-object-no-reffing, $title
+    self._get-native-object-no-reffing, $title
   );
 }
 

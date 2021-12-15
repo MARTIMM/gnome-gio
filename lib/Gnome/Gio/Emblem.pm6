@@ -134,7 +134,7 @@ submethod BUILD ( *%options ) {
       my $no;
       if ? %options<icon> {
         $no = %options<icon>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         if ?%options<origin> {
           $no = _g_emblem_new_with_origin( $no, %options<origin>);
         }
@@ -174,7 +174,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -199,21 +199,21 @@ Returns: a B<Gnome::Gio::Emblem>. The returned object belongs to the emblem and 
 =end pod
 
 method get-icon ( --> N-GObject ) {
-  g_emblem_get_icon(self.get-native-object-no-reffing)
+  g_emblem_get_icon(self._get-native-object-no-reffing)
 }
 
 method get-icon-rk ( --> Gnome::Gio::Emblem ) {
-  my GEnum $origin = g_emblem_get_origin(self.get-native-object-no-reffing);
+  my GEnum $origin = g_emblem_get_origin(self._get-native-object-no-reffing);
   if ?$origin {
     Gnome::Gio::Emblem.new(
-      :icon(g_emblem_get_icon(self.get-native-object-no-reffing))
+      :icon(g_emblem_get_icon(self._get-native-object-no-reffing))
       :$origin
     )
   }
 
   else {
     Gnome::Gio::Emblem.new(
-      :icon(g_emblem_get_icon(self.get-native-object-no-reffing))
+      :icon(g_emblem_get_icon(self._get-native-object-no-reffing))
     )
   }
 }
@@ -238,7 +238,7 @@ Returns: the origin of the emblem as an GEmblemOrigin enum
 =end pod
 
 method get-origin ( --> GEmblemOrigin ) {
-  GEmblemOrigin(g_emblem_get_origin(self.get-native-object-no-reffing))
+  GEmblemOrigin(g_emblem_get_origin(self._get-native-object-no-reffing))
 }
 
 sub g_emblem_get_origin (

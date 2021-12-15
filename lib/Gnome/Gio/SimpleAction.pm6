@@ -127,13 +127,13 @@ submethod BUILD ( *%options ) {
         my $parameter-type = N-GObject;
         if %options<parameter-type>.defined {
           $parameter-type = %options<parameter-type>;
-          $parameter-type .= get-native-object-no-reffing
+          $parameter-type .= _get-native-object-no-reffing
             unless $parameter-type ~~ N-GObject;
         }
 
         if %options<state>.defined {
           my $state = %options<state>;
-          $state .= get-native-object-no-reffing
+          $state .= _get-native-object-no-reffing
             unless $state ~~ N-GObject;
 
           $no = _g_simple_action_new_stateful(
@@ -145,7 +145,7 @@ submethod BUILD ( *%options ) {
           $no = _g_simple_action_new( %options<name>, $parameter-type);
         }
 
-        self.set-native-object($no);
+        self._set-native-object($no);
       }
 
       ##`{{ use this when the module is not made inheritable
@@ -174,7 +174,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -221,7 +221,7 @@ Sets the state of the action.  This directly updates the 'state' property to the
 
 method set-state ( $value ) {
   my $no = $value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_simple_action_set_state(
     self._f('GSimpleAction'), $no
@@ -247,7 +247,7 @@ Sets the state hint for the action.  See C<get_state_hint()> in B<Gnome::Gio::Ac
 
 method set-state-hint ( $state_hint ) {
   my $no = $state_hint;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_simple_action_set_state_hint(
     self._f('GSimpleAction'), $no

@@ -247,7 +247,7 @@ submethod BUILD ( *%options ) {
       my $no;
       if ? %options<___x___> {
         #$no = %options<___x___>;
-        #$no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        #$no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         #$no = _g_application_command_line_new___x___($no);
       }
 
@@ -277,7 +277,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -308,7 +308,7 @@ method create-file-for-arg ( Str $arg --> Gnome::Gio::File ) {
   Gnome::Gio::File.new(
     :native-object(
       g_application_command_line_create_file_for_arg(
-        self.get-native-object-no-reffing, $arg
+        self._get-native-object-no-reffing, $arg
       )
     )
   )
@@ -340,7 +340,7 @@ Returns: an array of strings containing the arguments
 method get-arguments ( --> Array ) {
 
   my CArray[Str] $a = g_application_command_line_get_arguments(
-    self.get-native-object-no-reffing, my int $argc
+    self._get-native-object-no-reffing, my int $argc
   );
 
 #note "ac: $argc";
@@ -381,7 +381,7 @@ Returns: the current directory, or C<undefined>
 method get-cwd ( --> Str ) {
 
   g_application_command_line_get_cwd(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -413,7 +413,7 @@ Returns: the environment strings, or C<undefined> if they were not sent
 method get-environ ( --> CArray[Str] ) {
 
   g_application_command_line_get_environ(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -439,7 +439,7 @@ Returns: the exit status
 method get-exit-status ( --> Int ) {
 
   g_application_command_line_get_exit_status(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -465,7 +465,7 @@ Returns: C<True> if the invocation was remote
 method get-is-remote ( --> Bool ) {
 
   g_application_command_line_get_is_remote(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   ).Bool
 }
 
@@ -496,7 +496,7 @@ Returns: (transfer none): a B<Gnome::Gio::VariantDict> with the options
 method get-options-dict ( --> N-GObject ) {
 
   g_application_command_line_get_options_dict(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -528,7 +528,7 @@ Returns: the platform data, or C<undefined>
 method get-platform-data ( --> N-GObject ) {
 
   g_application_command_line_get_platform_data(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -560,7 +560,7 @@ Returns: (transfer full): a B<Gnome::Gio::InputStream> for stdin
 method get-stdin ( --> GInputStream ) {
 
   g_application_command_line_get_stdin(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -592,7 +592,7 @@ Returns: the value of the variable, or C<undefined> if unset or unsent
 method getenv ( Str $name --> Str ) {
 
   g_application_command_line_getenv(
-    self.get-native-object-no-reffing, $name
+    self._get-native-object-no-reffing, $name
   )
 }
 
@@ -620,7 +620,7 @@ Prints message using the stdout print handler in the invoking process.
 method print ( Str $message ) {
 
   g_application_command_line_print(
-    self.get-native-object-no-reffing, $message, Nil
+    self._get-native-object-no-reffing, $message, Nil
   );
 }
 
@@ -647,7 +647,7 @@ Formats a message and prints it using the stderr print handler in the invoking p
 method printerr ( Str $message ) {
 
   g_application_command_line_printerr(
-    self.get-native-object-no-reffing, $message, Nil
+    self._get-native-object-no-reffing, $message, Nil
   );
 }
 
@@ -678,7 +678,7 @@ In the case that the commandline invocation is local, the situation is slightly 
 method set-exit-status ( Int $exit_status ) {
 
   g_application_command_line_set_exit_status(
-    self.get-native-object-no-reffing, $exit_status
+    self._get-native-object-no-reffing, $exit_status
   );
 }
 

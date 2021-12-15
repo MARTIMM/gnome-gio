@@ -294,7 +294,7 @@ Returns: (transfer full): the value of the attribute
 
 method get-item-attribute-value ( Int $item_index, Str $attribute, N-GObject $expected_type --> N-GObject ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_model_get_item_attribute_value(
     self._f('GMenuModel'), $item_index, $attribute, $expected_type

@@ -138,9 +138,9 @@ submethod BUILD ( *%options ) {
       my $no;
       if %options<icon>:exists and %options<emblem>:exists {
         my $no1 = %options<icon>;
-        $no1 .= get-native-object-no-reffing unless $no1 ~~ N-GObject;
+        $no1 .= _get-native-object-no-reffing unless $no1 ~~ N-GObject;
         my $no2 = %options<emblem>;
-        $no2 .= get-native-object-no-reffing unless $no2 ~~ N-GObject;
+        $no2 .= _get-native-object-no-reffing unless $no2 ~~ N-GObject;
         $no = _g_emblemed_icon_new( $no1, $no2);
       }
 
@@ -174,7 +174,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -196,10 +196,10 @@ Adds I<emblem> to the B<Gnome::Gio::List> of B<Gnome::Gio::Emblems>.
 =end pod
 
 method add-emblem ( $emblem is copy ) {
-  $emblem .= get-native-object-no-reffing unless $emblem ~~ N-GObject;
+  $emblem .= _get-native-object-no-reffing unless $emblem ~~ N-GObject;
 
   g_emblemed_icon_add_emblem(
-    self.get-native-object-no-reffing, $emblem
+    self._get-native-object-no-reffing, $emblem
   );
 }
 
@@ -220,7 +220,7 @@ Removes all the emblems from I<icon>.
 =end pod
 
 method clear-emblems ( ) {
-  g_emblemed_icon_clear_emblems(self.get-native-object-no-reffing);
+  g_emblemed_icon_clear_emblems(self._get-native-object-no-reffing);
 }
 
 sub g_emblemed_icon_clear_emblems (
@@ -242,12 +242,12 @@ Gets the list a B<Gnome::Glib::List> of emblems for the I<icon>.
 =end pod
 
 method get-emblems ( --> N-GList ) {
-  g_emblemed_icon_get_emblems(self.get-native-object-no-reffing)
+  g_emblemed_icon_get_emblems(self._get-native-object-no-reffing)
 }
 
 method get-emblems-rk ( --> Gnome::Glib::List ) {
   Gnome::Glib::List.new(:native-object(
-      g_emblemed_icon_get_emblems(self.get-native-object-no-reffing)
+      g_emblemed_icon_get_emblems(self._get-native-object-no-reffing)
     )
   )
 }
@@ -272,12 +272,12 @@ Gets the main icon for I<emblemed>.
 =end pod
 
 method get-icon ( --> N-GObject ) {
-  g_emblemed_icon_get_icon(self.get-native-object-no-reffing)
+  g_emblemed_icon_get_icon(self._get-native-object-no-reffing)
 }
 
 method get-icon-rk ( --> Gnome::Gio::EmblemedIcon ) {
   Gnome::Gio::EmblemedIcon.new(
-    :icon(g_emblemed_icon_get_icon(self.get-native-object-no-reffing)),
+    :icon(g_emblemed_icon_get_icon(self._get-native-object-no-reffing)),
     :emblem(N-GObject)
   )
 }

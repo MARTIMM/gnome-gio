@@ -197,7 +197,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -222,7 +222,7 @@ Returns C<True> if successful, C<False> if an error is set. When False, Check th
 method add-supports-type ( Str $content-type --> Bool ) {
   my CArray[N-GError] $error .= new(N-GError);
   my Bool $r = g_app_info_add_supports_type(
-    self.get-native-object-no-reffing, $content-type, $error
+    self._get-native-object-no-reffing, $content-type, $error
   ).Bool;
 
   $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
@@ -250,7 +250,7 @@ Returns: C<True> if I<appinfo> can be deleted
 =end pod
 
 method can-delete ( --> Bool ) {
-  g_app_info_can_delete(self.get-native-object-no-reffing).Bool
+  g_app_info_can_delete(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_can_delete (
@@ -272,7 +272,7 @@ Returns: C<True> if it is possible to remove supported content types from a give
 =end pod
 
 method can-remove-supports-type ( --> Bool ) {
-  g_app_info_can_remove_supports_type(self.get-native-object-no-reffing).Bool
+  g_app_info_can_remove_supports_type(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_can_remove_supports_type (
@@ -298,7 +298,7 @@ Returns: C<True> if I<appinfo> has been deleted
 =end pod
 
 method delete ( --> Bool ) {
-  g_app_info_delete(self.get-native-object-no-reffing).Bool
+  g_app_info_delete(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_delete (
@@ -323,7 +323,7 @@ Returns: a duplicate of I<appinfo>.
 method dup ( --> N-GObject ) {
 
   g_app_info_dup(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -351,7 +351,7 @@ Returns: C<True> if I<appinfo1> is equal to I<appinfo2>. C<False> otherwise.
 =end pod
 
 method equal ( N-GObject $appinfo2 --> Bool ) {
-  g_app_info_equal( self.get-native-object-no-reffing, $appinfo2).Bool
+  g_app_info_equal( self._get-native-object-no-reffing, $appinfo2).Bool
 }
 
 sub g_app_info_equal (
@@ -422,7 +422,7 @@ Returns: (type filename): a string containing the I<appinfo>'s commandline, or C
 =end pod
 
 method get-commandline ( --> Str ) {
-  g_app_info_get_commandline(self.get-native-object-no-reffing)
+  g_app_info_get_commandline(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_commandline (
@@ -456,7 +456,7 @@ method get-default-for-type (
   Str $content-type, Bool $must_support_uris --> N-GObject
 ) {
   g_app_info_get_default_for_type(
-    self.get-native-object-no-reffing, $content-type, $must_support_uris
+    self._get-native-object-no-reffing, $content-type, $must_support_uris
   )
 }
 
@@ -493,7 +493,7 @@ Gets the default application for handling URIs with the given URI scheme. A URI 
 =end pod
 
 method get-default-for-uri-scheme ( Str $uri_scheme --> N-GObject ) {
-  g_app_info_get_default_for_uri_scheme( self.get-native-object-no-reffing, $uri_scheme)
+  g_app_info_get_default_for_uri_scheme( self._get-native-object-no-reffing, $uri_scheme)
 }
 
 method get-default-for-uri-scheme-rk (
@@ -523,7 +523,7 @@ Returns: a string containing a description of the application I<appinfo>, or C<u
 =end pod
 
 method get-description ( --> Str ) {
-  g_app_info_get_description(self.get-native-object-no-reffing)
+  g_app_info_get_description(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_description (
@@ -545,7 +545,7 @@ Returns: the display name of the application for I<appinfo>, or the name if no d
 =end pod
 
 method get-display-name ( --> Str ) {
-  g_app_info_get_display_name(self.get-native-object-no-reffing)
+  g_app_info_get_display_name(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_display_name (
@@ -567,7 +567,7 @@ Returns: (type filename): a string containing the I<appinfo>'s application binar
 =end pod
 
 method get-executable ( --> Str ) {
-  g_app_info_get_executable(self.get-native-object-no-reffing)
+  g_app_info_get_executable(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_executable (
@@ -613,7 +613,7 @@ Returns: the default B<Gnome::Gio::Icon> for I<appinfo> or C<undefined> if there
 =end pod
 
 method get-icon ( --> N-GObject ) {
-  g_app_info_get_icon(self.get-native-object-no-reffing)
+  g_app_info_get_icon(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_icon (
@@ -638,7 +638,7 @@ Returns: a string containing the application's ID.
 =end pod
 
 method get-id ( --> Str ) {
-  g_app_info_get_id(self.get-native-object-no-reffing)
+  g_app_info_get_id(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_id (
@@ -660,7 +660,7 @@ Returns: the name of the application for I<appinfo>.
 =end pod
 
 method get-name ( --> Str ) {
-  g_app_info_get_name(self.get-native-object-no-reffing)
+  g_app_info_get_name(self._get-native-object-no-reffing)
 }
 
 sub g_app_info_get_name (
@@ -707,7 +707,7 @@ Returns: a list of content types.
 
 method get-supported-types ( --> Array ) {
   my CArray[Str] $a = g_app_info_get_supported_types(
-    self.get-native-object-no-reffing
+    self._get-native-object-no-reffing
   );
 
   my Int $i = 0;
@@ -756,7 +756,7 @@ Returns C<True> if the launch was successful, C<False> if an error is set. When 
 =end pod
 
 method launch ( @files, $context is copy --> Bool ) {
-  $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
+  $context .= _get-native-object-no-reffing unless $context ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my Gnome::Glib::List $flist .= new;
@@ -765,13 +765,13 @@ method launch ( @files, $context is copy --> Bool ) {
 
     # appending like this keeps the location at the end so it is not
     # a big problem as gnome wants you to believe.
-    $flist .= append(nativecast( Pointer, $gfile.get-native-object-no-reffing));
+    $flist .= append(nativecast( Pointer, $gfile._get-native-object-no-reffing));
   }
   $flist .= first;
 
   # launch the application with the provided files
   my Bool $r = g_app_info_launch(
-    self.get-native-object-no-reffing, $flist.get-native-object,
+    self._get-native-object-no-reffing, $flist._get-native-object,
     $context, $error
   ).Bool;
 
@@ -819,7 +819,7 @@ B<Note> There are situations where a C<False> value is returned but the error ob
 =end pod
 
 method launch-default-for-uri ( Str $uri, $context is copy --> Bool ) {
-  $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
+  $context .= _get-native-object-no-reffing unless $context ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_launch_default_for_uri( $uri, $context, $error).Bool;
@@ -861,7 +861,7 @@ This is also useful if you want to be sure that the D-Bus–activated applicatio
 method launch-default-for-uri-async ( Str $uri, GAppLaunchContext $context, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_app_info_launch_default_for_uri_async(
-    self.get-native-object-no-reffing, $uri, $context, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $uri, $context, $cancellable, $callback, $user_data
   );
 }
 
@@ -888,10 +888,10 @@ Returns: C<True> if the launch was successful, C<False> if I<error> is set
 =end pod
 
 method launch-default-for-uri-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_launch_default_for_uri_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -921,7 +921,7 @@ Returns C<True> if the launch was successful, C<False> if an error is set. When 
 =end pod
 
 method launch-uris ( @uris, $context is copy --> Bool ) {
-  $context .= get-native-object-no-reffing unless $context ~~ N-GObject;
+  $context .= _get-native-object-no-reffing unless $context ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my Gnome::Glib::List $ulist .= new;
@@ -936,7 +936,7 @@ method launch-uris ( @uris, $context is copy --> Bool ) {
 
   # launch the application with the provided uris
   my Bool $r = g_app_info_launch_uris(
-    self.get-native-object-no-reffing, $ulist.get-native-object,
+    self._get-native-object-no-reffing, $ulist._get-native-object,
     $context, $error
   ).Bool;
 
@@ -973,10 +973,10 @@ The I<callback> is invoked immediately after the application launch, but it wait
 =end pod
 
 method launch-uris-async ( $uris is copy, GAppLaunchContext $context, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
-  $uris .= get-native-object-no-reffing unless $uris ~~ N-GList;
+  $uris .= _get-native-object-no-reffing unless $uris ~~ N-GList;
 
   g_app_info_launch_uris_async(
-    self.get-native-object-no-reffing, $uris, $context, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $uris, $context, $cancellable, $callback, $user_data
   );
 }
 
@@ -1003,10 +1003,10 @@ Returns: C<True> on successful launch, C<False> otherwise.
 =end pod
 
 method launch-uris-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_app_info_launch_uris_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -1036,7 +1036,7 @@ method remove-supports-type ( Str $content-type --> Bool ) {
   my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_remove_supports_type(
-    self.get-native-object-no-reffing, $content-type, $error
+    self._get-native-object-no-reffing, $content-type, $error
   ).Bool;
 
   $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
@@ -1089,7 +1089,7 @@ method set-as-default-for-extension ( Str $extension --> Bool ) {
   my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_default_for_extension(
-    self.get-native-object-no-reffing, $extension, $error
+    self._get-native-object-no-reffing, $extension, $error
   ).Bool;
 
   $!last-error .= new(:native-object($error[0] // N-GError));
@@ -1128,7 +1128,7 @@ method set-as-default-for-type ( Str $content-type --> Bool ) {
   my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_default_for_type(
-    self.get-native-object-no-reffing, $content-type, $error
+    self._get-native-object-no-reffing, $content-type, $error
   ).Bool;
 
   $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
@@ -1159,7 +1159,7 @@ method set-as-last-used-for-type ( Str $content-type --> Bool ) {
   my CArray[N-GError] $error .= new(N-GError);
 
   my Bool $r = g_app_info_set_as_last_used_for_type(
-    self.get-native-object-no-reffing, $content-type, $error
+    self._get-native-object-no-reffing, $content-type, $error
   ).Bool;
 
   $!last-error .= new(:native-object($r ?? N-GError !! $error[0]));
@@ -1187,7 +1187,7 @@ Returns: C<True> if the I<appinfo> should be shown, C<False> otherwise.
 =end pod
 
 method should-show ( --> Bool ) {
-  g_app_info_should_show(self.get-native-object-no-reffing).Bool
+  g_app_info_should_show(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_should_show (
@@ -1209,7 +1209,7 @@ Returns: C<True> if the I<appinfo> supports files.
 =end pod
 
 method supports-files ( --> Bool ) {
-  g_app_info_supports_files(self.get-native-object-no-reffing).Bool
+  g_app_info_supports_files(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_supports_files (
@@ -1231,7 +1231,7 @@ Returns: C<True> if the I<appinfo> supports URIs.
 =end pod
 
 method supports-uris ( --> Bool ) {
-  g_app_info_supports_uris(self.get-native-object-no-reffing).Bool
+  g_app_info_supports_uris(self._get-native-object-no-reffing).Bool
 }
 
 sub g_app_info_supports_uris (
@@ -1258,7 +1258,7 @@ method _create-from-commandline (
 ) {
   my CArray[N-GError] $error .= new(N-GError);
   g_app_info_create_from_commandline(
-    self.get-native-object-no-reffing, $commandline, $application_name, $flags, $error
+    self._get-native-object-no-reffing, $commandline, $application_name, $flags, $error
   )
 }
 }}

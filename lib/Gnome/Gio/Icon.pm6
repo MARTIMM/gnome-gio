@@ -135,7 +135,7 @@ Returns: a B<Gnome::Gio::Icon>, or C<undefined> when deserialization fails.
 =end pod
 
 method deserialize ( $value is copy --> N-GObject ) {
-  $value .= get-native-object-no-reffing unless $value ~~ N-GObject;
+  $value .= _get-native-object-no-reffing unless $value ~~ N-GObject;
   g_icon_deserialize($value)
 }
 
@@ -159,7 +159,7 @@ Returns: C<True> if the icon is equal to I<$icon>. C<False> otherwise.
 =end pod
 
 method equal ( $icon is copy --> Bool ) {
-  $icon .= get-native-object-no-reffing unless $icon ~~ N-GObject;
+  $icon .= _get-native-object-no-reffing unless $icon ~~ N-GObject;
   g_icon_equal( self._f('GIcon'), $icon).Bool
 }
 

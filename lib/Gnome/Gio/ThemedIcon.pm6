@@ -212,7 +212,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -236,7 +236,7 @@ Append a name to the list of icons from within I<icon>.
 =end pod
 
 method append-name ( Str $iconname ) {
-  g_themed_icon_append_name( self.get-native-object-no-reffing, $iconname);
+  g_themed_icon_append_name( self._get-native-object-no-reffing, $iconname);
 }
 
 sub g_themed_icon_append_name (
@@ -257,7 +257,7 @@ Gets the names of icons from within I<icon>.
 
 method get-names ( --> Array ) {
   my CArray[Str] $ntn = g_themed_icon_get_names(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 
   my Array $tn = [];
@@ -292,7 +292,7 @@ Note that doing so invalidates the hash computed by prior calls to C<g-icon-hash
 method prepend-name ( Str $iconname ) {
 
   g_themed_icon_prepend_name(
-    self.get-native-object-no-reffing, $iconname
+    self._get-native-object-no-reffing, $iconname
   );
 }
 

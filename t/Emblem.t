@@ -55,7 +55,7 @@ subtest 'Manipulations', {
   # check if $emblem is of type GEmblem
   $gtype = $type.from-name('GEmblem');
   note "is an emblem: $gtype = ",
-  ` $type.check-instance-is-a( $e2.get-native-object-no-reffing, $gtype);
+  ` $type.check-instance-is-a( $e2._get-native-object-no-reffing, $gtype);
 
   note $e2.^name;
 }}

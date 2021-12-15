@@ -214,7 +214,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -322,7 +322,7 @@ method enumerate-children ( Str $path --> List ) {
   # lookup_flags G_RESOURCE_LOOKUP_FLAGS_NONE is not used in C code!
 
   my CArray[Str] $a = g_resource_enumerate_children(
-    self.get-native-object-no-reffing, $path,
+    self._get-native-object-no-reffing, $path,
     G_RESOURCE_LOOKUP_FLAGS_NONE.value, $e
   );
 
@@ -395,7 +395,7 @@ Returns: C<True> if the file was found. C<False> if there were errors
 method get-info ( Str $path, GResourceLookupFlags $lookup_flags, UInt $size, UInt $flags, N-GError $error --> Int ) {
 
   g_resources_get_info(
-    self.get-native-object-no-reffing, $path, $lookup_flags, $size, $flags, $error
+    self._get-native-object-no-reffing, $path, $lookup_flags, $size, $flags, $error
   );
 }
 
@@ -441,7 +441,7 @@ Free the returned object with C<g-bytes-unref()>
 method lookup-data ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> N-GObject ) {
 
   g_resources_lookup_data(
-    self.get-native-object-no-reffing, $path, $lookup_flags, $error
+    self._get-native-object-no-reffing, $path, $lookup_flags, $error
   );
 }
 
@@ -464,7 +464,7 @@ Registers the resource with the process-global set of resources. Once a resource
 method register ( ) {
 
   g_resources_register(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -486,7 +486,7 @@ Unregisters the resource from the process-global set of resources.
 method unregister ( ) {
 
   g_resources_unregister(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   );
 }
 
@@ -515,7 +515,7 @@ and is not typically used by other code.
 method g-static-resource-fini ( GStaticResource $static_resource ) {
 
   g_static_resource_fini(
-    self.get-native-object-no-reffing, $static_resource
+    self._get-native-object-no-reffing, $static_resource
   );
 }
 
@@ -547,7 +547,7 @@ Returns:  (transfer none): a B<Gnome::Gio::Resource>
 method g-static-resource-get-resource ( GStaticResource $static_resource --> N-GResource ) {
 
   g_static_resource_get_resource(
-    self.get-native-object-no-reffing, $static_resource
+    self._get-native-object-no-reffing, $static_resource
   );
 }
 
@@ -577,7 +577,7 @@ and is not typically used by other code.
 method g-static-resource-init ( GStaticResource $static_resource ) {
 
   g_static_resource_init(
-    self.get-native-object-no-reffing, $static_resource
+    self._get-native-object-no-reffing, $static_resource
   );
 }
 
@@ -610,7 +610,7 @@ Returns: C<True> if the file was found. C<False> if there were errors
 method get-info ( Str $path, GResourceLookupFlags $lookup_flags, UInt $size, UInt $flags, N-GError $error --> Int ) {
 
   g_resource_get_info(
-    self.get-native-object-no-reffing, $path, $lookup_flags, $size, $flags, $error
+    self._get-native-object-no-reffing, $path, $lookup_flags, $size, $flags, $error
   );
 }
 
@@ -649,7 +649,7 @@ Returns: (transfer full): a new B<Gnome::Gio::Resource>, or C<undefined> on erro
 method load ( Str $filename, N-GError $error --> N-GResource ) {
 
   g_resource_load(
-    self.get-native-object-no-reffing, $filename, $error
+    self._get-native-object-no-reffing, $filename, $error
   );
 }
 }}
@@ -698,7 +698,7 @@ Free the returned object with C<g-bytes-unref()>
 method lookup-data ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> N-GObject ) {
 
   g_resource_lookup_data(
-    self.get-native-object-no-reffing, $path, $lookup_flags, $error
+    self._get-native-object-no-reffing, $path, $lookup_flags, $error
   );
 }
 
@@ -732,7 +732,7 @@ Free the returned object with C<g-object-unref()>
 method open-stream ( Str $path, GResourceLookupFlags $lookup_flags, N-GError $error --> GInputStream ) {
 
   g_resource_open_stream(
-    self.get-native-object-no-reffing, $path, $lookup_flags, $error
+    self._get-native-object-no-reffing, $path, $lookup_flags, $error
   );
 }
 

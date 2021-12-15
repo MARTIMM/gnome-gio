@@ -158,7 +158,7 @@ submethod BUILD ( *%options ) {
       my $no;
       if ? %options<___x___> {
         $no = %options<___x___>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         #$no = _g_app_launch_context_new___x___($no);
       }
 
@@ -188,7 +188,7 @@ submethod BUILD ( *%options ) {
       }
       #}}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -212,10 +212,10 @@ Returns: a display string for the display.
 =end pod
 
 method get-display ( N-GObject $info, $files is copy --> Str ) {
-  $files .= get-native-object-no-reffing unless $files ~~ N-GList;
+  $files .= _get-native-object-no-reffing unless $files ~~ N-GList;
 
   g_app_launch_context_get_display(
-    self.get-native-object-no-reffing, $info, $files
+    self._get-native-object-no-reffing, $info, $files
   )
 }
 
@@ -240,7 +240,7 @@ Returns:  (element-type filename) : the child's environment
 method get-environment ( --> CArray[Str] ) {
 
   g_app_launch_context_get_environment(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -267,10 +267,10 @@ Returns: a startup notification ID for the application, or C<undefined> if not s
 =end pod
 
 method get-startup-notify-id ( N-GObject $info, $files is copy --> Str ) {
-  $files .= get-native-object-no-reffing unless $files ~~ N-GList;
+  $files .= _get-native-object-no-reffing unless $files ~~ N-GList;
 
   g_app_launch_context_get_startup_notify_id(
-    self.get-native-object-no-reffing, $info, $files
+    self._get-native-object-no-reffing, $info, $files
   )
 }
 
@@ -294,7 +294,7 @@ Called when an application has failed to launch, so that it can cancel the appli
 method launch-failed ( Str $startup_notify_id ) {
 
   g_app_launch_context_launch_failed(
-    self.get-native-object-no-reffing, $startup_notify_id
+    self._get-native-object-no-reffing, $startup_notify_id
   );
 }
 
@@ -319,7 +319,7 @@ Arranges for I<variable> to be set to I<value> in the child's environment when I
 method setenv ( Str $variable, Str $value ) {
 
   g_app_launch_context_setenv(
-    self.get-native-object-no-reffing, $variable, $value
+    self._get-native-object-no-reffing, $variable, $value
   );
 }
 
@@ -343,7 +343,7 @@ Arranges for I<variable> to be unset in the child's environment when I<context> 
 method unsetenv ( Str $variable ) {
 
   g_app_launch_context_unsetenv(
-    self.get-native-object-no-reffing, $variable
+    self._get-native-object-no-reffing, $variable
   );
 }
 

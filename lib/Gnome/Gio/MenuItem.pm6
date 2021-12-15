@@ -187,25 +187,25 @@ submethod BUILD ( *%options ) {
       my $no;
       if %options<action>:exists {
         #$no = %options<>;
-        #$no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        #$no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new( %options<label>//Str, %options<action>);
       }
 
       elsif %options<section>:exists {
         $no = %options<section>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_section( %options<label>//Str, $no);
       }
 
       elsif %options<submenu>:exists {
         $no = %options<submenu>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_submenu( %options<label>//Str, $no);
       }
 
       elsif %options<model>:exists and %options<item-index>:exists {
         $no = %options<model>;
-        $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_from_model( $no, %options<item-index>);
       }
 
@@ -235,7 +235,7 @@ submethod BUILD ( *%options ) {
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -277,7 +277,7 @@ type
 method get-attribute ( Str $attribute, Str $format_string --> Int ) {
 
   g_menu_item_get_attribute(
-    self.get-native-object-no-reffing, $attribute, $format_string
+    self._get-native-object-no-reffing, $attribute, $format_string
   );
 }
 
@@ -312,12 +312,12 @@ method get-attribute-value (
   Str $attribute, $expected_type --> Gnome::Glib::Variant
 ) {
   my $no = $expected_type;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   Gnome::Glib::Variant.new(
     :native-object(
       g_menu_item_get_attribute_value(
-        self.get-native-object-no-reffing, $attribute, $no
+        self._get-native-object-no-reffing, $attribute, $no
       )
     )
   )
@@ -349,7 +349,7 @@ Returns: (transfer full): the link, or C<undefined>
 method get-link ( Str $link --> N-GObject ) {
 
   g_menu_item_get_link(
-    self.get-native-object-no-reffing, $link
+    self._get-native-object-no-reffing, $link
   );
 }
 
@@ -397,7 +397,7 @@ description of the semantics of the action and target attributes.
 method set-action-and-target ( Str $action, Str $format_string ) {
 
   g_menu_item_set_action_and_target(
-    self.get-native-object-no-reffing, $action, $format_string
+    self._get-native-object-no-reffing, $action, $format_string
   );
 }
 
@@ -461,10 +461,10 @@ probably more convenient for most uses.
 
 method set-action-and-target-value ( Str $action, N-GObject $target_value ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_item_set_action_and_target_value(
-    self.get-native-object-no-reffing, $action, $target_value
+    self._get-native-object-no-reffing, $action, $target_value
   );
 }
 
@@ -510,7 +510,7 @@ that directly accepts a B<GVariant>.
 method set-attribute ( Str $attribute, Str $format_string ) {
 
   g_menu_item_set_attribute(
-    self.get-native-object-no-reffing, $attribute, $format_string
+    self._get-native-object-no-reffing, $attribute, $format_string
   );
 }
 
@@ -557,10 +557,10 @@ the same.
 
 method set-attribute-value ( Str $attribute, N-GObject $value ) {
   my $no = …;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_item_set_attribute_value(
-    self.get-native-object-no-reffing, $attribute, $value
+    self._get-native-object-no-reffing, $attribute, $value
   );
 }
 
@@ -598,7 +598,7 @@ the semantics of the action and target attributes.
 method set-detailed-action ( Str $detailed_action ) {
 
   g_menu_item_set_detailed_action(
-    self.get-native-object-no-reffing, $detailed_action
+    self._get-native-object-no-reffing, $detailed_action
   );
 }
 
@@ -638,7 +638,7 @@ If I<icon> is C<undefined> then the icon is unset.
 method set-icon ( GIcon $icon ) {
 
   g_menu_item_set_icon(
-    self.get-native-object-no-reffing, $icon
+    self._get-native-object-no-reffing, $icon
   );
 }
 
@@ -670,7 +670,7 @@ it is C<undefined> then the label attribute is unset.
 method set-label ( Str $label ) {
 
   g_menu_item_set_label(
-    self.get-native-object-no-reffing, $label
+    self._get-native-object-no-reffing, $label
   );
 }
 
@@ -708,7 +708,7 @@ must not end with a '-', and must not contain consecutive dashes.
 method set-link ( Str $link, N-GObject $model ) {
 
   g_menu_item_set_link(
-    self.get-native-object-no-reffing, $link, $model
+    self._get-native-object-no-reffing, $link, $model
   );
 }
 
@@ -742,7 +742,7 @@ section.
 method set-section ( N-GObject $section ) {
 
   g_menu_item_set_section(
-    self.get-native-object-no-reffing, $section
+    self._get-native-object-no-reffing, $section
   );
 }
 
@@ -776,7 +776,7 @@ exactly as it sounds.
 method set-submenu ( N-GObject $submenu ) {
 
   g_menu_item_set_submenu(
-    self.get-native-object-no-reffing, $submenu
+    self._get-native-object-no-reffing, $submenu
   );
 }
 
@@ -812,7 +812,7 @@ Returns: a new B<Gnome::Gio::MenuItem>
 method item-new ( Str $label, Str $detailed_action --> N-GObject ) {
 
   g_menu_item_new(
-    self.get-native-object-no-reffing, $label, $detailed_action
+    self._get-native-object-no-reffing, $label, $detailed_action
   );
 }
 }}
@@ -850,7 +850,7 @@ Returns: a new B<Gnome::Gio::MenuItem>.
 method item-new-from-model ( N-GObject $model, Int $item_index --> N-GObject ) {
 
   g_menu_item_new_from_model(
-    self.get-native-object-no-reffing, $model, $item_index
+    self._get-native-object-no-reffing, $model, $item_index
   );
 }
 }}
@@ -942,7 +942,7 @@ Returns: a new B<Gnome::Gio::MenuItem>
 method item-new-section ( Str $label, N-GObject $section --> N-GObject ) {
 
   g_menu_item_new_section(
-    self.get-native-object-no-reffing, $label, $section
+    self._get-native-object-no-reffing, $label, $section
   );
 }
 }}
@@ -978,7 +978,7 @@ Returns: a new B<Gnome::Gio::MenuItem>
 method item-new-submenu ( Str $label, N-GObject $submenu --> N-GObject ) {
 
   g_menu_item_new_submenu(
-    self.get-native-object-no-reffing, $label, $submenu
+    self._get-native-object-no-reffing, $label, $submenu
   );
 }
 }}

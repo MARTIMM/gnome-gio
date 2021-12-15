@@ -230,11 +230,11 @@ submethod BUILD ( *%options ) {
       #`{{ when there are options use this instead
       # create default object
       else {
-        self.set-native-object(g_file_new());
+        self._set-native-object(g_file_new());
       }
       }}
 
-      self.set-native-object($no);
+      self._set-native-object($no);
     }
 
     # only after creating the native-object, the gtype is known
@@ -325,10 +325,10 @@ Returns: a B<Gnome::Gio::FileOutputStream>, or C<undefined> on error. Free the r
 =end pod
 
 method append-to ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_append_to(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -360,7 +360,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method append-to-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_append_to_async(
-    self.get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -387,10 +387,10 @@ Returns: a valid B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free 
 =end pod
 
 method append-to-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_append_to_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -441,10 +441,10 @@ Returns: C<True> on success, C<False> otherwise.
 =end pod
 
 method copy ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_copy(
-    self.get-native-object-no-reffing, $destination, $flags, $cancellable, $progress_callback, $progress_callback_data, $error
+    self._get-native-object-no-reffing, $destination, $flags, $cancellable, $progress_callback, $progress_callback_data, $error
   ).Bool
 }
 
@@ -479,7 +479,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method copy-async ( N-GFile $destination, UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_copy_async(
-    self.get-native-object-no-reffing, $destination, $flags, $io_priority, $cancellable, $progress_callback, $progress_callback_data, $callback, $user_data
+    self._get-native-object-no-reffing, $destination, $flags, $io_priority, $cancellable, $progress_callback, $progress_callback_data, $callback, $user_data
   );
 }
 
@@ -508,10 +508,10 @@ Returns: C<True> if the attributes were copied successfully, C<False> otherwise.
 =end pod
 
 method copy-attributes ( N-GFile $destination, UInt $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_copy_attributes(
-    self.get-native-object-no-reffing, $destination, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $destination, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -536,10 +536,10 @@ Returns: a C<True> on success, C<False> on error.
 =end pod
 
 method copy-finish ( GAsyncResult $res, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_copy_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   ).Bool
 }
 
@@ -573,10 +573,10 @@ Returns: a B<Gnome::Gio::FileOutputStream> for the newly created file, or C<unde
 =end pod
 
 method create ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_create(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -608,7 +608,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method create-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_create_async(
-    self.get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -633,10 +633,10 @@ Returns: a B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free the re
 =end pod
 
 method create-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_create_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -670,10 +670,10 @@ Returns: a B<Gnome::Gio::FileIOStream> for the newly created file, or C<undefine
 =end pod
 
 method create-readwrite ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_create_readwrite(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -705,7 +705,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method create-readwrite-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_create_readwrite_async(
-    self.get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -730,10 +730,10 @@ Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the return
 =end pod
 
 method create-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_create_readwrite_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -762,10 +762,10 @@ Returns: C<True> if the file was deleted. C<False> otherwise.
 =end pod
 
 method delete ( GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_delete(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   ).Bool
 }
 
@@ -794,7 +794,7 @@ Virtual: delete-file-async
 method delete-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_delete_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -821,10 +821,10 @@ Returns: C<True> if the file was deleted. C<False> otherwise.
 =end pod
 
 method delete-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_delete_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -855,7 +855,7 @@ Returns: a new B<Gnome::Gio::File> that is a duplicate of the given B<Gnome::Gio
 method dup ( --> N-GFile ) {
 
   g_file_dup(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -886,7 +886,7 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 method eject-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_eject_mountable_with_operation(
-    self.get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -911,10 +911,10 @@ Returns: C<True> if the I<file> was ejected successfully. C<False> otherwise.
 =end pod
 
 method eject-mountable-with-operation-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_eject_mountable_with_operation_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -949,10 +949,10 @@ Returns: A B<Gnome::Gio::FileEnumerator> if successful, C<undefined> on error. F
 =end pod
 
 method enumerate-children ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> GFileEnumerator ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_enumerate_children(
-    self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
   )
 }
 
@@ -985,7 +985,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method enumerate-children-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_enumerate_children_async(
-    self.get-native-object-no-reffing, $attributes, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $attributes, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -1010,10 +1010,10 @@ Returns: a B<Gnome::Gio::FileEnumerator> or C<undefined> if an error occurred. F
 =end pod
 
 method enumerate-children-finish ( GAsyncResult $res, $error is copy --> GFileEnumerator ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_enumerate_children_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -1045,7 +1045,7 @@ Returns: C<True> if I<file1> and I<file2> are equal.
 method equal ( N-GFile $file2 --> Bool ) {
 
   g_file_equal(
-    self.get-native-object-no-reffing, $file2
+    self._get-native-object-no-reffing, $file2
   ).Bool
 }
 
@@ -1076,10 +1076,10 @@ Returns: a B<Gnome::Gio::Mount> where the I<file> is located or C<undefined> on 
 =end pod
 
 method find-enclosing-mount ( GCancellable $cancellable, $error is copy --> GMount ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_find_enclosing_mount(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   )
 }
 
@@ -1110,7 +1110,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method find-enclosing-mount-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_find_enclosing_mount_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -1135,10 +1135,10 @@ Returns: B<Gnome::Gio::Mount> for given I<file> or C<undefined> on error. Free t
 =end pod
 
 method find-enclosing-mount-finish ( GAsyncResult $res, $error is copy --> GMount ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_find_enclosing_mount_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -1170,7 +1170,7 @@ Returns: (type filename) : string containing the B<Gnome::Gio::File>'s base name
 method get-basename ( --> Str ) {
 
   g_file_get_basename(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -1200,12 +1200,12 @@ Returns: a B<Gnome::Gio::File> to a child specified by I<name>. Free the returne
 =end pod
 
 method get-child ( Str $name --> N-GFile ) {
-  g_file_get_child( self.get-native-object-no-reffing, $name)
+  g_file_get_child( self._get-native-object-no-reffing, $name)
 }
 
 method get-child-rk ( Str $name --> Gnome::Gio::File ) {
   Gnome::Gio::File.new(
-    :native-object(g_file_get_child( self.get-native-object-no-reffing, $name))
+    :native-object(g_file_get_child( self._get-native-object-no-reffing, $name))
   )
 }
 
@@ -1250,7 +1250,7 @@ method get-child-for-display-name ( Str $display_name --> N-GFile ) {
   my CArray[N-GError] $error .= new(N-GError);
 
   g_file_get_child_for_display_name(
-    self.get-native-object-no-reffing, $display_name, $error
+    self._get-native-object-no-reffing, $display_name, $error
   );
 
   $!last-error.clear-object;
@@ -1263,7 +1263,7 @@ method get-child-for-display-name-rk (
   my CArray[N-GError] $error .= new(N-GError);
 
   my N-GFile $no = g_file_get_child_for_display_name(
-    self.get-native-object-no-reffing, $display_name, $error
+    self._get-native-object-no-reffing, $display_name, $error
   );
 
   $!last-error.clear-object;
@@ -1294,12 +1294,12 @@ Returns: a B<Gnome::Gio::File> structure to the parent of the given B<Gnome::Gio
 =end pod
 
 method get-parent ( --> N-GFile ) {
-  g_file_get_parent(self.get-native-object-no-reffing)
+  g_file_get_parent(self._get-native-object-no-reffing)
 }
 
 method get-parent-rk ( --> Gnome::Gio::File ) {
   Gnome::Gio::File.new(
-    :native-object(g_file_get_parent(self.get-native-object-no-reffing))
+    :native-object(g_file_get_parent(self._get-native-object-no-reffing))
   )
 }
 
@@ -1331,7 +1331,7 @@ Returns: a string containing the B<Gnome::Gio::File>'s parse name.
 method get-parse-name ( --> Str ) {
 
   g_file_get_parse_name(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -1358,7 +1358,7 @@ Returns: (type filename) : string containing the B<Gnome::Gio::File>'s path, or 
 method get-path ( --> Str ) {
 
   g_file_get_path(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -1385,8 +1385,8 @@ Returns: string with the relative path from I<descendant> to I<parent>, or C<und
 =end pod
 
 method get-relative-path ( $descendant is copy --> Str ) {
-  $descendant .= get-native-object-no-reffing unless $descendant ~~ N-GFile;
-  g_file_get_relative_path( self.get-native-object-no-reffing, $descendant)
+  $descendant .= _get-native-object-no-reffing unless $descendant ~~ N-GFile;
+  g_file_get_relative_path( self._get-native-object-no-reffing, $descendant)
 }
 
 sub g_file_get_relative_path (
@@ -1412,7 +1412,7 @@ Returns: a string containing the B<Gnome::Gio::File>'s URI. The returned string 
 method get-uri ( --> Str ) {
 
   g_file_get_uri(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -1441,7 +1441,7 @@ Returns: a string containing the URI scheme for the given B<Gnome::Gio::File>. T
 =end pod
 
 method get-uri-scheme ( --> Str ) {
-  g_file_get_uri_scheme(self.get-native-object-no-reffing)
+  g_file_get_uri_scheme(self._get-native-object-no-reffing)
 }
 
 sub g_file_get_uri_scheme (
@@ -1466,8 +1466,8 @@ Returns: C<True> if I<file> is an immediate child of I<parent> (or any parent in
 =end pod
 
 method has-parent ( $parent is copy --> Bool ) {
-  $parent .= get-native-object-no-reffing unless $parent ~~ N-GFile;
-  g_file_has_parent( self.get-native-object-no-reffing, $parent).Bool
+  $parent .= _get-native-object-no-reffing unless $parent ~~ N-GFile;
+  g_file_has_parent( self._get-native-object-no-reffing, $parent).Bool
 }
 
 sub g_file_has_parent (
@@ -1498,8 +1498,8 @@ Returns: C<True> if the I<files>'s parent, grandparent, etc is I<prefix>, C<Fals
 =end pod
 
 method has-prefix ( $prefix is copy --> Bool ) {
-  $prefix .= get-native-object-no-reffing unless $prefix ~~ N-GFile;
-  g_file_has_prefix( self.get-native-object-no-reffing, $prefix).Bool
+  $prefix .= _get-native-object-no-reffing unless $prefix ~~ N-GFile;
+  g_file_has_prefix( self._get-native-object-no-reffing, $prefix).Bool
 }
 
 sub g_file_has_prefix (
@@ -1524,7 +1524,7 @@ Returns: C<True> if B<Gnome::Gio::File>'s backend supports the given URI scheme,
 =end pod
 
 method has-uri-scheme ( Str $uri_scheme --> Bool ) {
-  g_file_has_uri_scheme( self.get-native-object-no-reffing, $uri_scheme).Bool
+  g_file_has_uri_scheme( self._get-native-object-no-reffing, $uri_scheme).Bool
 }
 
 sub g_file_has_uri_scheme (
@@ -1554,7 +1554,7 @@ Returns: 0 if I<file> is not a valid B<Gnome::Gio::File>, otherwise an integer t
 method hash ( Pointer $file --> UInt ) {
 
   g_file_hash(
-    self.get-native-object-no-reffing, $file
+    self._get-native-object-no-reffing, $file
   )
 }
 
@@ -1584,7 +1584,7 @@ Returns: C<True> if I<file> is native
 =end pod
 
 method is-native ( --> Bool ) {
-  g_file_is_native(self.get-native-object-no-reffing).Bool
+  g_file_is_native(self._get-native-object-no-reffing).Bool
 }
 
 sub g_file_is_native (
@@ -1616,10 +1616,10 @@ Returns: a B<Gnome::Gio::Bytes> or C<undefined> and I<error> is set
 =end pod
 
 method load-bytes ( GCancellable $cancellable, CArray[Str] $etag_out, $error is copy --> N-GObject ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_load_bytes(
-    self.get-native-object-no-reffing, $cancellable, $etag_out, $error
+    self._get-native-object-no-reffing, $cancellable, $etag_out, $error
   )
 }
 
@@ -1651,7 +1651,7 @@ See C<g-file-load-bytes()> for more information.
 method load-bytes-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_load_bytes_async(
-    self.get-native-object-no-reffing, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $cancellable, $callback, $user_data
   );
 }
 
@@ -1683,10 +1683,10 @@ Returns: a B<Gnome::Gio::Bytes> or C<undefined> and I<error> is set
 =end pod
 
 method load-bytes-finish ( GAsyncResult $result, CArray[Str] $etag_out, $error is copy --> N-GObject ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_load_bytes_finish(
-    self.get-native-object-no-reffing, $result, $etag_out, $error
+    self._get-native-object-no-reffing, $result, $etag_out, $error
   )
 }
 
@@ -1716,10 +1716,10 @@ Returns: C<True> if the I<file>'s contents were successfully loaded. C<False> if
 =end pod
 
 method load-contents ( GCancellable $cancellable, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_load_contents(
-    self.get-native-object-no-reffing, $cancellable, $contents, $length, $etag_out, $error
+    self._get-native-object-no-reffing, $cancellable, $contents, $length, $etag_out, $error
   ).Bool
 }
 
@@ -1751,7 +1751,7 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 method load-contents-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_load_contents_async(
-    self.get-native-object-no-reffing, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $cancellable, $callback, $user_data
   );
 }
 
@@ -1779,10 +1779,10 @@ Returns: C<True> if the load was successful. If C<False> and I<error> is present
 =end pod
 
 method load-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_load_contents_finish(
-    self.get-native-object-no-reffing, $res, $contents, $length, $etag_out, $error
+    self._get-native-object-no-reffing, $res, $contents, $length, $etag_out, $error
   ).Bool
 }
 
@@ -1813,7 +1813,7 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 method load-partial-contents-async ( GCancellable $cancellable, GFileReadMoreCallback $read_more_callback, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_load_partial_contents_async(
-    self.get-native-object-no-reffing, $cancellable, $read_more_callback, $callback, $user_data
+    self._get-native-object-no-reffing, $cancellable, $read_more_callback, $callback, $user_data
   );
 }
 
@@ -1841,10 +1841,10 @@ Returns: C<True> if the load was successful. If C<False> and I<error> is present
 =end pod
 
 method load-partial-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_load_partial_contents_finish(
-    self.get-native-object-no-reffing, $res, $contents, $length, $etag_out, $error
+    self._get-native-object-no-reffing, $res, $contents, $length, $etag_out, $error
   ).Bool
 }
 
@@ -1875,10 +1875,10 @@ Returns: C<True> on successful creation, C<False> otherwise.
 =end pod
 
 method make-directory ( GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_make_directory(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   ).Bool
 }
 
@@ -1907,7 +1907,7 @@ Virtual: make-directory-async
 method make-directory-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_make_directory_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -1934,10 +1934,10 @@ Returns: C<True> on successful directory creation, C<False> otherwise.
 =end pod
 
 method make-directory-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_make_directory_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -1966,10 +1966,10 @@ Returns: C<True> if all directories have been successfully created, C<False> oth
 =end pod
 
 method make-directory-with-parents ( GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_make_directory_with_parents(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   ).Bool
 }
 
@@ -1997,10 +1997,10 @@ Returns: C<True> on the creation of a new symlink, C<False> otherwise.
 =end pod
 
 method make-symbolic-link ( Str $symlink_value, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_make_symbolic_link(
-    self.get-native-object-no-reffing, $symlink_value, $cancellable, $error
+    self._get-native-object-no-reffing, $symlink_value, $cancellable, $error
   ).Bool
 }
 
@@ -2041,10 +2041,10 @@ Returns: C<True> if successful, with the out parameters set. C<False> otherwise,
 =end pod
 
 method measure-disk-usage ( UInt $flags, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, UInt $disk_usage, UInt $num_dirs, UInt $num_files, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_measure_disk_usage(
-    self.get-native-object-no-reffing, $flags, $cancellable, $progress_callback, $progress_data, $disk_usage, $num_dirs, $num_files, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $progress_callback, $progress_data, $disk_usage, $num_dirs, $num_files, $error
   ).Bool
 }
 
@@ -2076,7 +2076,7 @@ This is the asynchronous version of C<measure-disk-usage()>. See there for more 
 method measure-disk-usage-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_measure_disk_usage_async(
-    self.get-native-object-no-reffing, $flags, $io_priority, $cancellable, $progress_callback, $progress_data, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $io_priority, $cancellable, $progress_callback, $progress_data, $callback, $user_data
   );
 }
 
@@ -2104,10 +2104,10 @@ Returns: C<True> if successful, with the out parameters set. C<False> otherwise,
 =end pod
 
 method measure-disk-usage-finish ( GAsyncResult $result, UInt $disk_usage, UInt $num_dirs, UInt $num_files, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_measure_disk_usage_finish(
-    self.get-native-object-no-reffing, $result, $disk_usage, $num_dirs, $num_files, $error
+    self._get-native-object-no-reffing, $result, $disk_usage, $num_dirs, $num_files, $error
   ).Bool
 }
 
@@ -2137,10 +2137,10 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 =end pod
 
 method monitor ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_monitor(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -2172,10 +2172,10 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 =end pod
 
 method monitor-directory ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_monitor_directory(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -2205,10 +2205,10 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 =end pod
 
 method monitor-file ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_monitor_file(
-    self.get-native-object-no-reffing, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $flags, $cancellable, $error
   )
 }
 
@@ -2240,7 +2240,7 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 method mount-enclosing-volume ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_mount_enclosing_volume(
-    self.get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -2265,10 +2265,10 @@ Returns: C<True> if successful. If an error has occurred, this function will ret
 =end pod
 
 method mount-enclosing-volume-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_mount_enclosing_volume_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -2300,7 +2300,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method mount-mountable ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_mount_mountable(
-    self.get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -2327,10 +2327,10 @@ Returns: a B<Gnome::Gio::File> or C<undefined> on error. Free the returned objec
 =end pod
 
 method mount-mountable-finish ( GAsyncResult $result, $error is copy --> N-GFile ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_mount_mountable_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   )
 }
 
@@ -2375,10 +2375,10 @@ Returns: C<True> on successful move, C<False> otherwise.
 =end pod
 
 method move ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_move(
-    self.get-native-object-no-reffing, $destination, $flags, $cancellable, $progress_callback, $progress_callback_data, $error
+    self._get-native-object-no-reffing, $destination, $flags, $cancellable, $progress_callback, $progress_callback_data, $error
   ).Bool
 }
 
@@ -2407,10 +2407,10 @@ Returns: B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the returned
 =end pod
 
 method open-readwrite ( GCancellable $cancellable, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_open_readwrite(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   )
 }
 
@@ -2437,7 +2437,7 @@ sub g_file_open_readwrite (
 method open-readwrite-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_open_readwrite_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -2462,10 +2462,10 @@ Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the return
 =end pod
 
 method open-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_open_readwrite_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -2493,7 +2493,7 @@ Returns: a new B<Gnome::Gio::File>.
 method parse-name ( Str $parse_name --> N-GFile ) {
 
   g_file_parse_name(
-    self.get-native-object-no-reffing, $parse_name
+    self._get-native-object-no-reffing, $parse_name
   )
 }
 
@@ -2522,7 +2522,7 @@ Returns: (type filename) : string containing the B<Gnome::Gio::File>'s path, or 
 method peek-path ( --> Str ) {
 
   g_file_peek_path(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   )
 }
 
@@ -2553,7 +2553,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method poll-mountable ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_poll_mountable(
-    self.get-native-object-no-reffing, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $cancellable, $callback, $user_data
   );
 }
 
@@ -2580,10 +2580,10 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 =end pod
 
 method poll-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_poll_mountable_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -2614,11 +2614,11 @@ Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there
 method query-default-handler (
   $cancellable is copy --> Gnome::GObject::Object
 ) {
-  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  $cancellable .= _get-native-object-no-reffing unless $cancellable ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my N-GObject $no = g_file_query_default_handler(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   );
 
   $!last-error.clear-object;
@@ -2650,7 +2650,7 @@ Async version of C<query-default-handler()>.
 method query-default-handler-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_query_default_handler_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -2675,10 +2675,10 @@ Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there
 =end pod
 
 method query-default-handler-finish ( GAsyncResult $result, $error is copy --> GAppInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_default_handler_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   )
 }
 
@@ -2710,7 +2710,7 @@ Returns: C<True> if the file exists (and can be detected without error), C<False
 method query-exists ( GCancellable $cancellable --> Bool ) {
 
   g_file_query_exists(
-    self.get-native-object-no-reffing, $cancellable
+    self._get-native-object-no-reffing, $cancellable
   ).Bool
 }
 
@@ -2739,7 +2739,7 @@ Returns: The B<Gnome::Gio::FileType> of the file and B<Gnome::Gio::-FILE-TYPE-UN
 method query-file-type ( GFileQueryInfoFlags $flags, GCancellable $cancellable --> GFileType ) {
 
   g_file_query_file_type(
-    self.get-native-object-no-reffing, $flags, $cancellable
+    self._get-native-object-no-reffing, $flags, $cancellable
   )
 }
 
@@ -2771,10 +2771,10 @@ Returns: a B<Gnome::Gio::FileInfo> or C<undefined> if there was an error. Free t
 =end pod
 
 method query-filesystem-info ( Str $attributes, GCancellable $cancellable, $error is copy --> GFileInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_filesystem_info(
-    self.get-native-object-no-reffing, $attributes, $cancellable, $error
+    self._get-native-object-no-reffing, $attributes, $cancellable, $error
   )
 }
 
@@ -2806,7 +2806,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method query-filesystem-info-async ( Str $attributes, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_query_filesystem_info_async(
-    self.get-native-object-no-reffing, $attributes, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $attributes, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -2831,10 +2831,10 @@ Returns: B<Gnome::Gio::FileInfo> for given I<file> or C<undefined> on error. Fre
 =end pod
 
 method query-filesystem-info-finish ( GAsyncResult $res, $error is copy --> GFileInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_filesystem_info_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -2879,11 +2879,11 @@ method query-info (
   Str $attributes, GFlag $flags, N-GObject $cancellable is copy
   --> N-GObject
 ) {
-  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  $cancellable .= _get-native-object-no-reffing unless $cancellable ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my N-GObject $no = g_file_query_info(
-    self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
   );
 
   $!last-error.clear-object;
@@ -2897,11 +2897,11 @@ method query-info-rk (
   Str $attributes, GFlag $flags, N-GObject $cancellable is copy
   -->Gnome::Gio::FileInfo
 ) {
-  $cancellable .= get-native-object-no-reffing unless $cancellable ~~ N-GObject;
+  $cancellable .= _get-native-object-no-reffing unless $cancellable ~~ N-GObject;
   my CArray[N-GError] $error .= new(N-GError);
 
   my N-GObject $no = g_file_query_info(
-    self.get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
   );
 
   $!last-error.clear-object;
@@ -2943,7 +2943,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method query-info-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_query_info_async(
-    self.get-native-object-no-reffing, $attributes, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $attributes, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -2968,10 +2968,10 @@ Returns: B<Gnome::Gio::FileInfo> for given I<file> or C<undefined> on error. Fre
 =end pod
 
 method query-info-finish ( GAsyncResult $res, $error is copy --> GFileInfo ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_info_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -3000,10 +3000,10 @@ Returns: a B<Gnome::Gio::FileAttributeInfoList> describing the settable attribut
 =end pod
 
 method query-settable-attributes ( GCancellable $cancellable, $error is copy --> GFileAttributeInfoList ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_settable_attributes(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   )
 }
 
@@ -3030,10 +3030,10 @@ Returns: a B<Gnome::Gio::FileAttributeInfoList> describing the writable namespac
 =end pod
 
 method query-writable-namespaces ( GCancellable $cancellable, $error is copy --> GFileAttributeInfoList ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_query_writable_namespaces(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   )
 }
 
@@ -3066,10 +3066,10 @@ Returns: B<Gnome::Gio::FileInputStream> or C<undefined> on error. Free the retur
 =end pod
 
 method read ( GCancellable $cancellable, $error is copy --> GFileInputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_read(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   )
 }
 
@@ -3100,7 +3100,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method read-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_read_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -3125,10 +3125,10 @@ Returns: a B<Gnome::Gio::FileInputStream> or C<undefined> on error. Free the ret
 =end pod
 
 method read-finish ( GAsyncResult $res, $error is copy --> GFileInputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_read_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -3170,10 +3170,10 @@ Returns: a B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free the re
 =end pod
 
 method replace ( Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace(
-    self.get-native-object-no-reffing, $etag, $make_backup, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $etag, $make_backup, $flags, $cancellable, $error
   )
 }
 
@@ -3207,7 +3207,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method replace-async ( Str $etag, Bool $make_backup, UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_replace_async(
-    self.get-native-object-no-reffing, $etag, $make_backup, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $etag, $make_backup, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -3246,10 +3246,10 @@ Returns: C<True> if successful. If an error has occurred, this function will ret
 =end pod
 
 method replace-contents ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, CArray[Str] $new_etag, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace_contents(
-    self.get-native-object-no-reffing, $contents, $length, $etag, $make_backup, $flags, $new_etag, $cancellable, $error
+    self._get-native-object-no-reffing, $contents, $length, $etag, $make_backup, $flags, $new_etag, $cancellable, $error
   ).Bool
 }
 
@@ -3288,7 +3288,7 @@ Note that no copy of I<content> will be made, so it must stay valid until I<call
 method replace-contents-async ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_replace_contents_async(
-    self.get-native-object-no-reffing, $contents, $length, $etag, $make_backup, $flags, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $contents, $length, $etag, $make_backup, $flags, $cancellable, $callback, $user_data
   );
 }
 
@@ -3306,22 +3306,22 @@ Same as C<replace-contents-async()> but takes a B<Gnome::Gio::Bytes> input inste
 
 When this operation has completed, I<callback> will be called with I<user-user> data, and the operation can be finalized with C<g-file-replace-contents-finish()>.
 
-  method replace-contents-bytes-async ( N-GObject $contents, Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
+  method replace-contents-bytes-async ( N-GObject $contents, Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
 =item N-GObject $contents; a B<Gnome::Gio::Bytes>
 =item Str $etag; a new [entity tag][gfile-etag] for the I<file>, or C<undefined>
 =item Bool $make_backup; C<True> if a backup should be created
-=item self.get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
 =item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 =item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
 =item Pointer $user_data; the data to pass to callback function
 =end pod
 
-method replace-contents-bytes-async ( $contents is copy, Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
-  $contents .= get-native-object-no-reffing unless $contents ~~ N-GObject;
+method replace-contents-bytes-async ( $contents is copy, Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
+  $contents .= _get-native-object-no-reffing unless $contents ~~ N-GObject;
 
   g_file_replace_contents_bytes_async(
-    self.get-native-object-no-reffing, $contents, $etag, $make_backup, $flags, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $contents, $etag, $make_backup, $flags, $cancellable, $callback, $user_data
   );
 }
 
@@ -3347,10 +3347,10 @@ Returns: C<True> on success, C<False> on failure.
 =end pod
 
 method replace-contents-finish ( GAsyncResult $res, CArray[Str] $new_etag, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace_contents_finish(
-    self.get-native-object-no-reffing, $res, $new_etag, $error
+    self._get-native-object-no-reffing, $res, $new_etag, $error
   ).Bool
 }
 
@@ -3377,10 +3377,10 @@ Returns: a B<Gnome::Gio::FileOutputStream>, or C<undefined> on error. Free the r
 =end pod
 
 method replace-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -3404,20 +3404,20 @@ Note that in many non-local file cases read and write streams are not supported,
 
 Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the returned object with C<clear-object()>.
 
-  method replace-readwrite ( Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, GCancellable $cancellable, N-GError $error --> GFileIOStream )
+  method replace-readwrite ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, N-GError $error --> GFileIOStream )
 
 =item Str $etag; an optional [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or B<NULL> to ignore
 =item Bool $make_backup; C<True> if a backup should be created
-=item self.get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
 =item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 =item N-GError $error; return location for a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
-method replace-readwrite ( Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, GCancellable $cancellable, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+method replace-readwrite ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, $error is copy --> GFileIOStream ) {
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace_readwrite(
-    self.get-native-object-no-reffing, $etag, $make_backup, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $etag, $make_backup, $flags, $cancellable, $error
   )
 }
 
@@ -3437,21 +3437,21 @@ For more details, see C<replace-readwrite()> which is the synchronous version of
 
 When the operation is finished, I<callback> will be called. You can then call C<g-file-replace-readwrite-finish()> to get the result of the operation.
 
-  method replace-readwrite-async ( Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
+  method replace-readwrite-async ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
 =item Str $etag; an [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or C<undefined> to ignore
 =item Bool $make_backup; C<True> if a backup should be created
-=item self.get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
 =item Int() $io_priority; the [I/O priority][io-priority] of the request
 =item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 =item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
 =item Pointer $user_data; (closure): the data to pass to callback function
 =end pod
 
-method replace-readwrite-async ( Str $etag, Bool $make_backup, self.get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
+method replace-readwrite-async ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_replace_readwrite_async(
-    self.get-native-object-no-reffing, $etag, $make_backup, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $etag, $make_backup, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -3476,10 +3476,10 @@ Returns: a B<Gnome::Gio::FileIOStream>, or C<undefined> on error. Free the retur
 =end pod
 
 method replace-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_replace_readwrite_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -3507,7 +3507,7 @@ Returns: B<Gnome::Gio::File> to the resolved path. C<undefined> if I<relative-pa
 method resolve-relative-path ( Str $relative_path --> N-GFile ) {
 
   g_file_resolve_relative_path(
-    self.get-native-object-no-reffing, $relative_path
+    self._get-native-object-no-reffing, $relative_path
   )
 }
 
@@ -3540,10 +3540,10 @@ Returns: C<True> if the attribute was set, C<False> otherwise.
 =end pod
 
 method set-attribute ( Str $attribute, GFileAttributeType $type, Pointer $value_p, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute(
-    self.get-native-object-no-reffing, $attribute, $type, $value_p, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $type, $value_p, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3573,10 +3573,10 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 =end pod
 
 method set-attribute-byte-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_byte_string(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3606,10 +3606,10 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 =end pod
 
 method set-attribute-int32 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_int32(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3639,10 +3639,10 @@ Returns: C<True> if the I<attribute> was successfully set, C<False> otherwise.
 =end pod
 
 method set-attribute-int64 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_int64(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3672,10 +3672,10 @@ Returns: C<True> if the I<attribute> was successfully set, C<False> otherwise.
 =end pod
 
 method set-attribute-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_string(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3705,10 +3705,10 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 =end pod
 
 method set-attribute-uint32 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_uint32(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3738,10 +3738,10 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 =end pod
 
 method set-attribute-uint64 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attribute_uint64(
-    self.get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $attribute, $value, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3774,7 +3774,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method set-attributes-async ( GFileInfo $info, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_set_attributes_async(
-    self.get-native-object-no-reffing, $info, $flags, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $info, $flags, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -3800,10 +3800,10 @@ Returns: C<True> if the attributes were set correctly, C<False> otherwise.
 =end pod
 
 method set-attributes-finish ( GAsyncResult $result, GFileInfo $info, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attributes_finish(
-    self.get-native-object-no-reffing, $result, $info, $error
+    self._get-native-object-no-reffing, $result, $info, $error
   ).Bool
 }
 
@@ -3834,10 +3834,10 @@ Returns: C<False> if there was any error, C<True> otherwise.
 =end pod
 
 method set-attributes-from-info ( GFileInfo $info, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_attributes_from_info(
-    self.get-native-object-no-reffing, $info, $flags, $cancellable, $error
+    self._get-native-object-no-reffing, $info, $flags, $cancellable, $error
   ).Bool
 }
 
@@ -3873,10 +3873,10 @@ Returns: a B<Gnome::Gio::File> specifying what I<file> was renamed to, or C<unde
 =end pod
 
 method set-display-name ( Str $display_name, GCancellable $cancellable, $error is copy --> N-GFile ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_display_name(
-    self.get-native-object-no-reffing, $display_name, $cancellable, $error
+    self._get-native-object-no-reffing, $display_name, $cancellable, $error
   )
 }
 
@@ -3908,7 +3908,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method set-display-name-async ( Str $display_name, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_set_display_name_async(
-    self.get-native-object-no-reffing, $display_name, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $display_name, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -3933,10 +3933,10 @@ Returns: a B<Gnome::Gio::File> or C<undefined> on error. Free the returned objec
 =end pod
 
 method set-display-name-finish ( GAsyncResult $res, $error is copy --> N-GFile ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_set_display_name_finish(
-    self.get-native-object-no-reffing, $res, $error
+    self._get-native-object-no-reffing, $res, $error
   )
 }
 
@@ -3968,7 +3968,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method start-mountable ( GDriveStartFlags $flags, GMountOperation $start_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_start_mountable(
-    self.get-native-object-no-reffing, $flags, $start_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $start_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -3995,10 +3995,10 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 =end pod
 
 method start-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_start_mountable_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -4030,7 +4030,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method stop-mountable ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_stop_mountable(
-    self.get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -4057,10 +4057,10 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 =end pod
 
 method stop-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_stop_mountable_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -4085,7 +4085,7 @@ Returns: Whether or not I<file> supports thread-default contexts.
 method supports-thread-contexts ( --> Bool ) {
 
   g_file_supports_thread_contexts(
-    self.get-native-object-no-reffing,
+    self._get-native-object-no-reffing,
   ).Bool
 }
 
@@ -4114,10 +4114,10 @@ Returns: C<True> on successful trash, C<False> otherwise.
 =end pod
 
 method trash ( GCancellable $cancellable, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_trash(
-    self.get-native-object-no-reffing, $cancellable, $error
+    self._get-native-object-no-reffing, $cancellable, $error
   ).Bool
 }
 
@@ -4146,7 +4146,7 @@ Virtual: trash-async
 method trash-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_trash_async(
-    self.get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $io_priority, $cancellable, $callback, $user_data
   );
 }
 
@@ -4173,10 +4173,10 @@ Returns: C<True> on successful trash, C<False> otherwise.
 =end pod
 
 method trash-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_trash_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 
@@ -4208,7 +4208,7 @@ When the operation is finished, I<callback> will be called. You can then call C<
 method unmount-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
 
   g_file_unmount_mountable_with_operation(
-    self.get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
+    self._get-native-object-no-reffing, $flags, $mount_operation, $cancellable, $callback, $user_data
   );
 }
 
@@ -4235,10 +4235,10 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 =end pod
 
 method unmount-mountable-with-operation-finish ( GAsyncResult $result, $error is copy --> Bool ) {
-  $error .= get-native-object-no-reffing unless $error ~~ N-GError;
+  $error .= _get-native-object-no-reffing unless $error ~~ N-GError;
 
   g_file_unmount_mountable_with_operation_finish(
-    self.get-native-object-no-reffing, $result, $error
+    self._get-native-object-no-reffing, $result, $error
   ).Bool
 }
 

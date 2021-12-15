@@ -73,7 +73,7 @@ Activates the action.  I<$parameter> must be the correct type of parameter for t
 
 method activate ( $parameter ) {
   my $no = $parameter;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_activate(
     self._f('GAction'), $no
@@ -99,7 +99,7 @@ Request for the state of this action to be changed to I<$value>. The action must
 
 method change-state ( $value ) {
   my $no = $value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_change_state(
     self._f('GAction'), $no
@@ -361,7 +361,7 @@ Returns: a detailed format string
 
 method print-detailed-name ( Str $action_name, $target_value --> Str ) {
   my $no = $target_value;
-  $no .= get-native-object-no-reffing unless $no ~~ N-GObject;
+  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_action_print_detailed_name( $action_name, $no);
 }
