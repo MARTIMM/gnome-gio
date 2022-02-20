@@ -3,6 +3,13 @@
   * Add module **Gnome::Gio::Emblem**.
   * Add module **Gnome::Gio::EmblemedIcon**.
 -->
+* 2022-02-20 0.10.2:
+  * Deprecate all `-rk()` routines. It is possible to coerce from the native object to the Raku object like so;
+  ```
+  my Gnome::Gdk3::Event $event = …;
+  my Gnome::Gdk3::Device() $device = $event.get-device;
+  ```
+
 * 2021-12-12 0.10.1
   * Changes for renamed methods in **Gnome::N::TopLevelClassSupport**.
 
