@@ -14,8 +14,8 @@ use Gnome::N::N-GObject;
 
 #-------------------------------------------------------------------------------
 my Gnome::Glib::Error $e;
-my Gnome::Gio::AppInfo $ai;
-my Gnome::Gio::AppInfo $ai2;
+my Gnome::Gio::AppInfo() $ai;
+my Gnome::Gio::AppInfo() $ai2;
 #my Gnome::Gio::AppLaunchContext $alc .= new;
 
 #-------------------------------------------------------------------------------
@@ -66,7 +66,8 @@ subtest 'Manipulations', {
   #ok $ai.launch-uris( ('file:///usr/local',), N-GObject), '.launch-uris()';
 
   # on my system: firefox
-  $ai2 = $ai.get-default-for-uri-scheme-rk('http');
+  $ai2 = $ai.get-default-for-uri-scheme('http');# //
+    #.new(:native-object(N-GObject));
   diag $ai2.get-commandline;
   diag 'should show: ' ~ $ai2.should-show;
 
@@ -131,7 +132,7 @@ subtest 'Manipulations', {
   ok $ai.set-as-default-for-type('image/jpeg'), '.set-as-default-for-type()';
   ok $ai.set-as-default-for-extension('jpg'), '.set-as-default-for-extension()';
 
-  $ai2 = $ai.get-default-for-type-rk( 'image/jpeg', True);
+  $ai2 = $ai.get-default-for-type( 'image/jpeg', True);
   is $ai2.get-commandline, 'gwenview %U', '.get-default-for-type-rk';
 
   # remove previous set default associations

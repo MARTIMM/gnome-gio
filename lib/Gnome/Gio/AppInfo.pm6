@@ -432,20 +432,14 @@ sub g_app_info_get_commandline (
 
 #-------------------------------------------------------------------------------
 #TM:1:get-default-for-type:
-#TM:1:get-default-for-type-rk:
 =begin pod
-=head2 get-default-for-type, get-default-for-type-rk
+=head2 get-default-for-type
 
 Gets the default B<Gnome::Gio::AppInfo> for a given content type.
 
   method get-default-for-type (
     Str $content-type, Bool $must_support_uris
     --> N-GObject
-  )
-
-  method get-default-for-type-rk (
-    Str $content-type, Bool $must_support_uris
-    --> Gnome::Gio::AppInfo
   )
 
 =item Str $content-type;
@@ -455,14 +449,17 @@ Gets the default B<Gnome::Gio::AppInfo> for a given content type.
 method get-default-for-type (
   Str $content-type, Bool $must_support_uris --> N-GObject
 ) {
-  g_app_info_get_default_for_type(
-    self._get-native-object-no-reffing, $content-type, $must_support_uris
-  )
+  g_app_info_get_default_for_type( $content-type, $must_support_uris)
 }
 
 method get-default-for-type-rk (
   Str $content-type, Bool $must_support_uris --> Gnome::Gio::AppInfo
 ) {
+  Gnome::N::deprecate(
+    'get-default-for-type-rk', 'coercing from g_app_info_get_default_for_type',
+    '0.19.2', '0.21.0'
+  );
+
   Gnome::Gio::AppInfo.new(
     :native-object(
       g_app_info_get_default_for_type( $content-type, $must_support_uris)
@@ -477,28 +474,28 @@ sub g_app_info_get_default_for_type (
 
 #-------------------------------------------------------------------------------
 #TM:1:get-default-for-uri-scheme:
-#TM:1:get-default-for-uri-scheme-rk:
 =begin pod
-=head2 get-default-for-uri-scheme, get-default-for-uri-scheme-rk
+=head2 get-default-for-uri-scheme
 
 Gets the default application for handling URIs with the given URI scheme. A URI scheme is the initial part of the URI, up to but not including the ':', e.g. "http", "ftp" or "sip".
 
   method get-default-for-uri-scheme ( Str $uri_scheme --> N-GObject )
 
-  method get-default-for-uri-scheme-rk (
-    Str $uri_scheme --> Gnome::Gio::AppInfo
-  )
-
 =item Str $uri_scheme;
 =end pod
 
 method get-default-for-uri-scheme ( Str $uri_scheme --> N-GObject ) {
-  g_app_info_get_default_for_uri_scheme( self._get-native-object-no-reffing, $uri_scheme)
+  g_app_info_get_default_for_uri_scheme($uri_scheme)
 }
 
 method get-default-for-uri-scheme-rk (
   Str $uri_scheme --> Gnome::Gio::AppInfo
 ) {
+  Gnome::N::deprecate(
+    'get-default-for-uri-scheme-rk', 'coercing from g_app_info_get_default_for_uri_scheme',
+    '0.19.2', '0.21.0'
+  );
+
   Gnome::Gio::AppInfo.new(
     :native-object(g_app_info_get_default_for_uri_scheme($uri_scheme))
   )
