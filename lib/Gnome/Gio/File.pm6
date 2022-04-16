@@ -124,6 +124,7 @@ Native object to hold a file representation
 
 =end pod
 
+#TODO deprecate N-GFile and make it N-GObject
 #TT:1:N-GFile:
 class N-GFile
   is repr('CPointer')
