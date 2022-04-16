@@ -25,11 +25,11 @@
     "Gnome::Gio::Icon": "lib/Gnome/Gio/Icon.pm6",
     "Gnome::Gio::Menu": "lib/Gnome/Gio/Menu.pm6",
     "Gnome::Gio::MenuAttributeIter": "lib/Gnome/Gio/MenuAttributeIter.pm6",
-    "Gnome::Gio::MenuLinkIter": "lib/Gnome/Gio/MenuLinkIter.pm6",
     "Gnome::Gio::MenuItem": "lib/Gnome/Gio/MenuItem.pm6",
+    "Gnome::Gio::MenuLinkIter": "lib/Gnome/Gio/MenuLinkIter.pm6",
     "Gnome::Gio::MenuModel": "lib/Gnome/Gio/MenuModel.pm6",
-    "Gnome::Gio::Resource": "lib/Gnome/Gio/Resource.pm6",
     "Gnome::Gio::Notification": "lib/Gnome/Gio/Notification.pm6",
+    "Gnome::Gio::Resource": "lib/Gnome/Gio/Resource.pm6",
     "Gnome::Gio::SimpleAction": "lib/Gnome/Gio/SimpleAction.pm6",
     "Gnome::Gio::SimpleActionGroup": "lib/Gnome/Gio/SimpleActionGroup.pm6",
     "Gnome::Gio::ThemedIcon": "lib/Gnome/Gio/ThemedIcon.pm6"
