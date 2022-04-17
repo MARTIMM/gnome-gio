@@ -3,6 +3,9 @@
   * Add module **Gnome::Gio::Emblem**.
   * Add module **Gnome::Gio::EmblemedIcon**.
 -->
+* 2022-02-20 0.10.3:
+  * Pushed a new version after accidentally removing 0.10, 0.10.1 and 0.10.2 from CPAN.
+
 * 2022-02-20 0.10.2:
   * Deprecate all `-rk()` routines. It is possible to coerce from the native object to the Raku object like so;
   ```
