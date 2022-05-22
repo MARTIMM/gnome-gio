@@ -3,6 +3,10 @@
   * Add module **Gnome::Gio::Emblem**.
   * Add module **Gnome::Gio::EmblemedIcon**.
 -->
+
+* 2022-05-23 0.10.4:
+  * Module DesktopAppInfo added.
+
 * 2022-02-20 0.10.3:
   * Pushed a new version after accidentally removing 0.10, 0.10.1 and 0.10.2 from CPAN.
 
