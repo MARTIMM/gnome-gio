@@ -186,7 +186,7 @@ submethod BUILD ( *%options ) {
 }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-action-name:
+#TM:1:get-action-name:
 =begin pod
 =head2 get-action-name
 
@@ -202,7 +202,9 @@ Returns: the locale-specific action name
 =end pod
 
 method get-action-name ( Str $action_name --> Str ) {
-  g_desktop_app_info_get_action_name( self._get-native-object-no-reffing, $action_name)
+  g_desktop_app_info_get_action_name(
+    self._get-native-object-no-reffing, $action_name
+  )
 }
 
 sub g_desktop_app_info_get_action_name (
@@ -236,7 +238,7 @@ sub g_desktop_app_info_get_boolean (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-categories:
+#TM:1:get-categories:
 =begin pod
 =head2 get-categories
 
@@ -258,7 +260,7 @@ sub g_desktop_app_info_get_categories (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-filename:
+#TM:1:get-filename:
 =begin pod
 =head2 get-filename
 

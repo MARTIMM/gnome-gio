@@ -1,14 +1,29 @@
 [Desktop Entry]
+Name[en_US]=directory-list
+Name[nl]=folder-lijst
+Name=directory-list
+
+GenericName[en_US]=directory-list
+GenericName[nl]=folder-lijst
+GenericName=directory-list
+
+Comment[en_US]=Make a directory listing
+Comment[nl]=Maak een folder lijstje
+Comment=Make a directory listing
+
 Type=Application
-Comment[en_US]=Test used by AppInfo.t
-Comment=Testjes voor AppInfo.t
-#Encoding=UTF-8
-Exec=ls -la %f
-GenericName[en_US]=information-test
-GenericName=informatie-testje
-Icon=gcr-key
-MimeType=text/x-yaml
-Name[en_US]=itest
-Name=itestje
+Exec=ls %f
+
+Icon=format-list-ordered
+MimeType=text/plain
+
 Path=/tmp
 StartupNotify=true
+Categories=Gnome;Test;DesktopAppInfo;
+
+Actions=Fullist;
+
+
+[Desktop Action Fullist]
+Exec=ls -la %f
+Name=Full-directory-list
