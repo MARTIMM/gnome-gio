@@ -43,12 +43,15 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
-  is $dai.get-action-name('Fullist'), 'Full-directory-list',
+  is $dai.get-action-name('FullList'), 'Full-directory-list',
       '.get-action-name()';
   ok $dai.get-boolean('StartupNotify'), '.get-boolean()';
   is $dai.get-categories, 'X-Gnome;Graphics;', '.get-categories()';
   is $dai.get-filename, $*CWD.IO.absolute ~ "/t/data/AppInfo.desktop",
       '.get-filename()';
+
+  is-deeply $dai.list-actions, [<FullList>,], '.list-actions()';
+  lives-ok { note $dai.search('sett'); }, '.search()';
 }
 
 #-------------------------------------------------------------------------------

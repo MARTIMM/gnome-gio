@@ -551,7 +551,7 @@ Activates the named application action.
 
 You may only call this function on action names that were returned from C<list_actions()>.
 
-Note that if the main entry of the desktop file indicates that the application supports startup notification, and I<launch_context> is non-C<undefined>, then startup notification will be used when activating the action (and as such, invocation of the action on the receiving side must signal the end of startup notification when it is completed). This is the expected behaviour of applications declaring additional actions, as per the desktop file specification.
+Note that if the main entry of the desktop file indicates that the application supports startup notification, and I<launch_context> is defined, then startup notification will be used when activating the action (and as such, invocation of the action on the receiving side must signal the end of startup notification when it is completed). This is the expected behaviour of applications declaring additional actions, as per the desktop file specification.
 
 As with C<g_app_info_launch()> there is no way to detect failures that occur while using this function.
 
@@ -646,7 +646,7 @@ sub g_desktop_app_info_launch_uris_as_manager_with_fds (
 }}
 
 #-------------------------------------------------------------------------------
-#TM:0:list-actions:
+#TM:1:list-actions:
 =begin pod
 =head2 list-actions
 
@@ -654,14 +654,24 @@ Returns the list of "additional application actions" supported on the desktop fi
 
 As per the specification, this is the list of actions that are explicitly listed in the "Actions" key of the [Desktop Entry] group.
 
-Returns:  (element-type utf8) : a list of strings, always non-C<undefined>
+Returns: an Array of strings, always defined
 
-  method list-actions ( --> CArray[Str] )
+  method list-actions ( --> Array )
 
 =end pod
 
-method list-actions ( --> CArray[Str] ) {
-  g_desktop_app_info_list_actions( self._get-native-object-no-reffing)
+method list-actions ( --> Array ) {
+  my CArray[Str] $ca = g_desktop_app_info_list_actions(
+    self._get-native-object-no-reffing
+  );
+
+  my Array $ra = [];
+  my Int $i = 0;
+  while $ca[$i].defined {
+    $ra.push: $ca[$i++];
+  }
+
+  $ra
 }
 
 sub g_desktop_app_info_list_actions (
@@ -670,25 +680,41 @@ sub g_desktop_app_info_list_actions (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:search:
+#TM:1:search:
 =begin pod
 =head2 search
 
 Searches desktop files for ones that match I<search_string>.
 
-The return value is an array of strvs. Each strv contains a list of applications that matched I<search_string> with an equal score. The outer list is sorted by score so that the first strv contains the best-matching applications, and so on. The algorithm for determining matches is undefined and may change at any time.
+The return value is an array of string arrays. Each string array contains a list of applications that matched I<search_string> with an equal score. The outer list is sorted by score so that the first string list contains the best-matching applications, and so on. The algorithm for determining matches is undefined and may change at any time.
 
 None of the search results are subjected to the normal validation checks performed by C<new()> (for example, checking that the executable referenced by a result exists), and so it is possible for C<new()> to return C<undefined> when passed an app ID returned by this function. It is expected that calling code will do this when subsequently creating a B<Gnome::Gio::DesktopAppInfo> for each result.
 
-Returns:  (element-type GStrv) : a list of strvs. Free each item with C<g_strfreev()> and free the outer list with C<g_free()>.
+Returns: an array of string array's.
+=comment TODO Free each item with C<g_strfreev()> and free the outer list with C<g_free()>.
 
-  method search ( Str $search_string --> CArray[CArray[Str]] )
+  method search ( Str $search_string --> Array[Array[Str]] )
 
 =item $search_string; the search string to use
 =end pod
 
-method search ( Str $search_string --> CArray[CArray[Str]] ) {
-  g_desktop_app_info_search( self._get-native-object-no-reffing, $search_string)
+method search ( Str $search_string --> Array ) {
+  my CArray[CArray[Str]] $ca = g_desktop_app_info_search($search_string);
+
+  my Array $ra = [];
+  my Int ( $i, $j) = ( 0, 0);
+  while $ca[$i].defined {
+    $ra.push: [];
+
+    while $ca[$i][$j].defined {
+      $ra[$i].push: $ca[$i][$j++];
+    }
+
+    $j = 0;
+    $i++;
+  }
+
+  $ra
 }
 
 sub g_desktop_app_info_search (

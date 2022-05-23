@@ -23,9 +23,9 @@ Path=/tmp
 StartupNotify=true
 Categories=X-Gnome;Graphics;
 
-Actions=Fullist;
+Actions=FullList;
 
 
-[Desktop Action Fullist]
+[Desktop Action FullList]
 Exec=ls -la %f
 Name=Full-directory-list
