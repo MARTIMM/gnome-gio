@@ -52,6 +52,19 @@ subtest 'Manipulations', {
 }
 
 #-------------------------------------------------------------------------------
+subtest 'Properties …', {
+#  my Gnome::Gio::DesktopAppInfo $dai .= new;
+  my @r = $dai.get-properties(
+    'filename', Str
+  );
+  is-deeply @r, [
+    $*CWD.IO.absolute ~ "/t/data/AppInfo.desktop"
+  ], 'properties: ' ~ (
+    'filename'
+  ).join(', ');
+}
+
+#-------------------------------------------------------------------------------
 done-testing;
 
 =finish
