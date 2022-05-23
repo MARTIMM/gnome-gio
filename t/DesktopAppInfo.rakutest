@@ -13,15 +13,26 @@ use Gnome::Gio::DesktopAppInfo;
 my Gnome::Gio::DesktopAppInfo $dai;
 #-------------------------------------------------------------------------------
 subtest 'ISA test', {
-  $dai .= new;
-  isa-ok $dai, Gnome::Gio::DesktopAppInfo, '.new()';
+  if $*HOME eq '/home/marcel' {
+    $dai .= new(:filename</home/marcel/Languages/Raku/Projects/gnome-gio/t/data/XAppInfo.desktop>);
+    nok $dai.is-valid, '.new(:filename); file does not exist';
+
+    $dai .= new(:desktop-id<abcdef.desktop>);
+    ok $dai.is-valid, '.new(:desktop-id); file exists';
+  }
+#`{{
+#note "\n$cwd, {%*ENV<XDG_DATA_HOME>//''}, {%*ENV<XDG_DATA_DIRS>//''}";
+  %*ENV<XDG_DATA_HOME> = "$cwd/t/data";
+  %*ENV<XDG_DATA_DIRS> = "$cwd/t/data:%*ENV<XDG_DATA_DIRS>";
+#note "\n$cwd, {%*ENV<XDG_DATA_HOME>//''}, {%*ENV<XDG_DATA_DIRS>//''}";
+
+#note 'load-file: ', $dai.load-file("$cwd/t/data/AppInfo.desktop");
+}}
+
+  my Str $cwd = $*CWD.IO.absolute;
+  $dai .= new(:filename("$cwd/t/data/AppInfo.desktop"));
+  ok $dai.is-valid, '.new(:filename); file exists';
 }
-
-#-------------------------------------------------------------------------------
-done-testing;
-
-=finish
-
 
 #-------------------------------------------------------------------------------
 # set environment variable 'raku-test-all' if rest must be tested too.
@@ -32,7 +43,13 @@ unless %*ENV<raku_test_all>:exists {
 
 #-------------------------------------------------------------------------------
 subtest 'Manipulations', {
+  ok $dai.get-boolean('StartupNotify'), '.get-boolean()';
 }
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
 
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::DesktopAppInfo', {
@@ -142,4 +159,3 @@ subtest 'Themes …', {
 #-------------------------------------------------------------------------------
 subtest 'Interface …', {
 }
-

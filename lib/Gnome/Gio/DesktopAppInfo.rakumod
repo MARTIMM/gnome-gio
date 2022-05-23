@@ -119,7 +119,8 @@ Create a DesktopAppInfo object using a native object from elsewhere. See also B<
 =end pod
 
 # TM:0:new():inheriting
-#TM:1:new():
+#TM:1:new(:desktop-id):
+#TM:1:new(:filename):
 #TM:4:new(:native-object):Gnome::N::TopLevelClassSupport
 submethod BUILD ( *%options ) {
 
@@ -150,7 +151,7 @@ submethod BUILD ( *%options ) {
       }
 }}
 
-      #`{{ use this when the module is not made inheritable
+      ##`{{ use this when the module is not made inheritable
       # check if there are unknown options
       elsif %options.elems {
         die X::Gnome.new(
@@ -160,14 +161,14 @@ submethod BUILD ( *%options ) {
           )
         );
       }
-      }}
+      #}}
 
-      #`{{ when there are no defaults use this
+      ##`{{ when there are no defaults use this
       # check if there are any options
       elsif %options.elems == 0 {
         die X::Gnome.new(:message('No options specified ' ~ self.^name));
       }
-      }}
+      #}}
 
       #`{{ when there are defaults use this instead
       # create default object
@@ -210,7 +211,7 @@ sub g_desktop_app_info_get_action_name (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:get-boolean:
+#TM:1:get-boolean:
 =begin pod
 =head2 get-boolean
 
@@ -776,3 +777,35 @@ sub _g_desktop_app_info_new_from_keyfile ( N-GObject $key_file --> N-GObject )
 =item Default value is undefined.
 
 =end pod
+
+#`{{
+routine from c file to check somewhat deeper
+#-------------------------------------------------------------------------------
+use Gnome::Glib::Error;
+
+method load-file ( Str $filename --> Bool ) {
+  my N-GObject $key_file;
+  my Bool $retval = False;
+
+  my $error = CArray[N-GError].new;
+  $key_file = g_key_file_new;
+  $retval = g_key_file_load_from_file( $key_file, $filename, 0, $error).Bool;
+note "retval: $filename, $retval, $error";
+  g_key_file_unref($key_file);
+  $retval;
+}
+
+sub g_key_file_new ( --> N-GObject)
+  is native(&glib-lib)
+  { * }
+
+sub g_key_file_load_from_file (
+  N-GObject $key-file, Str $filename, gint $flags, CArray[N-GError] $error
+  --> gboolean
+) is native(&glib-lib)
+  { * }
+
+sub g_key_file_unref ( N-GObject $key_file)
+  is native(&glib-lib)
+  { * }
+}}

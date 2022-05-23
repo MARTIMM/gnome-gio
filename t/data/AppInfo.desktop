@@ -1,7 +1,8 @@
 [Desktop Entry]
+Type=Application
 Comment[en_US]=Test used by AppInfo.t
 Comment=Testjes voor AppInfo.t
-Encoding=UTF-8
+#Encoding=UTF-8
 Exec=ls -la %f
 GenericName[en_US]=information-test
 GenericName=informatie-testje
@@ -10,4 +11,4 @@ MimeType=text/x-yaml
 Name[en_US]=itest
 Name=itestje
 Path=/tmp
-StartupNotify=false
+StartupNotify=true
