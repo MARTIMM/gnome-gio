@@ -768,10 +768,10 @@ sub _g_desktop_app_info_new_from_keyfile ( N-GObject $key_file --> N-GObject )
 =head1 Properties
 
 =comment -----------------------------------------------------------------------
-=comment #TP:0:filename:
+=comment #TP:1:filename:
 =head2 filename
 
-
+The filename path of the desktop entry file
 
 =item B<Gnome::GObject::Value> type of this property is G_TYPE_STRING
 =item Parameter is readable and writable.
