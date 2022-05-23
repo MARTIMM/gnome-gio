@@ -46,7 +46,7 @@ subtest 'Manipulations', {
   is $dai.get-action-name('Fullist'), 'Full-directory-list',
       '.get-action-name()';
   ok $dai.get-boolean('StartupNotify'), '.get-boolean()';
-  is $dai.get-categories, 'Gnome;Test;DesktopAppInfo;', '.get-categories()';
+  is $dai.get-categories, 'X-Gnome;Graphics;', '.get-categories()';
   is $dai.get-filename, $*CWD.IO.absolute ~ "/t/data/AppInfo.desktop",
       '.get-filename()';
 }
