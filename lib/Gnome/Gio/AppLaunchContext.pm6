@@ -303,8 +303,10 @@ sub g_app_launch_context_launch_failed (
 ) is native(&gio-lib)
   { * }
 
+#`{{ NOTE not needed because Raku has its own way to set/unset environment variables
+
 #-------------------------------------------------------------------------------
-#TM:0:setenv:
+# TM:0:setenv:
 =begin pod
 =head2 setenv
 
@@ -329,7 +331,7 @@ sub g_app_launch_context_setenv (
   { * }
 
 #-------------------------------------------------------------------------------
-#TM:0:unsetenv:
+# TM:0:unsetenv:
 =begin pod
 =head2 unsetenv
 
@@ -351,6 +353,7 @@ sub g_app_launch_context_unsetenv (
   N-GObject $context, gchar-ptr $variable
 ) is native(&gio-lib)
   { * }
+}}
 
 #-------------------------------------------------------------------------------
 #TM:1:_g_app_launch_context_new:
