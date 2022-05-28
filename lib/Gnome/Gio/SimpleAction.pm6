@@ -77,7 +77,7 @@ Create a new stateful SimpleAction object. All future state values must have the
   )
 
 =item  Str  $name; the name of the action
-=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::Variant> object.
+=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::VariantType> object.
 =item N-GObject $state; the initial state value of the action. The state is a native B<Gnome::Glib::Variant> object.
 
 
@@ -132,10 +132,7 @@ submethod BUILD ( *%options ) {
         }
 
         if %options<state>.defined {
-          my $state = %options<state>;
-          $state .= _get-native-object-no-reffing
-            unless $state ~~ N-GObject;
-
+          my N-GObject() $state = %options<state>;
           $no = _g_simple_action_new_stateful(
             %options<name>, $parameter-type, $state
           );
