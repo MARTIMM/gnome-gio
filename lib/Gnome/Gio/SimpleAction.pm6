@@ -64,8 +64,8 @@ Create a new stateless SimpleAction object.
 
   multi method new ( Str :$name!, N-GObject :$parameter-type )
 
-=item  Str  $name; the name of the action
-=item N-GObject $parameter_type; the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
+=item Str $name; the name of the action
+=item N-GObject $parameter_type; the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::Variant> object.
 
 
 =head3 :name, :parameter-type, :state
@@ -77,8 +77,8 @@ Create a new stateful SimpleAction object. All future state values must have the
   )
 
 =item  Str  $name; the name of the action
-=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter
-=item N-GObject $state; the initial state value of the action
+=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::Variant> object.
+=item N-GObject $state; the initial state value of the action. The state is a native B<Gnome::Glib::Variant> object.
 
 
 =head3 :native-object
@@ -124,11 +124,11 @@ submethod BUILD ( *%options ) {
     else {
       my $no;
       if ? %options<name> {
-        my $parameter-type = N-GObject;
+        my N-GObject() $parameter-type = N-GObject;
         if %options<parameter-type>.defined {
           $parameter-type = %options<parameter-type>;
-          $parameter-type .= _get-native-object-no-reffing
-            unless $parameter-type ~~ N-GObject;
+#          $parameter-type .= _get-native-object-no-reffing
+#            unless $parameter-type ~~ N-GObject;
         }
 
         if %options<state>.defined {
@@ -215,16 +215,13 @@ Sets the state of the action.  This directly updates the 'state' property to the
 
   method set-state ( N-GObject $value )
 
-=item N-GObject $value; the new B<N-GObject> for the state
+=item N-GObject $value; the new B<N-GObject> for the state. The state is a native B<Gnome::Glib::Variant> object.
 
 =end pod
 
-method set-state ( $value ) {
-  my $no = $value;
-  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
-
+method set-state ( N-GObject() $value ) {
   g_simple_action_set_state(
-    self._f('GSimpleAction'), $no
+    self._f('GSimpleAction'), $value
   );
 }
 

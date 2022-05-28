@@ -62,7 +62,7 @@ use Gnome::Glib::VariantType;
 use Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::MenuItem:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::MenuItem:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
@@ -70,6 +70,13 @@ also is Gnome::GObject::Object;
 =begin pod
 =head1 Methods
 =head2 new
+
+=head3 :label
+
+Creates a menu item. Call one of C<set-action-and-target-value>, C<set-detailed-action>, C<set-section>, C<set-submenu> to set purpose of item
+
+  multi method new ( Str :$label! )
+
 
 =head3 :label, :action
 
@@ -100,7 +107,7 @@ This is a convenience API around C<new()> followed by C<set-section()>.
 
 The effect of having one menu appear as a section of another is exactly as it sounds: the items from I<$section> become a direct part of the menu that I<menu-item> is added to.
 
-Visual separation is typically displayed between two non-empty sections.  If I<$label> is non-C<undefined> then it will be encorporated into this visual indication.  This allows for labeled subsections of a menu.
+Visual separation is typically displayed between two non-empty sections.  If I<$label> is defined then it will be encorporated into this visual indication.  This allows for labeled subsections of a menu.
 
 As a simple example, consider a typical "Edit" menu from a simple program.  It probably contains an "Undo" and "Redo" item, followed by a separator, followed by "Cut", "Copy" and "Paste".
 
@@ -139,7 +146,7 @@ The following example is exactly equivalent.  It is more illustrative of the exa
 
 The method is defined as
 
-  multi method new ( Str $label?, N-GObject $section! )
+  multi method new ( Str :$label?, N-GObject :$section! )
 
 
 =head3 :submenu, :label
@@ -165,6 +172,7 @@ Create a Menu object using a native object returned from a builder. See also B<G
 
 =end pod
 
+#TM:1:new(:label):
 #TM:1:new(:label,:action):
 #TM:1:new(:model,:item_index):
 #TM:1:new(:label,:section):
@@ -207,6 +215,10 @@ submethod BUILD ( *%options ) {
         $no = %options<model>;
         $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_from_model( $no, %options<item-index>);
+      }
+
+      elsif %options<label>:exists {
+        $no = _g_menu_item_new( %options<label>, Nil);
       }
 
       ##`{{ use this when the module is not made inheritable
@@ -370,8 +382,8 @@ If I<action> is C<undefined> then both the "action" and "target" attributes
 are unset (and I<format-string> is ignored along with the positional
 parameters).
 
-If I<action> is non-C<undefined> then the "action" attribute is set.
-I<format-string> is then inspected.  If it is non-C<undefined> then the proper
+If I<action> is defined then the "action" attribute is set.
+I<format-string> is then inspected.  If it is undefined then the proper
 position parameters are collected to create a B<GVariant> instance to
 use as the target value.  If it is C<undefined> then the positional
 parameters are ignored and the "target" attribute is unset.
@@ -417,9 +429,9 @@ Sets or unsets the "action" and "target" attributes of I<menu-item>.
 If I<action> is C<undefined> then both the "action" and "target" attributes
 are unset (and I<target-value> is ignored).
 
-If I<action> is non-C<undefined> then the "action" attribute is set.  The
+If I<action> is defined then the "action" attribute is set.  The
 "target" attribute is then set to the value of I<target-value> if it is
-non-C<undefined> or unset otherwise.
+defined or unset otherwise.
 
 Normal menu items (ie: not submenu, section or other custom item
 types) are expected to have the "action" attribute set to identify
@@ -489,7 +501,7 @@ Attribute names are restricted to lowercase characters, numbers
 and '-'. Furthermore, the names must begin with a lowercase character,
 must not end with a '-', and must not contain consecutive dashes.
 
-If I<format-string> is non-C<undefined> then the proper position parameters
+If I<format-string> is defined then the proper position parameters
 are collected to create a B<GVariant> instance to use as the attribute
 value.  If it is C<undefined> then the positional parameterrs are ignored
 and the named attribute is unset.
@@ -524,7 +536,6 @@ sub g_menu_item_set_attribute ( N-GObject $menu_item, gchar-ptr $attribute, gcha
 =begin pod
 =head2 set-attribute-value
 
-
 Sets or unsets an attribute on I<menu-item>.
 
 The attribute to set or unset is specified by I<attribute>. This
@@ -538,14 +549,12 @@ must not end with a '-', and must not contain consecutive dashes.
 must consist only of lowercase
 ASCII characters, digits and '-'.
 
-If I<value> is non-C<undefined> then it is used as the new value for the
+If I<value> is defined then it is used as the new value for the
 attribute.  If I<value> is C<undefined> then the attribute is unset. If
 the I<value> B<GVariant> is floating, it is consumed.
 
 See also C<set-attribute()> for a more convenient way to do
 the same.
-
-
 
   method set-attribute-value ( Str $attribute, N-GObject $value )
 
@@ -556,8 +565,8 @@ the same.
 =end pod
 
 method set-attribute-value ( Str $attribute, N-GObject $value ) {
-  my $no = …;
-  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
+#  my $no = …;
+#  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
 
   g_menu_item_set_attribute_value(
     self._get-native-object-no-reffing, $attribute, $value
@@ -606,46 +615,34 @@ sub g_menu_item_set_detailed_action ( N-GObject $menu_item, gchar-ptr $detailed_
   is native(&gio-lib)
   { * }
 
-#`{{
 #-------------------------------------------------------------------------------
-#TM:0:set-icon:
+#TM:4:set-icon:
 =begin pod
 =head2 set-icon
 
+Sets (or unsets) the icon on this menu item.
 
-Sets (or unsets) the icon on I<menu-item>.
+This call is the same as calling C<Gnome::Gio::Icon.serialize()> and using the result as the value to C<set-attribute-value()> for C<G-MENU-ATTRIBUTE-ICON>.
 
-This call is the same as calling C<g-icon-serialize()> and using the
-result as the value to C<set-attribute-value()> for
-C<G-MENU-ATTRIBUTE-ICON>.
+This API is only intended for use with "noun" menu items; things like bookmarks or applications in an "Open With" menu. Don't use it on menu items corresponding to verbs (eg: stock icons for 'Save' or 'Quit').
 
-This API is only intended for use with "noun" menu items; things like
-bookmarks or applications in an "Open With" menu.  Don't use it on
-menu items corresponding to verbs (eg: stock icons for 'Save' or
-'Quit').
+If I<$icon> is not defined then the icon is unset.
 
-If I<icon> is C<undefined> then the icon is unset.
+  method set-icon ( N-GObject() $icon )
 
-
-
-  method set-icon ( GIcon $icon )
-
-=item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
-=item GIcon $icon; a B<GIcon>, or C<undefined>
+=item N-GObject $icon; a native B<Gnome::Gio::Icon> or undefined.
 
 =end pod
 
-method set-icon ( GIcon $icon ) {
-
+method set-icon ( N-GObject() $icon ) {
   g_menu_item_set_icon(
     self._get-native-object-no-reffing, $icon
   );
 }
 
-sub g_menu_item_set_icon ( N-GObject $menu_item, GIcon $icon  )
+sub g_menu_item_set_icon ( N-GObject $menu_item, N-GObject $icon  )
   is native(&gio-lib)
   { * }
-}}
 
 #-------------------------------------------------------------------------------
 #TM:0:set-label:
@@ -655,7 +652,7 @@ sub g_menu_item_set_icon ( N-GObject $menu_item, GIcon $icon  )
 
 Sets or unsets the "label" attribute of I<menu-item>.
 
-If I<label> is non-C<undefined> it is used as the label for the menu item.  If
+If I<label> is defined it is used as the label for the menu item.  If
 it is C<undefined> then the label attribute is unset.
 
 
@@ -684,7 +681,7 @@ sub g_menu_item_set_label ( N-GObject $menu_item, gchar-ptr $label  )
 =head2 set-link
 
 
-Creates a link from I<menu-item> to I<model> if non-C<undefined>, or unsets it.
+Creates a link from I<menu-item> to I<model> if defined, or unsets it.
 
 Links are used to establish a relationship between a particular menu
 item and another menu.  For example, C<G-MENU-LINK-SUBMENU> is used to
@@ -732,15 +729,14 @@ section.
 
 
 
-  method set-section ( N-GObject $section )
+  method set-section ( N-GObject() $section )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item N-GObject $section; (nullable): a B<Gnome::Gio::MenuModel>, or C<undefined>
 
 =end pod
 
-method set-section ( N-GObject $section ) {
-
+method set-section ( N-GObject() $section ) {
   g_menu_item_set_section(
     self._get-native-object-no-reffing, $section
   );
@@ -758,7 +754,7 @@ sub g_menu_item_set_section ( N-GObject $menu_item, N-GObject $section  )
 
 Sets or unsets the "submenu" link of I<menu-item> to I<submenu>.
 
-If I<submenu> is non-C<undefined>, it is linked to.  If it is C<undefined> then the
+If I<submenu> is defined, it is linked to.  If it is C<undefined> then the
 link is unset.
 
 The effect of having one menu appear as a submenu of another is
@@ -766,18 +762,15 @@ exactly as it sounds.
 
 
 
-  method set-submenu ( N-GObject $submenu )
+  method set-submenu ( N-GObject() $submenu )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item N-GObject $submenu; (nullable): a B<Gnome::Gio::MenuModel>, or C<undefined>
 
 =end pod
 
-method set-submenu ( N-GObject $submenu ) {
-
-  g_menu_item_set_submenu(
-    self._get-native-object-no-reffing, $submenu
-  );
+method set-submenu ( N-GObject() $submenu ) {
+  g_menu_item_set_submenu( self._get-native-object-no-reffing, $submenu);
 }
 
 sub g_menu_item_set_submenu ( N-GObject $menu_item, N-GObject $submenu  )
@@ -793,10 +786,10 @@ sub g_menu_item_set_submenu ( N-GObject $menu_item, N-GObject $submenu  )
 
 Creates a new B<Gnome::Gio::MenuItem>.
 
-If I<label> is non-C<undefined> it is used to set the "label" attribute of the
+If I<label> is undefined it is used to set the "label" attribute of the
 new item.
 
-If I<detailed-action> is non-C<undefined> it is used to set the "action" and
+If I<detailed-action> is undefined it is used to set the "action" and
 possibly the "target" attribute of the new item.  See
 C<set-detailed-action()> for more information.
 
@@ -877,7 +870,7 @@ exactly as it sounds: the items from I<section> become a direct part of
 the menu that I<menu-item> is added to.
 
 Visual separation is typically displayed between two non-empty
-sections.  If I<label> is non-C<undefined> then it will be encorporated into
+sections. If I<label> is undefined then it will be encorporated into
 this visual indication.  This allows for labeled subsections of a
 menu.
 
