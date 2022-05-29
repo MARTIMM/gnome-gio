@@ -192,28 +192,23 @@ submethod BUILD ( *%options ) {
 
     # process all other options
     else {
-      my $no;
+      my N-GObject() $no;
       if %options<action>:exists {
-        #$no = %options<>;
-        #$no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new( %options<label>//Str, %options<action>);
       }
 
       elsif %options<section>:exists {
         $no = %options<section>;
-        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_section( %options<label>//Str, $no);
       }
 
       elsif %options<submenu>:exists {
         $no = %options<submenu>;
-        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_submenu( %options<label>//Str, $no);
       }
 
       elsif %options<model>:exists and %options<item-index>:exists {
         $no = %options<model>;
-        $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
         $no = _g_menu_item_new_from_model( $no, %options<item-index>);
       }
 
@@ -280,7 +275,6 @@ type
 
   method get-attribute ( Str $attribute, Str $format_string --> Int )
 
-=item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $attribute; the attribute name to query
 =item Str $format_string; a B<GVariant> format string @...: positional parameters, as per I<format-string>
 
@@ -310,7 +304,7 @@ If I<$expected-type> is specified and the attribute does not have this type, C<u
 Returns: the attribute value, or C<undefined>
 
   method get-attribute-value (
-    Str $attribute, N-GObject $expected_type
+    Str $attribute, N-GObject() $expected_type
     --> Gnome::Glib::Variant
   )
 
@@ -321,15 +315,12 @@ Returns: the attribute value, or C<undefined>
 =end pod
 
 method get-attribute-value (
-  Str $attribute, $expected_type --> Gnome::Glib::Variant
+  Str $attribute, N-GObject() $expected_type --> Gnome::Glib::Variant
 ) {
-  my $no = $expected_type;
-  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
-
   Gnome::Glib::Variant.new(
     :native-object(
       g_menu_item_get_attribute_value(
-        self._get-native-object-no-reffing, $attribute, $no
+        self._get-native-object-no-reffing, $attribute, $expected_type
       )
     )
   )
@@ -344,12 +335,9 @@ sub g_menu_item_get_attribute_value ( N-GObject $menu_item, gchar-ptr $attribute
 =begin pod
 =head2 get-link
 
-
 Queries the named I<link> on I<menu-item>.
 
-Returns: (transfer full): the link, or C<undefined>
-
-
+Returns: the link, or C<undefined>
 
   method get-link ( Str $link --> N-GObject )
 
@@ -463,7 +451,7 @@ probably more convenient for most uses.
 
 
 
-  method set-action-and-target-value ( Str $action, N-GObject $target_value )
+  method set-action-and-target-value ( Str $action, N-GObject() $target_value )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $action; (nullable): the name of the action for this item
@@ -471,10 +459,7 @@ probably more convenient for most uses.
 
 =end pod
 
-method set-action-and-target-value ( Str $action, N-GObject $target_value ) {
-  my $no = …;
-  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
-
+method set-action-and-target-value ( Str $action, N-GObject() $target_value ) {
   g_menu_item_set_action_and_target_value(
     self._get-native-object-no-reffing, $action, $target_value
   );
@@ -556,7 +541,7 @@ the I<value> B<GVariant> is floating, it is consumed.
 See also C<set-attribute()> for a more convenient way to do
 the same.
 
-  method set-attribute-value ( Str $attribute, N-GObject $value )
+  method set-attribute-value ( Str $attribute, N-GObject() $value )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $attribute; the attribute to set
@@ -564,10 +549,7 @@ the same.
 
 =end pod
 
-method set-attribute-value ( Str $attribute, N-GObject $value ) {
-#  my $no = …;
-#  $no .= _get-native-object-no-reffing unless $no ~~ N-GObject;
-
+method set-attribute-value ( Str $attribute, N-GObject() $value ) {
   g_menu_item_set_attribute_value(
     self._get-native-object-no-reffing, $attribute, $value
   );
@@ -599,7 +581,6 @@ the semantics of the action and target attributes.
 
   method set-detailed-action ( Str $detailed_action )
 
-=item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $detailed_action; the "detailed" action string
 
 =end pod
@@ -693,8 +674,7 @@ and '-'. Furthermore, the names must begin with a lowercase character,
 must not end with a '-', and must not contain consecutive dashes.
 
 
-
-  method set-link ( Str $link, N-GObject $model )
+  method set-link ( Str $link, N-GObject() $model )
 
 =item N-GObject $menu_item; a B<Gnome::Gio::MenuItem>
 =item Str $link; type of link to establish or unset
@@ -702,7 +682,7 @@ must not end with a '-', and must not contain consecutive dashes.
 
 =end pod
 
-method set-link ( Str $link, N-GObject $model ) {
+method set-link ( Str $link, N-GObject() $model ) {
 
   g_menu_item_set_link(
     self._get-native-object-no-reffing, $link, $model
@@ -822,7 +802,6 @@ sub _g_menu_item_new (
 =begin pod
 =head2 item-new-from-model
 
-
 Creates a B<Gnome::Gio::MenuItem> as an exact copy of an existing menu item in a
 B<Gnome::Gio::MenuModel>.
 
@@ -832,8 +811,9 @@ C<model-get-n-items()> first).
 Returns: a new B<Gnome::Gio::MenuItem>.
 
 
-
-  method item-new-from-model ( N-GObject $model, Int $item_index --> N-GObject )
+  method item-new-from-model (
+    N-GObject() $model, Int $item_index --> N-GObject
+  )
 
 =item N-GObject $model; a B<Gnome::Gio::MenuModel>
 =item Int $item_index; the index of an item in I<model>
@@ -848,8 +828,9 @@ method item-new-from-model ( N-GObject $model, Int $item_index --> N-GObject ) {
 }
 }}
 
-sub _g_menu_item_new_from_model ( N-GObject $model, gint $item_index --> N-GObject )
-  is symbol('g_menu_item_new_from_model')
+sub _g_menu_item_new_from_model (
+  N-GObject $model, gint $item_index --> N-GObject
+) is symbol('g_menu_item_new_from_model')
   is native(&gio-lib)
   { * }
 
