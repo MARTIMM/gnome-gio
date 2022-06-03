@@ -7,6 +7,8 @@ use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 use Gnome::Gio::SimpleAction;
 
+use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::N-GObject;
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
@@ -77,8 +79,21 @@ subtest 'Manipulations', {
   ), 'app.action(55)', '.print-detailed-name()';
 }
 
-#`{{
-##-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
+subtest 'Properties …', {
+#  my Gnome::Gio::SimpleAction $sa .= new;
+  my @r = $sa.get-properties( 'enabled', gboolean, 'name', Str);
+  is-deeply @r, [ 1, 'my-action'], 'properties: ' ~ (
+    'enabled', 'name'
+  ).join(', ');
+}
+
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
+
+#-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::SimpleAction', {
   class MyClass is Gnome::Gio::SimpleAction {
     method new ( |c ) {
@@ -97,59 +112,10 @@ subtest 'Inherit Gnome::Gio::SimpleAction', {
 #-------------------------------------------------------------------------------
 subtest 'Interface ...', {
 }
-}}
 
-#-------------------------------------------------------------------------------
-subtest 'Properties ...', {
-  use Gnome::GObject::Value;
-  use Gnome::GObject::Type;
-
-  #my Gnome::Gio::SimpleAction $sa .= new;
-
-  sub test-property (
-    $type, Str $prop, Str $routine, $value,
-    Bool :$approx = False, Bool :$is-local = False
-  ) {
-    my Gnome::GObject::Value $gv .= new(:init($type));
-    $sa.get-property( $prop, $gv);
-    my $gv-value = $gv."$routine"();
-    if $approx {
-      is-approx $gv-value, $value,
-        "property $prop, value: " ~ $gv-value;
-    }
-
-    # dependency on local settings might result in different values
-    elsif $is-local {
-      if $gv-value ~~ /$value/ {
-        like $gv-value, /$value/, "property $prop, value: " ~ $gv-value;
-      }
-
-      else {
-        ok 1, "property $prop, value: " ~ $gv-value;
-      }
-    }
-
-    else {
-      is $gv-value, $value,
-        "property $prop, value: " ~ $gv-value;
-    }
-    $gv.clear-object;
-  }
-
-  test-property( G_TYPE_BOOLEAN, 'enabled', 'get-boolean', True);
-  test-property( G_TYPE_STRING, 'name', 'get-string', 'my-action');
-
-  # example calls
-  #test-property( G_TYPE_STRING, 'label', 'get-string', '...');
-  #test-property( G_TYPE_FLOAT, 'xalign', 'get-float', 23e-2, :approx);
-}
-
-
-#`{{
 #-------------------------------------------------------------------------------
 subtest 'Themes ...', {
 }
-}}
 
 #`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circulat dependency
 #-------------------------------------------------------------------------------
@@ -225,7 +191,3 @@ subtest 'Signals ...', {
 
   is $p.result, 'done', 'emitter finished';
 }
-}}
-
-#-------------------------------------------------------------------------------
-done-testing;
