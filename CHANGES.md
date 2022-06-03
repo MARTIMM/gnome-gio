@@ -6,7 +6,7 @@
 * 2022-05-28 0.10.5:
   * setenv and unsetenv removed from AppLaunchContext.
   * Improved doc in MenuItem and SimpleAction.
-  *
+
 
 * 2022-05-23 0.10.4:
   * Module DesktopAppInfo added.
