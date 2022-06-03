@@ -9,6 +9,8 @@ use Gnome::Gio::Menu;
 use Gnome::Gio::MenuItem;
 use Gnome::Gio::MenuLinkIter;
 
+#use Gnome::N::N-GObject;
+use Gnome::N::GlibToRakuTypes;
 #use Gnome::N::X;
 #Gnome::N::debug(:on);
 
@@ -207,7 +209,12 @@ subtest 'Manipulations', {
 }}
 }
 
-#`{{
+#-------------------------------------------------------------------------------
+done-testing;
+
+=finish
+
+
 #-------------------------------------------------------------------------------
 subtest 'Inherit Gnome::Gio::Menu', {
   class MyClass is Gnome::Gio::Menu {
@@ -222,53 +229,6 @@ subtest 'Inherit Gnome::Gio::Menu', {
 
   my MyClass $mgc .= new;
   isa-ok $mgc, Gnome::Gio::Menu, '.new()';
-}
-
-#-------------------------------------------------------------------------------
-subtest 'Interface ...', {
-}
-
-#-------------------------------------------------------------------------------
-subtest 'Properties ...', {
-  use Gnome::GObject::Value;
-  use Gnome::GObject::Type;
-
-  #my Gnome::Gio::Menu $m .= new;
-
-  sub test-property (
-    $type, Str $prop, Str $routine, $value,
-    Bool :$approx = False, Bool :$is-local = False
-  ) {
-    my Gnome::GObject::Value $gv .= new(:init($type));
-    $m.get-property( $prop, $gv);
-    my $gv-value = $gv."$routine"();
-    if $approx {
-      is-approx $gv-value, $value,
-        "property $prop, value: " ~ $gv-value;
-    }
-
-    # dependency on local settings might result in different values
-    elsif $is-local {
-      if $gv-value ~~ /$value/ {
-        like $gv-value, /$value/, "property $prop, value: " ~ $gv-value;
-      }
-
-      else {
-        ok 1, "property $prop, value: " ~ $gv-value;
-      }
-    }
-
-    else {
-      is $gv-value, $value,
-        "property $prop, value: " ~ $gv-value;
-    }
-    $gv.clear-object;
-  }
-
-  # example calls
-  #test-property( G_TYPE_BOOLEAN, 'homogeneous', 'get-boolean', 0);
-  #test-property( G_TYPE_STRING, 'label', 'get-string', '...');
-  #test-property( G_TYPE_FLOAT, 'xalign', 'get-float', 23e-2, :approx);
 }
 
 #-------------------------------------------------------------------------------
@@ -346,7 +306,3 @@ subtest 'Signals ...', {
 
   is $p.result, 'done', 'emitter finished';
 }
-}}
-
-#-------------------------------------------------------------------------------
-done-testing;
