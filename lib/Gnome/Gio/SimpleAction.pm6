@@ -44,7 +44,6 @@ use Gnome::GObject::Object;
 
 use Gnome::Gio::Action;
 
-use Gnome::Gio::Action;
 
 #-------------------------------------------------------------------------------
 unit class Gnome::Gio::SimpleAction:auth<github:MARTIMM>:ver<0.1.0>;
