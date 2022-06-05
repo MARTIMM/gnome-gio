@@ -350,7 +350,7 @@ Sets or unsets the "action" and "target" attributes of I<menu_item>.
 
 If I<action> is C<undefined> then both the "action" and "target" attributes are unset (and I<format_string> is ignored along with the positional parameters).
 
-If I<action> is non-C<undefined> then the "action" attribute is set. I<format_string> is then inspected. If it is non-C<undefined> then the proper position parameters are collected to create a B<Gnome::Gio::Variant> instance to use as the target value. If it is C<undefined> then the positional parameters are ignored and the "target" attribute is unset.
+If I<action> is defined then the "action" attribute is set. I<format_string> is then inspected. If it is defined then the proper position parameters are collected to create a B<Gnome::Gio::Variant> instance to use as the target value. If it is C<undefined> then the positional parameters are ignored and the "target" attribute is unset.
 
 See also C<set_action_and_target_value()> for an equivalent call that directly accepts a B<Gnome::Gio::Variant>. See C<set_detailed_action()> for a more convenient version that works with string-typed targets.
 
@@ -381,7 +381,7 @@ Sets or unsets the "action" and "target" attributes of I<menu_item>.
 
 If I<action> is C<undefined> then both the "action" and "target" attributes are unset (and I<target_value> is ignored).
 
-If I<action> is non-C<undefined> then the "action" attribute is set. The "target" attribute is then set to the value of I<target_value> if it is non-C<undefined> or unset otherwise.
+If I<action> is defined then the "action" attribute is set. The "target" attribute is then set to the value of I<target_value> if it is defined or unset otherwise.
 
 Normal menu items (ie: not submenu, section or other custom item types) are expected to have the "action" attribute set to identify the action that they are associated with. The state type of the action help to determine the disposition of the menu item. See B<Gnome::Gio::Action> and B<Gnome::Gio::ActionGroup> for an overview of actions.
 
@@ -420,7 +420,7 @@ Sets or unsets an attribute on I<menu_item>.
 
 The attribute to set or unset is specified by I<attribute>. This can be one of the standard attribute names C<G_MENU_ATTRIBUTE_LABEL>, C<G_MENU_ATTRIBUTE_ACTION>, C<G_MENU_ATTRIBUTE_TARGET>, or a custom attribute name. Attribute names are restricted to lowercase characters, numbers and '-'. Furthermore, the names must begin with a lowercase character, must not end with a '-', and must not contain consecutive dashes.
 
-If I<format_string> is non-C<undefined> then the proper position parameters are collected to create a B<Gnome::Gio::Variant> instance to use as the attribute value. If it is C<undefined> then the positional parameterrs are ignored and the named attribute is unset.
+If I<format_string> is defined then the proper position parameters are collected to create a B<Gnome::Gio::Variant> instance to use as the attribute value. If it is C<undefined> then the positional parameterrs are ignored and the named attribute is unset.
 
 See also C<set_attribute_value()> for an equivalent call that directly accepts a B<Gnome::Gio::Variant>.
 
@@ -451,7 +451,7 @@ The attribute to set or unset is specified by I<attribute>. This can be one of t
 
 must consist only of lowercase ASCII characters, digits and '-'.
 
-If I<value> is non-C<undefined> then it is used as the new value for the attribute. If I<value> is C<undefined> then the attribute is unset. If the I<value> B<Gnome::Gio::Variant> is floating, it is consumed.
+If I<value> is defined then it is used as the new value for the attribute. If I<value> is C<undefined> then the attribute is unset. If the I<value> B<Gnome::Gio::Variant> is floating, it is consumed.
 
 See also C<set_attribute()> for a more convenient way to do the same.
 
@@ -477,7 +477,7 @@ sub g_menu_item_set_attribute_value (
 
 Sets the "action" and possibly the "target" attribute of I<menu_item>.
 
-The format of I<detailed_action> is the same format parsed by C<g_action_parse_detailed_name()>.
+The format of I<detailed_action> is the same format parsed by C<Gnome::Gio::Action.parse_detailed_name()>.
 
 See C<set_action_and_target()> or C<set_action_and_target_value()> for more flexible (but slightly less convenient) alternatives.
 
@@ -504,7 +504,7 @@ sub g_menu_item_set_detailed_action (
 
 Sets (or unsets) the icon on I<menu_item>.
 
-This call is the same as calling C<g_icon_serialize()> and using the result as the value to C<set_attribute_value()> for C<G_MENU_ATTRIBUTE_ICON>.
+This call is the same as calling C<Gnome::Gio::Icon.serialize()> and using the result as the value to C<set_attribute_value()> for C<G_MENU_ATTRIBUTE_ICON>.
 
 This API is only intended for use with "noun" menu items; things like bookmarks or applications in an "Open With" menu. Don't use it on menu items corresponding to verbs (eg: stock icons for 'Save' or 'Quit').
 
@@ -531,7 +531,7 @@ sub g_menu_item_set_icon (
 
 Sets or unsets the "label" attribute of I<menu_item>.
 
-If I<label> is non-C<undefined> it is used as the label for the menu item. If it is C<undefined> then the label attribute is unset.
+If I<label> is defined it is used as the label for the menu item. If it is C<undefined> then the label attribute is unset.
 
   method set-label ( Str $label )
 
@@ -552,7 +552,7 @@ sub g_menu_item_set_label (
 =begin pod
 =head2 set-link
 
-Creates a link from I<menu_item> to I<model> if non-C<undefined>, or unsets it.
+Creates a link from I<menu_item> to I<model> if defined, or unsets it.
 
 Links are used to establish a relationship between a particular menu item and another menu. For example, C<G_MENU_LINK_SUBMENU> is used to associate a submenu with a particular menu item, and C<G_MENU_LINK_SECTION> is used to create a section. Other types of link can be used, but there is no guarantee that clients will be able to make sense of them. Link types are restricted to lowercase characters, numbers and '-'. Furthermore, the names must begin with a lowercase character, must not end with a '-', and must not contain consecutive dashes.
 
@@ -601,7 +601,7 @@ sub g_menu_item_set_section (
 
 Sets or unsets the "submenu" link of I<menu_item> to I<submenu>.
 
-If I<submenu> is non-C<undefined>, it is linked to. If it is C<undefined> then the link is unset.
+If I<submenu> is defined, it is linked to. If it is C<undefined> then the link is unset.
 
 The effect of having one menu appear as a submenu of another is exactly as it sounds.
 
@@ -627,9 +627,9 @@ sub g_menu_item_set_submenu (
 
 Creates a new B<Gnome::Gio::MenuItem>.
 
-If I<label> is non-C<undefined> it is used to set the "label" attribute of the new item.
+If I<label> is defined it is used to set the "label" attribute of the new item.
 
-If I<detailed_action> is non-C<undefined> it is used to set the "action" and possibly the "target" attribute of the new item. See C<set_detailed_action()> for more information.
+If I<detailed_action> is defined it is used to set the "action" and possibly the "target" attribute of the new item. See C<set_detailed_action()> for more information.
 
 Returns: a new B<Gnome::Gio::MenuItem>
 
@@ -681,7 +681,7 @@ This is a convenience API around C<new()> and C<set_section()>.
 
 The effect of having one menu appear as a section of another is exactly as it sounds: the items from I<section> become a direct part of the menu that I<menu_item> is added to.
 
-Visual separation is typically displayed between two non-empty sections. If I<label> is non-C<undefined> then it will be encorporated into this visual indication. This allows for labeled subsections of a menu.
+Visual separation is typically displayed between two non-empty sections. If I<label> is defined then it will be encorporated into this visual indication. This allows for labeled subsections of a menu.
 
 As a simple example, consider a typical "Edit" menu from a simple program. It probably contains an "Undo" and "Redo" item, followed by a separator, followed by "Cut", "Copy" and "Paste".
 
