@@ -61,36 +61,30 @@ my Bool $signals-added = False;
 
 Create a new stateless SimpleAction object.
 
-  multi method new ( Str :$name!, N-GObject :$parameter-type )
+  multi method new ( Str :$name!, N-GObject() :$parameter-type? )
 
-=item Str $name; the name of the action
-=item N-GObject $parameter_type; the type of parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::Variant> object.
+=item $name; the name of the action
+=item $parameter_type; the type of parameter that will be passed to handlers for the I<activate> signal. The $parameter_type is a native B<Gnome::Glib::Variant> object.
 
 
-=head3 :name, :parameter-type, :state
+=head3 :name, :state, :parameter-type
 
-Create a new stateful SimpleAction object. All future state values must have the same B<N-GObject> as the initial I<$state> variant object.
+Create a new stateful SimpleAction object. All future state values must have the same type as the initial I<$state> variant object.
 
   multi method new (
-    Str :$name!, N-GObject :$parameter_type, N-GObject :$state!
+    Str :$name!, N-GObject() :$state!, N-GObject() :$parameter_type?
   )
 
-=item  Str  $name; the name of the action
-=item N-GObject $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal, or C<undefined> for no parameter. The $parameter_type is a native B<Gnome::Glib::VariantType> object.
-=item N-GObject $state; the initial state value of the action. The state is a native B<Gnome::Glib::Variant> object.
+=item $name; the name of the action
+=item $parameter_type; the type of the parameter that will be passed to handlers for the  I<activate> signal. The $parameter_type is a native B<Gnome::Glib::VariantType> object.
+=item $state; the initial state value of the action. The state is a native B<Gnome::Glib::Variant> object.
 
 
 =head3 :native-object
 
 Create a SimpleAction object using a native object from elsewhere. See also B<Gnome::GObject::Object>.
 
-  multi method new ( N-GObject :$native-object! )
-
-=begin comment
-Create a SimpleAction object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
-
-  multi method new ( Str :$build-id! )
-=end comment
+  multi method new ( N-GObject() :$native-object! )
 
 =end pod
 
@@ -123,12 +117,7 @@ submethod BUILD ( *%options ) {
     else {
       my $no;
       if ? %options<name> {
-        my N-GObject() $parameter-type = N-GObject;
-        if %options<parameter-type>.defined {
-          $parameter-type = %options<parameter-type>;
-#          $parameter-type .= _get-native-object-no-reffing
-#            unless $parameter-type ~~ N-GObject;
-        }
+        my N-GObject() $parameter-type = %options<parameter-type> // N-GObject;
 
         if %options<state>.defined {
           my N-GObject() $state = %options<state>;
@@ -213,7 +202,7 @@ This directly updates the 'state' property to the given value.
 
 This should only be called by the implementor of the action. Users of the action should not attempt to directly modify the 'state' property. Instead, they should call C<Gnome::Gio::Action.change-state()> to request the change.
 
-If the I<$value> GVariant is floating, it is consumed.
+=comment If the I<$value> B<Gnome::Glib::Variant> is floating, it is consumed.
 
   method set-state ( N-GObject() $value )
 
@@ -312,17 +301,11 @@ sub _g_simple_action_new_stateful (
 
 Indicates that the action was just activated.
 
-I<parameter> will always be of the expected type, i.e. the parameter type
-specified when the action was created. If an incorrect type is given when
-activating the action, this signal is not emitted.
+I<$parameter> will always be of the expected type, i.e. the parameter type specified when the action was created. If an incorrect type is given when activating the action, this signal is not emitted.
 
-Since GLib 2.40, if no handler is connected to this signal then the
-default behaviour for boolean-stated actions with a C<undefined> parameter
-type is to toggle them via the I<change-state> signal.
-For stateful actions where the state type is equal to the parameter
-type, the default is to forward them directly to
-I<change-state>.  This should allow almost all users
-of B<Gnome::Gio::SimpleAction> to connect only one handler or the other.
+If no handler is connected to this signal then the default behaviour for boolean-stated actions with an undefined parameter type is to toggle them via the I<change-state> signal.
+
+For stateful actions where the state type is equal to the parameter type, the default is to forward them directly to I<change-state>. This should allow almost all users of B<Gnome::Gio::SimpleAction> to connect only one handler or the other.
 
   method handler (
     N-GObject $parameter,
@@ -342,19 +325,11 @@ of B<Gnome::Gio::SimpleAction> to connect only one handler or the other.
 =comment #TS:1:change-state:
 =head2 change-state
 
-Indicates that the action just received a request to change its
-state.
+Indicates that the action just received a request to change its state.
 
-I<value> will always be of the correct state type, i.e. the type of the
-initial state passed to C<new_stateful()>. If an incorrect
-type is given when requesting to change the state, this signal is not
-emitted.
+I<value> will always be of the correct state type, i.e. the type of the initial state passed to a C<new(:state, …)>. If an incorrect type is given when requesting to change the state, this signal is not emitted.
 
-If no handler is connected to this signal then the default
-behaviour is to call C<set_state()> to set the state
-to the requested value. If you connect a signal handler then no
-default action is taken. If the state should change then you must
-call C<set_state()> from the handler.
+If no handler is connected to this signal then the default behaviour is to call C<set-state()> to set the state to the requested value. If you connect a signal handler then no default action is taken. If the state should change then you must call C<set-state()> from the handler.
 
 =begin comment
 An example of a 'change-state' handler:
