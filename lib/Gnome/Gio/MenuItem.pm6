@@ -78,7 +78,7 @@ Creates a menu item. Call one of C<set-action-and-target-value>, C<set-detailed-
 
   multi method new ( Str :$label! )
 
-=item $label; the section label, or C<undefined>
+=item $label; the menu item label
 
 
 =head3 :label, :action
@@ -90,6 +90,9 @@ If I<$label> is defined, then it is used to set the "label" attribute of the new
 I<$action> is used to set the "action" and possibly the "target" attribute of the new item.  See C<set-detailed-action()> for more information.
 
   multi method new ( Str :$label?, Str :$action! )
+
+=item $label; the menu item label, or C<undefined>
+=item $action; the detailed action string
 
 
 =head3 :model, :item-index
@@ -106,15 +109,15 @@ I<$item-index> must be valid (ie: be sure to call C<model-get-n-items()> first).
 
 Creates a new B<Gnome::Gio::MenuItem> representing a section.
 
-This is a convenience API around C<new()> followed by C<set-section()>.
+This is a convenience API around C<new(:label<…>)> followed by C<set-section()>.
 
-The effect of having one menu appear as a section of another is exactly as it sounds: the items from I<$section> become a direct part of the menu that I<menu-item> is added to.
+The effect of having one menu appear as a section of another is exactly as it sounds: the items from I<$section> become a direct part of the menu that this menu item is added to.
 
-Visual separation is typically displayed between two non-empty sections.  If I<$label> is defined then it will be encorporated into this visual indication.  This allows for labeled subsections of a menu.
+Visual separation is typically displayed between two non-empty sections.  If I<$label> is defined then it will be encorporated into this visual indication. This allows for labeled subsections of a menu.
 
 As a simple example, consider a typical "Edit" menu from a simple program.  It probably contains an "Undo" and "Redo" item, followed by a separator, followed by "Cut", "Copy" and "Paste".
 
-This would be accomplished by creating three B<Gnome::Gio::Menu> instances.  The first would be populated with the "Undo" and "Redo" items, and the second with the "Cut", "Copy" and "Paste" items.  The first and second menus would then be added as submenus of the third.  In XML format, this would look something like the following:
+This would be accomplished by creating three B<Gnome::Gio::Menu> instances.  The first would be populated with the "Undo" and "Redo" items, and the second with the "Cut", "Copy" and "Paste" items.  The first and second menus would then be added as submenus of the third. In XML format, this would look something like the following:
 
   <menu id='edit-menu'>
     <section>
@@ -129,7 +132,9 @@ This would be accomplished by creating three B<Gnome::Gio::Menu> instances.  The
   </menu>
 
 
-The following example is exactly equivalent.  It is more illustrative of the exact relationship between the menus and items (keeping in mind that the 'link' element defines a new menu that is linked to the containing one).  The style of the second example is more verbose and difficult to read (and therefore not recommended except for the purpose of understanding what is really going on).
+The following example is exactly equivalent. It is more illustrative of the exact relationship between the menus and items (keeping in mind that the 'link' element defines a new menu that is linked to the containing one).
+
+The style of the second example is more verbose and difficult to read (and therefore not recommended except for the purpose of understanding what is really going on).
 
   <menu id='edit-menu'>
     <item>
@@ -151,6 +156,9 @@ The method is defined as
 
   multi method new ( Str :$label?, N-GObject :$section! )
 
+=item $label; the menu item label, or C<undefined>
+=item $section; a B<Gnome::Gio::MenuModel> with the items of the section
+
 
 =head3 :submenu, :label
 
@@ -159,6 +167,10 @@ Creates a new B<Gnome::Gio::MenuItem> representing a submenu.
 This is a convenience API around C<new()> followed by C<set-submenu()>.
 
   method item-new-submenu ( Str :$label?, N-GObject :$submenu! )
+
+=item $label; the section label, or C<undefined>
+=item $submenu; a B<Gnome::Gio::MenuModel> with the items of the submenu
+
 
 =head3 :native-object
 
@@ -172,6 +184,7 @@ Create a Menu object using a native object from elsewhere. See also B<Gnome::N::
 Create a Menu object using a native object returned from a builder. See also B<Gnome::GObject::Object>.
 
   multi method new ( Str :$build-id! )
+
 
 =end pod
 
