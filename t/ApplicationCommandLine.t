@@ -114,7 +114,7 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::ApplicationCommandLine :$_widget, gulong :$_handler-id
+      Gnome::Gio::ApplicationCommandLine() :$_native-object, gulong :$_handler-id
       # --> ...
     ) {
 

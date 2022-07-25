@@ -130,7 +130,7 @@ subtest 'Signals ...', {
 
     method ah (
       N-GObject $parameter,
-      Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
+      Gnome::Gio::SimpleAction() :$_native-object, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($parameter));
       is $v.print(False), '43', 'activation parameter ok';
@@ -140,7 +140,7 @@ subtest 'Signals ...', {
 
     method ch (
       N-GObject $value,
-      Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
+      Gnome::Gio::SimpleAction() :$_native-object, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($value));
       is $v.print(False), '49', 'activation parameter ok';

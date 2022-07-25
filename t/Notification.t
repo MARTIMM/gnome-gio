@@ -111,7 +111,7 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::Notification :$_widget, gulong :$_handler-id
+      Gnome::Gio::Notification() :$_native-object, gulong :$_handler-id
       # --> ...
     ) {
 

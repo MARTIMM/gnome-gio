@@ -128,7 +128,7 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::FileIcon :$_widget, gulong :$_handler-id
+      Gnome::Gio::FileIcon() :$_native-object, gulong :$_handler-id
       # --> ...
     ) {
 

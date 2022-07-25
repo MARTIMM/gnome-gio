@@ -179,7 +179,7 @@ subtest 'Signals ...', {
     has Bool $!signal-processed = False;
 
     method application-activate (
-      Gnome::Gio::Application :$_widget, gulong :$_handler-id
+      Gnome::Gio::Application() :$_native-object, gulong :$_handler-id
     ) {
       $_widget.hold;
       isa-ok $_widget, Gnome::Gio::Application;
@@ -189,7 +189,7 @@ subtest 'Signals ...', {
 
     method application-open (
       CArray[N-GFile] $files, Int $n-files, Str $hint,
-      Gnome::Gio::Application :$_widget, gulong :$_handler-id
+      Gnome::Gio::Application() :$_native-object, gulong :$_handler-id
     ) {
       $_widget.hold;
       isa-ok $_widget, Gnome::Gio::Application;
@@ -202,7 +202,7 @@ subtest 'Signals ...', {
 
     method action-activate (
       N-GObject $parameter,
-      Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
+      Gnome::Gio::SimpleAction() :$_native-object, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($parameter));
       is $v.print(False), '43', 'activation parameter ok';
@@ -212,7 +212,7 @@ subtest 'Signals ...', {
 
     method change-state-activate (
       N-GObject $value,
-      Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
+      Gnome::Gio::SimpleAction() :$_native-object, gulong :$_handler-id
     ) {
       my Gnome::Glib::Variant $v .= new(:native-object($value));
       is $v.print(False), '49', 'activation parameter ok';

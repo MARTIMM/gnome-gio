@@ -111,7 +111,7 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::AppInfoMonitor :$_widget, gulong :$_handler-id
+      Gnome::Gio::AppInfoMonitor() :$_native-object, gulong :$_handler-id
       # --> ...
     ) {
 
@@ -170,4 +170,3 @@ subtest 'Signals ...', {
 
   is $p.result, 'done', 'emitter finished';
 }
-

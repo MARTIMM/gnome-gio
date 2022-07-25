@@ -166,7 +166,7 @@ subtest 'Signals ...', {
 
     method a-added (
       Str $name,
-      Gnome::Gio::SimpleActionGroup :$_widget, gulong :$_handler-id
+      Gnome::Gio::SimpleActionGroup() :$_native-object, gulong :$_handler-id
     ) {
       ok $name ~~ any(<MyActionTest11 MyActionTest12>), "action name $name ok";
       isa-ok $_widget, Gnome::Gio::SimpleActionGroup;
@@ -174,11 +174,10 @@ subtest 'Signals ...', {
     }
 
     method action-activate (
-      N-GObject $parameter,
-      Gnome::Gio::SimpleAction :$_widget, gulong :$_handler-id
+      Gnome::Glib::Variant() $parameter,
+      Gnome::Gio::SimpleAction() :$_native-object, gulong :$_handler-id
     ) {
-      my Gnome::Glib::Variant $v .= new(:native-object($parameter));
-      is $v.print(False), '43', 'activation parameter ok';
+      is $parameter.print(False), '43', 'activation parameter ok';
       isa-ok $_widget, Gnome::Gio::SimpleAction;
       $!signal-processed = True;
     }

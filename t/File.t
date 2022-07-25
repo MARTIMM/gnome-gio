@@ -203,7 +203,7 @@ subtest 'Signals ...', {
 
     method ... (
       'any-args',
-      Gnome::Gio::File :$_widget, gulong :$_handler-id
+      Gnome::Gio::File() :$_native-object, gulong :$_handler-id
       # --> ...
     ) {
 
