@@ -1,4 +1,7 @@
 ## Release notes
+* 2022-10-13 0.10.7
+  * File extensions renamed
+
 * 2022-07-25 0.10.6
   * Remove dependency on :_widget in event callback handlers
 
