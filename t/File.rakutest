@@ -69,22 +69,22 @@ subtest 'Manipulations', {
     diag $f.get-uri-scheme;
   }, '.has-uri-scheme()';
 
-  my Gnome::Gio::File $f2 = $f.get-child-rk('2.62/GFile.html');
+  my Gnome::Gio::File() $f2 = $f.get-child('2.62/GFile.html');
   is $f2.get-uri, 'https://developer.gnome.org/gio/2.62/GFile.html',
-     '.get-child-rk()';
+     '.get-child()';
 
   $f.clear-object;
   $f2.clear-object;
   $f .= new(:path<t/data/g-resources>);
-  $f2 = $f.get-child-for-display-name-rk('rtest');
+  $f2 = $f.get-child-for-display-name('rtest');
   like $f2.get-path, / 't/data/g-resources/rtest' /,
-      '.get-child-for-display-name-rk()';
+      '.get-child-for-display-name()';
   ok $f2.has-parent($f), '.has-parent()';
   ok $f2.has-prefix($f), '.has-prefix()';
 
   $f2.clear-object;
-  $f2 = $f.get-parent-rk;
-  like $f2.get-path, / 't/data' /, '.get-parent-rk()';
+  $f2 = $f.get-parent;
+  like $f2.get-path, / 't/data' /, '.get-parent()';
   like $f2.get-parse-name, / 't/data' /, '.get-parse-name()';
 
   $f2.clear-object;

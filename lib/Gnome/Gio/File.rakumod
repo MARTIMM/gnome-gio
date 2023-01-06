@@ -247,11 +247,36 @@ submethod BUILD ( *%options ) {
 # no pod. user does not have to know about it.
 method _fallback ( $native-sub is copy --> Callable ) {
 
+  my Str $new-patt = $native-sub.subst( '_', '-', :g);
+
   my Callable $s;
   try { $s = &::("g_file_$native-sub"); };
-# check for gtk_, gdk_, g_, pango_, cairo_ !!!
-  try { $s = &::("gtk_$native-sub"); } unless ?$s;
-  try { $s = &::($native-sub); } if !$s and $native-sub ~~ m/^ 'gtk_' /;
+  if ?$s {
+    Gnome::N::deprecate(
+      "gtk_application_$native-sub", $new-patt, '0.10.8', '0.11.0'
+    );
+  }
+
+  else {
+    # TODO; check for gtk_, gdk_, g_, pango_, cairo_ !!!
+    try { $s = &::("gtk_$native-sub"); } unless ?$s;
+    if ?$s {
+      Gnome::N::deprecate(
+        "gtk_$native-sub", $new-patt.subst('application-'),
+        '0.10.8', '0.11.0'
+      );
+    }
+
+    else {
+      try { $s = &::($native-sub); } if !$s and $native-sub ~~ m/^ 'gtk_' /;
+      if ?$s {
+        Gnome::N::deprecate(
+          "$native-sub", $new-patt.subst('gtk-application-'),
+          '0.10.8', '0.11.0'
+        );
+      }
+    }
+  }
 
   self._set-class-name-of-sub('GFile');
   $s = callsame unless ?$s;
@@ -1182,9 +1207,8 @@ sub g_file_get_basename (
 
 #-------------------------------------------------------------------------------
 #TM:1:get-child:
-#TM:1:get-child-rk:
 =begin pod
-=head2 get-child, get-child-rk
+=head2 get-child
 
 Gets a child of this I<File> with basename equal to I<name>.
 
@@ -1195,7 +1219,6 @@ This call does no blocking I/O.
 Returns: a B<Gnome::Gio::File> to a child specified by I<name>. Free the returned object with C<.clear-object()>.
 
   method get-child ( Str $name --> N-GFile )
-  method get-child-rk ( Str $name --> Gnome::Gio::File )
 
 =item Str $name; (type filename): string containing the child's basename
 =end pod
@@ -1205,6 +1228,11 @@ method get-child ( Str $name --> N-GFile ) {
 }
 
 method get-child-rk ( Str $name --> Gnome::Gio::File ) {
+  Gnome::N::deprecate(
+    'get-child-rk', 'coercing from get-child',
+    '0.10.8', '0.11.0'
+  );
+
   Gnome::Gio::File.new(
     :native-object(g_file_get_child( self._get-native-object-no-reffing, $name))
   )
@@ -1217,30 +1245,21 @@ sub g_file_get_child (
 
 #-------------------------------------------------------------------------------
 #TM:1:get-child-for-display-name:
-#TM:1:get-child-for-display-name-rk:
 =begin pod
-=head2 get-child-for-display-name, get-child-for-display-name-rk
+=head2 get-child-for-display-name
 
 Gets the child for a given I<display-name> (i.e. a UTF-8 version of the name). If this function fails, it returns C<undefined> and I<error> will be set. This is very useful when constructing a B<Gnome::Gio::File> for a new file and the user entered the filename in the user interface, for instance when you select a directory and type a filename in the file selector.
 
-This call does no blocking I/O.
-
 Returns: a native File object to the specified child, or C<undefined> if the display name couldn't be converted.
 
-For the C<-rk()> version, when an error takes place, an error object is set and the returned object is invalid. The error is stored in the attribute C<$.last-error>. Free the returned object with C<clear-object()>.
+When an error takes place, the error object is set and the returned object is invalid. The error is stored in the attribute C<$.last-error>. Free the returned object with C<clear-object()>.
 
-  method get-child-for-display-name (
-    Str $display_name --> N-GFile
-  )
-
-  method get-child-for-display-name-rk (
-    Str $display_name --> Gnome::Gio::File
-  )
+  method get-child-for-display-name ( Str $display-name --> N-GFile )
 
 =head3 Example
 
   my Gnome::Gio::File $f .= new(:path<t/data/g-resources>);
-  my Gnome::Gio::File $f2 = $f.get-child-for-display-name-rk('rtest')
+  my Gnome::Gio::File() $f2 = $f.get-child-for-display-name('rtest')
   die $f.last-error.message unless $f2.is-valid;
 
 
@@ -1250,17 +1269,24 @@ For the C<-rk()> version, when an error takes place, an error object is set and 
 method get-child-for-display-name ( Str $display_name --> N-GFile ) {
   my CArray[N-GError] $error .= new(N-GError);
 
-  g_file_get_child_for_display_name(
+  my N-GFile $no = g_file_get_child_for_display_name(
     self._get-native-object-no-reffing, $display_name, $error
   );
 
   $!last-error.clear-object;
   $!last-error = Gnome::Glib::Error.new(:native-object($error[0]));
+  
+  $no
 }
 
 method get-child-for-display-name-rk (
   Str $display_name --> Gnome::Gio::File
 ) {
+  Gnome::N::deprecate(
+    'get-child-for-display-name-rk', 'coercing from get-child-for-display-name',
+    '0.10.8', '0.11.0'
+  );
+
   my CArray[N-GError] $error .= new(N-GError);
 
   my N-GFile $no = g_file_get_child_for_display_name(
@@ -1279,9 +1305,8 @@ sub g_file_get_child_for_display_name (
 
 #-------------------------------------------------------------------------------
 #TM:1:get-parent:
-#TM:1:get-parent-rk:
 =begin pod
-=head2 get-parent, get-parent-rk
+=head2 get-parent
 
 Gets the parent directory for the I<file>. If the I<file> represents the root directory of the file system, then C<undefined> will be returned.
 
@@ -1290,7 +1315,6 @@ This call does no blocking I/O.
 Returns: a B<Gnome::Gio::File> structure to the parent of the given B<Gnome::Gio::File> or C<undefined> if there is no parent. Free the returned object with C<clear-object()>.
 
   method get-parent ( --> N-GFile )
-  method get-parent-rk ( --> Gnome::Gio::File )
 
 =end pod
 
@@ -1299,6 +1323,11 @@ method get-parent ( --> N-GFile ) {
 }
 
 method get-parent-rk ( --> Gnome::Gio::File ) {
+  Gnome::N::deprecate(
+    'get-parent-rk', 'coercing from get-parent',
+    '0.10.8', '0.11.0'
+  );
+
   Gnome::Gio::File.new(
     :native-object(g_file_get_parent(self._get-native-object-no-reffing))
   )
@@ -2892,25 +2921,6 @@ method query-info (
 
   $no
 }
-
-#`{{
-method query-info-rk (
-  Str $attributes, GFlag $flags, N-GObject $cancellable is copy
-  -->Gnome::Gio::FileInfo
-) {
-  $cancellable .= _get-native-object-no-reffing unless $cancellable ~~ N-GObject;
-  my CArray[N-GError] $error .= new(N-GError);
-
-  my N-GObject $no = g_file_query_info(
-    self._get-native-object-no-reffing, $attributes, $flags, $cancellable, $error
-  );
-
-  $!last-error.clear-object;
-  $!last-error .= new(?$no ?? N-GError !! $error[0]);
-
-  $no
-}
-}}
 
 sub g_file_query_info (
   N-GFile $file, gchar-ptr $attributes, GFlag $flags, N-GObject $cancellable,

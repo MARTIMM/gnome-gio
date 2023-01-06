@@ -39,27 +39,6 @@ B<Gnome::Gio::Icon>, B<Gnome::Gio::LoadableIcon>
 ![](plantuml/FileIcon.svg)
 
 
-=begin comment
-=head2 Inheriting this class
-
-Inheriting is done in a special way in that it needs a call from new() to get the native object created by the class you are inheriting from.
-
-  use Gnome::Gio::FileIcon;
-
-  unit class MyGuiClass;
-  also is Gnome::Gio::FileIcon;
-
-  submethod new ( |c ) {
-    # let the Gnome::Gio::FileIcon class process the options
-    self.bless( :GFileIcon, |c);
-  }
-
-  submethod BUILD ( ... ) {
-    ...
-  }
-
-=end comment
-
 
 =comment head2 Example
 
@@ -79,7 +58,7 @@ use Gnome::Gio::File;
 #use Gnome::Gio::Enums;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::FileIcon:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::FileIcon:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::Icon;
 
@@ -114,7 +93,6 @@ Create a FileIcon object using a native object from elsewhere. See also B<Gnome:
 
 =end pod
 
-# TM:0:new():inheriting
 #TM:1:new(:file):
 #TM:4:new(:native-object):Gnome::N::TopLevelClassSupport
 submethod BUILD ( *%options ) {
@@ -137,6 +115,11 @@ submethod BUILD ( *%options ) {
         $no = _g_file_icon_new($no);
       }
 
+      #TODO; get an error when trying to retrieve as a FileIcon;
+      # (Image.rakutest:48164): GLib-GIO-CRITICAL **: 12:11:29.669: 
+      #g_file_icon_get_file: assertion 'G_IS_FILE_ICON (icon)' failed
+
+      # call sub from Icon module
       elsif ? %options<string> {
         $no = self._g_icon_new_for_string(%options<string>);
       }
@@ -178,16 +161,14 @@ submethod BUILD ( *%options ) {
 
 #-------------------------------------------------------------------------------
 #TM:1:get-file:
-#TM:1:get-file-rk:
 =begin pod
-=head2 get-file, get-file-rk
+=head2 get-file
 
 Gets the B<Gnome::Gio::File> associated with the given I<icon>.
 
 Returns: a B<Gnome::Gio::File>, or C<undefined>.
 
   method get-file ( --> N-GFile )
-  method get-file-rk ( --> Gnome::Gio::File )
 
 =end pod
 
@@ -196,6 +177,11 @@ method get-file ( --> N-GFile ) {
 }
 
 method get-file-rk ( --> Gnome::Gio::File ) {
+  Gnome::N::deprecate(
+    'get-file-rk', 'coercing from get-file',
+    '0.10.8', '0.11.0'
+  );
+
   Gnome::Gio::File.new(
     :native-object(g_file_icon_get_file(self._get-native-object-no-reffing))
   )
