@@ -82,7 +82,7 @@ Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fai
 
   method new ( Str :$string! )
 
-=item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
+=item $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
 
 
 =head3 :native-object
@@ -204,7 +204,7 @@ Returns:  (type GFileIcon): a B<Gnome::Gio::Icon> for the given I<file>, or C<un
 
   method _g_file_icon_new ( N-GObject $file --> N-GObject )
 
-=item N-GObject $file; a B<Gnome::Gio::File>.
+=item $file; a B<Gnome::Gio::File>.
 =end pod
 }}
 

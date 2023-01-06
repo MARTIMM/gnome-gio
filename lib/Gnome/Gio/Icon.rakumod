@@ -54,7 +54,7 @@ use Gnome::Glib::Error;
 #use Gnome::Glib::Variant;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::Icon:auth<github:MARTIMM>:ver<0.1.0>;
+unit role Gnome::Gio::Icon:auth<github:MARTIMM>;
 
 has Gnome::Glib::Error $.last-error;
 
@@ -68,12 +68,12 @@ different systems. See B<Gnome::Gio::ThemedIcon> and B<Gnome::Gio::LoadableIcon>
 examples of how to implement this interface.
 
 
-=item GTypeInterface $.g-iface: The parent interface.
-=item ---hash: A hash for a given B<Gnome::Gio::Icon>.
-=item ---equal: Checks if two B<Gnome::Gio::Icons> are equal.
-=item ---to-tokens: Serializes a B<Gnome::Gio::Icon> into tokens. The tokens must not contain any whitespace. Don't implement if the B<Gnome::Gio::Icon> can't be serialized (Since 2.20).
-=item ---from-tokens: Constructs a B<Gnome::Gio::Icon> from tokens. Set the B<Gnome::Gio::Error> if the tokens are malformed. Don't implement if the B<Gnome::Gio::Icon> can't be serialized (Since 2.20).
-=item ---serialize: Serializes a B<Gnome::Gio::Icon> into a B<Gnome::Gio::Variant>. Since: 2.38
+=item $.g-iface: The parent interface.
+=item A hash for a given B<Gnome::Gio::Icon>.
+=item Checks if two B<Gnome::Gio::Icons> are equal.
+=item Serializes a B<Gnome::Gio::Icon> into tokens. The tokens must not contain any whitespace. Don't implement if the B<Gnome::Gio::Icon> can't be serialized (Since 2.20).
+=item Constructs a B<Gnome::Gio::Icon> from tokens. Set the B<Gnome::Gio::Error> if the tokens are malformed. Don't implement if the B<Gnome::Gio::Icon> can't be serialized (Since 2.20).
+=item Serializes a B<Gnome::Gio::Icon> into a B<Gnome::Gio::Variant>. Since: 2.38
 
 
 =end pod
@@ -131,7 +131,7 @@ Returns: a B<Gnome::Gio::Icon>, or C<undefined> when deserialization fails.
 
   method deserialize ( N-GObject $value --> N-GObject )
 
-=item N-GObject $value; a B<Gnome::Glib::Variant> created with C<serialize()>
+=item $value; a B<Gnome::Glib::Variant> created with C<serialize()>
 =end pod
 
 method deserialize ( $value is copy --> N-GObject ) {
@@ -155,7 +155,7 @@ Returns: C<True> if the icon is equal to I<$icon>. C<False> otherwise.
 
   method equal ( N-GObject $icon --> Bool )
 
-=item N-GObject $icon; pointer to the other B<Gnome::Gio::Icon>.
+=item $icon; pointer to the other B<Gnome::Gio::Icon>.
 =end pod
 
 method equal ( $icon is copy --> Bool ) {
@@ -182,7 +182,7 @@ Returns: a B<guint> containing a hash for the I<icon>, suitable for use in a B<G
 
   method hash ( Pointer $icon --> UInt )
 
-=item Pointer $icon; B<gconstpointer> to an icon object.
+=item $icon; B<gconstpointer> to an icon object.
 =end pod
 
 method hash ( Pointer $icon --> UInt ) {
@@ -267,8 +267,8 @@ Returns: An object implementing the B<Gnome::Gio::Icon> interface or C<undefined
 
   method _g_icon_new_for_string ( Str $str, N-GError $error --> N-GObject )
 
-=item Str $str; A string obtained via C<to-string()>.
-=item N-GError $error; Return location for error.
+=item $str; A string obtained via C<to-string()>.
+=item $error; Return location for error.
 =end pod
 }}
 

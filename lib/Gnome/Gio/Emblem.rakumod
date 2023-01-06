@@ -92,8 +92,8 @@ Create a new Emblem object.
 
   multi method new ( N-GObject :$icon!, UInt :$origin? )
 
-=item N-GObject $icon; an object containing the icon.
-=item UInt $origin; a GEmblemOrigin enum defining the emblem's origin
+=item $icon; an object containing the icon.
+=item $origin; a GEmblemOrigin enum defining the emblem's origin
 
 
 =head3 :string
@@ -104,7 +104,7 @@ Generate a B<Gnome::Gio::FileIcon> instance from a string. This function can fai
 
   method new ( Str :$string! )
 
-=item Str $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
+=item $string; A string obtained via C<Gnome::Gio::Icon.to-string()>.
 
 
 =head3 :native-object
@@ -258,7 +258,7 @@ Returns: a new B<Gnome::Gio::Emblem>.
 
   method _g_emblem_new ( N-GObject $icon --> N-GObject )
 
-=item N-GObject $icon; a GIcon containing the icon.
+=item $icon; a GIcon containing the icon.
 =end pod
 }}
 
@@ -279,8 +279,8 @@ Returns: a new B<Gnome::Gio::Emblem>.
 
   method _g_emblem_new_with_origin ( N-GObject $icon, GEmblemOrigin $origin --> N-GObject )
 
-=item N-GObject $icon; a GIcon containing the icon.
-=item GEmblemOrigin $origin; a GEmblemOrigin enum defining the emblem's origin
+=item $icon; a GIcon containing the icon.
+=item $origin; a GEmblemOrigin enum defining the emblem's origin
 =end pod
 }}
 

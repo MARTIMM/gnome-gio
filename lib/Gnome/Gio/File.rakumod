@@ -110,7 +110,7 @@ use Gnome::Glib::Error;
 use Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::File:auth<github:MARTIMM>:ver<0.2.0>;
+unit class Gnome::Gio::File:auth<github:MARTIMM>;
 also is Gnome::N::TopLevelClassSupport;
 
 has Gnome::Glib::Error $.last-error;
@@ -308,7 +308,7 @@ If the pointer to the native object may be reused in future (for example, if it 
 
   method g_object_unref ( N-GFile $object )
 
-=item N-GObject $object; a I<N-GFile>
+=item $object; a I<N-GFile>
 
 =end pod
 
@@ -345,9 +345,9 @@ Returns: a B<Gnome::Gio::FileOutputStream>, or C<undefined> on error. Free the r
 
   method append-to ( UInt $flags, GCancellable $cancellable, N-GError $error --> GFileOutputStream )
 
-=item UInt $flags; a set of B<UInt>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<UInt>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method append-to ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
@@ -376,11 +376,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method append-to-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method append-to-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -408,8 +408,8 @@ Returns: a valid B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free 
 
   method append-to-finish ( GAsyncResult $res, N-GError $error --> GFileOutputStream )
 
-=item GAsyncResult $res; B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method append-to-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
@@ -458,12 +458,12 @@ Returns: C<True> on success, C<False> otherwise.
 
   method copy ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, N-GError $error --> Bool )
 
-=item N-GFile $destination; destination B<Gnome::Gio::File>
-=item UInt $flags; set of B<Gnome::Gio::FileCopyFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GFileProgressCallback $progress_callback;  (scope call): function to callback with progress information, or C<undefined> if progress information is not needed
-=item Pointer $progress_callback_data; (closure): user data to pass to I<progress-callback>
-=item N-GError $error; B<Gnome::Gio::Error> to set on error, or C<undefined>
+=item $destination; destination B<Gnome::Gio::File>
+=item $flags; set of B<Gnome::Gio::FileCopyFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $progress_callback;  (scope call): function to callback with progress information, or C<undefined> if progress information is not needed
+=item $progress_callback_data; (closure): user data to pass to I<progress-callback>
+=item $error; B<Gnome::Gio::Error> to set on error, or C<undefined>
 =end pod
 
 method copy ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, $error is copy --> Bool ) {
@@ -492,14 +492,14 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method copy-async ( N-GFile $destination, UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item N-GFile $destination; destination B<Gnome::Gio::File>
-=item UInt $flags; set of B<Gnome::Gio::FileCopyFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GFileProgressCallback $progress_callback;  (scope notified): function to callback with progress information, or C<undefined> if progress information is not needed
-=item Pointer $progress_callback_data; (closure progress-callback) : user data to pass to I<progress-callback>
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure callback): the data to pass to callback function
+=item $destination; destination B<Gnome::Gio::File>
+=item $flags; set of B<Gnome::Gio::FileCopyFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $progress_callback;  (scope notified): function to callback with progress information, or C<undefined> if progress information is not needed
+=item $progress_callback_data; (closure progress-callback) : user data to pass to I<progress-callback>
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure callback): the data to pass to callback function
 =end pod
 
 method copy-async ( N-GFile $destination, UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -527,10 +527,10 @@ Returns: C<True> if the attributes were copied successfully, C<False> otherwise.
 
   method copy-attributes ( N-GFile $destination, UInt $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item N-GFile $destination; a B<Gnome::Gio::File> to copy attributes to
-=item UInt $flags; a set of B<Gnome::Gio::FileCopyFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, C<undefined> to ignore
+=item $destination; a B<Gnome::Gio::File> to copy attributes to
+=item $flags; a set of B<Gnome::Gio::FileCopyFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, C<undefined> to ignore
 =end pod
 
 method copy-attributes ( N-GFile $destination, UInt $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -557,8 +557,8 @@ Returns: a C<True> on success, C<False> on error.
 
   method copy-finish ( GAsyncResult $res, N-GError $error --> Bool )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method copy-finish ( GAsyncResult $res, $error is copy --> Bool ) {
@@ -593,9 +593,9 @@ Returns: a B<Gnome::Gio::FileOutputStream> for the newly created file, or C<unde
 
   method create ( UInt $flags, GCancellable $cancellable, N-GError $error --> GFileOutputStream )
 
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method create ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
@@ -624,11 +624,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method create-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method create-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -654,8 +654,8 @@ Returns: a B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free the re
 
   method create-finish ( GAsyncResult $res, N-GError $error --> GFileOutputStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method create-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
@@ -690,9 +690,9 @@ Returns: a B<Gnome::Gio::FileIOStream> for the newly created file, or C<undefine
 
   method create-readwrite ( UInt $flags, GCancellable $cancellable, N-GError $error --> GFileIOStream )
 
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; return location for a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; return location for a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method create-readwrite ( UInt $flags, GCancellable $cancellable, $error is copy --> GFileIOStream ) {
@@ -721,11 +721,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method create-readwrite-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method create-readwrite-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -751,8 +751,8 @@ Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the return
 
   method create-readwrite-finish ( GAsyncResult $res, N-GError $error --> GFileIOStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method create-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
@@ -783,8 +783,8 @@ Returns: C<True> if the file was deleted. C<False> otherwise.
 
   method delete ( GCancellable $cancellable, N-GError $error --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method delete ( GCancellable $cancellable, $error is copy --> Bool ) {
@@ -811,10 +811,10 @@ Virtual: delete-file-async
 
   method delete-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method delete-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -842,8 +842,8 @@ Returns: C<True> if the file was deleted. C<False> otherwise.
 
   method delete-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method delete-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -902,11 +902,11 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 
   method eject-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GMountUnmountFlags $flags; flags affecting the operation
-=item GMountOperation $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method eject-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -932,8 +932,8 @@ Returns: C<True> if the I<file> was ejected successfully. C<False> otherwise.
 
   method eject-mountable-with-operation-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method eject-mountable-with-operation-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -968,10 +968,10 @@ Returns: A B<Gnome::Gio::FileEnumerator> if successful, C<undefined> on error. F
 
   method enumerate-children ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> GFileEnumerator )
 
-=item Str $attributes; an attribute query string
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; B<Gnome::Gio::Error> for error reporting
+=item $attributes; an attribute query string
+=item $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; B<Gnome::Gio::Error> for error reporting
 =end pod
 
 method enumerate-children ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> GFileEnumerator ) {
@@ -1000,12 +1000,12 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method enumerate-children-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $attributes; an attribute query string
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $attributes; an attribute query string
+=item $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method enumerate-children-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1031,8 +1031,8 @@ Returns: a B<Gnome::Gio::FileEnumerator> or C<undefined> if an error occurred. F
 
   method enumerate-children-finish ( GAsyncResult $res, N-GError $error --> GFileEnumerator )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method enumerate-children-finish ( GAsyncResult $res, $error is copy --> GFileEnumerator ) {
@@ -1065,7 +1065,7 @@ Returns: C<True> if I<file1> and I<file2> are equal.
 
   method equal ( N-GFile $file2 --> Bool )
 
-=item N-GFile $file2; the second B<Gnome::Gio::File>
+=item $file2; the second B<Gnome::Gio::File>
 =end pod
 
 method equal ( N-GFile $file2 --> Bool ) {
@@ -1097,8 +1097,8 @@ Returns: a B<Gnome::Gio::Mount> where the I<file> is located or C<undefined> on 
 
   method find-enclosing-mount ( GCancellable $cancellable, N-GError $error --> GMount )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method find-enclosing-mount ( GCancellable $cancellable, $error is copy --> GMount ) {
@@ -1127,10 +1127,10 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method find-enclosing-mount-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method find-enclosing-mount-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1156,8 +1156,8 @@ Returns: B<Gnome::Gio::Mount> for given I<file> or C<undefined> on error. Free t
 
   method find-enclosing-mount-finish ( GAsyncResult $res, N-GError $error --> GMount )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method find-enclosing-mount-finish ( GAsyncResult $res, $error is copy --> GMount ) {
@@ -1220,7 +1220,7 @@ Returns: a B<Gnome::Gio::File> to a child specified by I<name>. Free the returne
 
   method get-child ( Str $name --> N-GFile )
 
-=item Str $name; (type filename): string containing the child's basename
+=item $name; (type filename): string containing the child's basename
 =end pod
 
 method get-child ( Str $name --> N-GFile ) {
@@ -1263,7 +1263,7 @@ When an error takes place, the error object is set and the returned object is in
   die $f.last-error.message unless $f2.is-valid;
 
 
-=item Str $display_name; string to a possible child
+=item $display_name; string to a possible child
 =end pod
 
 method get-child-for-display-name ( Str $display_name --> N-GFile ) {
@@ -1411,7 +1411,7 @@ Returns: string with the relative path from I<descendant> to I<parent>, or C<und
 
   method get-relative-path ( N-GFile $descendant --> Str )
 
-=item N-GFile $descendant; input B<Gnome::Gio::File>
+=item $descendant; input B<Gnome::Gio::File>
 =end pod
 
 method get-relative-path ( $descendant is copy --> Str ) {
@@ -1492,7 +1492,7 @@ Returns: C<True> if I<file> is an immediate child of I<parent> (or any parent in
 
   method has-parent ( N-GFile $parent --> Bool )
 
-=item N-GFile $parent; the parent to check for, or C<undefined>
+=item $parent; the parent to check for, or C<undefined>
 =end pod
 
 method has-parent ( $parent is copy --> Bool ) {
@@ -1524,7 +1524,7 @@ Returns: C<True> if the I<files>'s parent, grandparent, etc is I<prefix>, C<Fals
 
   method has-prefix ( N-GFile $prefix --> Bool )
 
-=item N-GFile $prefix; input B<Gnome::Gio::File>
+=item $prefix; input B<Gnome::Gio::File>
 =end pod
 
 method has-prefix ( $prefix is copy --> Bool ) {
@@ -1550,7 +1550,7 @@ Returns: C<True> if B<Gnome::Gio::File>'s backend supports the given URI scheme,
 
   method has-uri-scheme ( Str $uri_scheme --> Bool )
 
-=item Str $uri_scheme; a string containing a URI scheme
+=item $uri_scheme; a string containing a URI scheme
 =end pod
 
 method has-uri-scheme ( Str $uri_scheme --> Bool ) {
@@ -1578,7 +1578,7 @@ Returns: 0 if I<file> is not a valid B<Gnome::Gio::File>, otherwise an integer t
 
   method hash ( Pointer $file --> UInt )
 
-=item Pointer $file; (type N-GFile): B<gconstpointer> to a B<Gnome::Gio::File>
+=item $file; (type N-GFile): B<gconstpointer> to a B<Gnome::Gio::File>
 =end pod
 
 method hash ( Pointer $file --> UInt ) {
@@ -1640,9 +1640,9 @@ Returns: a B<Gnome::Gio::Bytes> or C<undefined> and I<error> is set
 
   method load-bytes ( GCancellable $cancellable, CArray[Str] $etag_out, N-GError $error --> N-GObject )
 
-=item GCancellable $cancellable; a B<Gnome::Gio::Cancellable> or C<undefined>
-=item CArray[Str] $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
-=item N-GError $error; a location for a B<Gnome::Gio::Error> or C<undefined>
+=item $cancellable; a B<Gnome::Gio::Cancellable> or C<undefined>
+=item $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
+=item $error; a location for a B<Gnome::Gio::Error> or C<undefined>
 =end pod
 
 method load-bytes ( GCancellable $cancellable, CArray[Str] $etag_out, $error is copy --> N-GObject ) {
@@ -1673,9 +1673,9 @@ See C<g-file-load-bytes()> for more information.
 
   method load-bytes-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GCancellable $cancellable; a B<Gnome::Gio::Cancellable> or C<undefined>
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $cancellable; a B<Gnome::Gio::Cancellable> or C<undefined>
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method load-bytes-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1707,9 +1707,9 @@ Returns: a B<Gnome::Gio::Bytes> or C<undefined> and I<error> is set
 
   method load-bytes-finish ( GAsyncResult $result, CArray[Str] $etag_out, N-GError $error --> N-GObject )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult> provided to the callback
-=item CArray[Str] $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
-=item N-GError $error; a location for a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult> provided to the callback
+=item $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
+=item $error; a location for a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method load-bytes-finish ( GAsyncResult $result, CArray[Str] $etag_out, $error is copy --> N-GObject ) {
@@ -1738,11 +1738,11 @@ Returns: C<True> if the I<file>'s contents were successfully loaded. C<False> if
 
   method load-contents ( GCancellable $cancellable, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, N-GError $error --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item CArray[Str] $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
-=item UInt $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
-=item CArray[Str] $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
+=item $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
+=item $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method load-contents ( GCancellable $cancellable, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
@@ -1773,9 +1773,9 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 
   method load-contents-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method load-contents-async ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1801,11 +1801,11 @@ Returns: C<True> if the load was successful. If C<False> and I<error> is present
 
   method load-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, N-GError $error --> Bool )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item CArray[Str] $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
-=item UInt $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
-=item CArray[Str] $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
+=item $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
+=item $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method load-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
@@ -1834,10 +1834,10 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 
   method load-partial-contents-async ( GCancellable $cancellable, GFileReadMoreCallback $read_more_callback, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GFileReadMoreCallback $read_more_callback; (scope call) (closure user-data): a B<Gnome::Gio::FileReadMoreCallback> to receive partial data and to specify whether further data should be read
-=item GAsyncReadyCallback $callback; (scope async) (closure user-data): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to the callback functions
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $read_more_callback; (scope call) (closure user-data): a B<Gnome::Gio::FileReadMoreCallback> to receive partial data and to specify whether further data should be read
+=item $callback; (scope async) (closure user-data): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to the callback functions
 =end pod
 
 method load-partial-contents-async ( GCancellable $cancellable, GFileReadMoreCallback $read_more_callback, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1863,11 +1863,11 @@ Returns: C<True> if the load was successful. If C<False> and I<error> is present
 
   method load-partial-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, N-GError $error --> Bool )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item CArray[Str] $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
-=item UInt $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
-=item CArray[Str] $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $contents;   (element-type guint8) (array length=length): a location to place the contents of the file
+=item $length; a location to place the length of the contents of the file, or C<undefined> if the length is not needed
+=item $etag_out; a location to place the current entity tag for the file, or C<undefined> if the entity tag is not needed
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method load-partial-contents-finish ( GAsyncResult $res, CArray[Str] $contents, UInt $length, CArray[Str] $etag_out, $error is copy --> Bool ) {
@@ -1900,8 +1900,8 @@ Returns: C<True> on successful creation, C<False> otherwise.
 
   method make-directory ( GCancellable $cancellable, N-GError $error --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method make-directory ( GCancellable $cancellable, $error is copy --> Bool ) {
@@ -1928,10 +1928,10 @@ Virtual: make-directory-async
 
   method make-directory-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method make-directory-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -1959,8 +1959,8 @@ Returns: C<True> on successful directory creation, C<False> otherwise.
 
   method make-directory-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method make-directory-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -1991,8 +1991,8 @@ Returns: C<True> if all directories have been successfully created, C<False> oth
 
   method make-directory-with-parents ( GCancellable $cancellable, N-GError $error --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method make-directory-with-parents ( GCancellable $cancellable, $error is copy --> Bool ) {
@@ -2021,9 +2021,9 @@ Returns: C<True> on the creation of a new symlink, C<False> otherwise.
 
   method make-symbolic-link ( Str $symlink_value, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $symlink_value; (type filename): a string with the path for the target of the new symlink
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $symlink_value; (type filename): a string with the path for the target of the new symlink
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method make-symbolic-link ( Str $symlink_value, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -2060,14 +2060,14 @@ Returns: C<True> if successful, with the out parameters set. C<False> otherwise,
 
   method measure-disk-usage ( UInt $flags, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, UInt $disk_usage, UInt $num_dirs, UInt $num_files, N-GError $error --> Bool )
 
-=item UInt $flags; B<Gnome::Gio::FileMeasureFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable>
-=item GFileMeasureProgressCallback $progress_callback; a B<Gnome::Gio::FileMeasureProgressCallback>
-=item Pointer $progress_data; user-data for I<progress-callback>
-=item UInt $disk_usage; the number of bytes of disk space used
-=item UInt $num_dirs; the number of directories encountered
-=item UInt $num_files; the number of non-directories encountered
-=item N-GError $error; C<undefined>, or a pointer to a C<undefined> B<Gnome::Gio::Error> pointer
+=item $flags; B<Gnome::Gio::FileMeasureFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable>
+=item $progress_callback; a B<Gnome::Gio::FileMeasureProgressCallback>
+=item $progress_data; user-data for I<progress-callback>
+=item $disk_usage; the number of bytes of disk space used
+=item $num_dirs; the number of directories encountered
+=item $num_files; the number of non-directories encountered
+=item $error; C<undefined>, or a pointer to a C<undefined> B<Gnome::Gio::Error> pointer
 =end pod
 
 method measure-disk-usage ( UInt $flags, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, UInt $disk_usage, UInt $num_dirs, UInt $num_files, $error is copy --> Bool ) {
@@ -2094,13 +2094,13 @@ This is the asynchronous version of C<measure-disk-usage()>. See there for more 
 
   method measure-disk-usage-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item UInt $flags; B<Gnome::Gio::FileMeasureFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable>
-=item GFileMeasureProgressCallback $progress_callback; a B<Gnome::Gio::FileMeasureProgressCallback>
-=item Pointer $progress_data; user-data for I<progress-callback>
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when complete
-=item Pointer $user_data; the data to pass to callback function
+=item $flags; B<Gnome::Gio::FileMeasureFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable>
+=item $progress_callback; a B<Gnome::Gio::FileMeasureProgressCallback>
+=item $progress_data; user-data for I<progress-callback>
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when complete
+=item $user_data; the data to pass to callback function
 =end pod
 
 method measure-disk-usage-async ( UInt $flags, Int() $io_priority, GCancellable $cancellable, GFileMeasureProgressCallback $progress_callback, Pointer $progress_data, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2126,11 +2126,11 @@ Returns: C<True> if successful, with the out parameters set. C<False> otherwise,
 
   method measure-disk-usage-finish ( GAsyncResult $result, UInt $disk_usage, UInt $num_dirs, UInt $num_files, N-GError $error --> Bool )
 
-=item GAsyncResult $result; the B<Gnome::Gio::AsyncResult> passed to your B<Gnome::Gio::AsyncReadyCallback>
-=item UInt $disk_usage; the number of bytes of disk space used
-=item UInt $num_dirs; the number of directories encountered
-=item UInt $num_files; the number of non-directories encountered
-=item N-GError $error; C<undefined>, or a pointer to a C<undefined> B<Gnome::Gio::Error> pointer
+=item $result; the B<Gnome::Gio::AsyncResult> passed to your B<Gnome::Gio::AsyncReadyCallback>
+=item $disk_usage; the number of bytes of disk space used
+=item $num_dirs; the number of directories encountered
+=item $num_files; the number of non-directories encountered
+=item $error; C<undefined>, or a pointer to a C<undefined> B<Gnome::Gio::Error> pointer
 =end pod
 
 method measure-disk-usage-finish ( GAsyncResult $result, UInt $disk_usage, UInt $num_dirs, UInt $num_files, $error is copy --> Bool ) {
@@ -2161,9 +2161,9 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 
   method monitor ( GFileMonitorFlags $flags, GCancellable $cancellable, N-GError $error --> GFileMonitor )
 
-=item GFileMonitorFlags $flags; a set of B<Gnome::Gio::FileMonitorFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<Gnome::Gio::FileMonitorFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method monitor ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
@@ -2196,9 +2196,9 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 
   method monitor-directory ( GFileMonitorFlags $flags, GCancellable $cancellable, N-GError $error --> GFileMonitor )
 
-=item GFileMonitorFlags $flags; a set of B<Gnome::Gio::FileMonitorFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<Gnome::Gio::FileMonitorFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method monitor-directory ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
@@ -2229,9 +2229,9 @@ Returns: a B<Gnome::Gio::FileMonitor> for the given I<file>, or C<undefined> on 
 
   method monitor-file ( GFileMonitorFlags $flags, GCancellable $cancellable, N-GError $error --> GFileMonitor )
 
-=item GFileMonitorFlags $flags; a set of B<Gnome::Gio::FileMonitorFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $flags; a set of B<Gnome::Gio::FileMonitorFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method monitor-file ( GFileMonitorFlags $flags, GCancellable $cancellable, $error is copy --> GFileMonitor ) {
@@ -2260,11 +2260,11 @@ If I<cancellable> is not C<undefined>, then the operation can be cancelled by tr
 
   method mount-enclosing-volume ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GMountMountFlags $flags; flags affecting the operation
-=item GMountOperation $mount_operation; a B<Gnome::Gio::MountOperation> or C<undefined> to avoid user interaction
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $mount_operation; a B<Gnome::Gio::MountOperation> or C<undefined> to avoid user interaction
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; the data to pass to callback function
 =end pod
 
 method mount-enclosing-volume ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2290,8 +2290,8 @@ Returns: C<True> if successful. If an error has occurred, this function will ret
 
   method mount-enclosing-volume-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method mount-enclosing-volume-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -2320,11 +2320,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method mount-mountable ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GMountMountFlags $flags; flags affecting the operation
-=item GMountOperation $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method mount-mountable ( GMountMountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2352,8 +2352,8 @@ Returns: a B<Gnome::Gio::File> or C<undefined> on error. Free the returned objec
 
   method mount-mountable-finish ( GAsyncResult $result, N-GError $error --> N-GFile )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method mount-mountable-finish ( GAsyncResult $result, $error is copy --> N-GFile ) {
@@ -2396,12 +2396,12 @@ Returns: C<True> on successful move, C<False> otherwise.
 
   method move ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, N-GError $error --> Bool )
 
-=item N-GFile $destination; B<Gnome::Gio::File> pointing to the destination location
-=item UInt $flags; set of B<Gnome::Gio::FileCopyFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GFileProgressCallback $progress_callback;  (scope call): B<Gnome::Gio::FileProgressCallback> function for updates
-=item Pointer $progress_callback_data; (closure): gpointer to user data for the callback function
-=item N-GError $error; B<Gnome::Gio::Error> for returning error conditions, or C<undefined>
+=item $destination; B<Gnome::Gio::File> pointing to the destination location
+=item $flags; set of B<Gnome::Gio::FileCopyFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $progress_callback;  (scope call): B<Gnome::Gio::FileProgressCallback> function for updates
+=item $progress_callback_data; (closure): gpointer to user data for the callback function
+=item $error; B<Gnome::Gio::Error> for returning error conditions, or C<undefined>
 =end pod
 
 method move ( N-GFile $destination, UInt $flags, GCancellable $cancellable, GFileProgressCallback $progress_callback, Pointer $progress_callback_data, $error is copy --> Bool ) {
@@ -2432,8 +2432,8 @@ Returns: B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the returned
 
   method open-readwrite ( GCancellable $cancellable, N-GError $error --> GFileIOStream )
 
-=item GCancellable $cancellable; a B<Gnome::Gio::Cancellable>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; a B<Gnome::Gio::Cancellable>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method open-readwrite ( GCancellable $cancellable, $error is copy --> GFileIOStream ) {
@@ -2458,10 +2458,10 @@ sub g_file_open_readwrite (
 
   method open-readwrite-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority;
-=item GCancellable $cancellable;
-=item GAsyncReadyCallback $callback;
-=item Pointer $user_data;
+=item $io_priority;
+=item $cancellable;
+=item $callback;
+=item $user_data;
 =end pod
 
 method open-readwrite-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2487,8 +2487,8 @@ Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the return
 
   method open-readwrite-finish ( GAsyncResult $res, N-GError $error --> GFileIOStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method open-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
@@ -2517,7 +2517,7 @@ Returns: a new B<Gnome::Gio::File>.
 
   method parse-name ( Str $parse_name --> N-GFile )
 
-=item Str $parse_name; a file name or path to be parsed
+=item $parse_name; a file name or path to be parsed
 =end pod
 
 method parse-name ( Str $parse_name --> N-GFile ) {
@@ -2575,9 +2575,9 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method poll-mountable ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; the data to pass to callback function
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; the data to pass to callback function
 =end pod
 
 method poll-mountable ( GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2605,8 +2605,8 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 
   method poll-mountable-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method poll-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -2638,7 +2638,7 @@ Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there
     N-GObject $cancellable --> Gnome::Gio::AppInfo
   )
 
-=item N-GObject $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore. (TODO: Cancellable not defined yet)
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore. (TODO: Cancellable not defined yet)
 =end pod
 
 method query-default-handler (
@@ -2671,10 +2671,10 @@ Async version of C<query-default-handler()>.
 
   method query-default-handler-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GCancellable $cancellable; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is done
-=item GAsyncReadyCallback $callback; data to pass to I<callback>
-=item Pointer $user_data;
+=item $io_priority; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $cancellable; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is done
+=item $callback; data to pass to I<callback>
+=item $user_data;
 =end pod
 
 method query-default-handler-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2700,8 +2700,8 @@ Returns: a B<Gnome::Gio::AppInfo> if the handle was found, C<undefined> if there
 
   method query-default-handler-finish ( GAsyncResult $result, N-GError $error --> GAppInfo )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method query-default-handler-finish ( GAsyncResult $result, $error is copy --> GAppInfo ) {
@@ -2734,7 +2734,7 @@ Returns: C<True> if the file exists (and can be detected without error), C<False
 
   method query-exists ( GCancellable $cancellable --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 =end pod
 
 method query-exists ( GCancellable $cancellable --> Bool ) {
@@ -2762,8 +2762,8 @@ Returns: The B<Gnome::Gio::FileType> of the file and B<Gnome::Gio::-FILE-TYPE-UN
 
   method query-file-type ( GFileQueryInfoFlags $flags, GCancellable $cancellable --> GFileType )
 
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags> passed to C<query-info()>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $flags; a set of B<Gnome::Gio::FileQueryInfoFlags> passed to C<query-info()>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 =end pod
 
 method query-file-type ( GFileQueryInfoFlags $flags, GCancellable $cancellable --> GFileType ) {
@@ -2795,9 +2795,9 @@ Returns: a B<Gnome::Gio::FileInfo> or C<undefined> if there was an error. Free t
 
   method query-filesystem-info ( Str $attributes, GCancellable $cancellable, N-GError $error --> GFileInfo )
 
-=item Str $attributes; an attribute query string
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $attributes; an attribute query string
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method query-filesystem-info ( Str $attributes, GCancellable $cancellable, $error is copy --> GFileInfo ) {
@@ -2826,11 +2826,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method query-filesystem-info-async ( Str $attributes, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $attributes; an attribute query string
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $attributes; an attribute query string
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method query-filesystem-info-async ( Str $attributes, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2856,8 +2856,8 @@ Returns: B<Gnome::Gio::FileInfo> for given I<file> or C<undefined> on error. Fre
 
   method query-filesystem-info-finish ( GAsyncResult $res, N-GError $error --> GFileInfo )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method query-filesystem-info-finish ( GAsyncResult $res, $error is copy --> GFileInfo ) {
@@ -2899,9 +2899,9 @@ Returns: a B<Gnome::Gio::FileInfo> for the given I<file>, or C<undefined> on err
 
   method query-info ( Str $attributes, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> GFileInfo )
 
-=item Str $attributes; an attribute query string
-=item UInt $flags; a set of GFileQueryInfoFlags
-=item N-GObject $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $attributes; an attribute query string
+=item $flags; a set of GFileQueryInfoFlags
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
 
 =end pod
 
@@ -2943,12 +2943,12 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method query-info-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $attributes; an attribute query string
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $attributes; an attribute query string
+=item $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method query-info-async ( Str $attributes, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -2974,8 +2974,8 @@ Returns: B<Gnome::Gio::FileInfo> for given I<file> or C<undefined> on error. Fre
 
   method query-info-finish ( GAsyncResult $res, N-GError $error --> GFileInfo )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>
 =end pod
 
 method query-info-finish ( GAsyncResult $res, $error is copy --> GFileInfo ) {
@@ -3006,8 +3006,8 @@ Returns: a B<Gnome::Gio::FileAttributeInfoList> describing the settable attribut
 
   method query-settable-attributes ( GCancellable $cancellable, N-GError $error --> GFileAttributeInfoList )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method query-settable-attributes ( GCancellable $cancellable, $error is copy --> GFileAttributeInfoList ) {
@@ -3036,8 +3036,8 @@ Returns: a B<Gnome::Gio::FileAttributeInfoList> describing the writable namespac
 
   method query-writable-namespaces ( GCancellable $cancellable, N-GError $error --> GFileAttributeInfoList )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method query-writable-namespaces ( GCancellable $cancellable, $error is copy --> GFileAttributeInfoList ) {
@@ -3072,8 +3072,8 @@ Returns: B<Gnome::Gio::FileInputStream> or C<undefined> on error. Free the retur
 
   method read ( GCancellable $cancellable, N-GError $error --> GFileInputStream )
 
-=item GCancellable $cancellable; a B<Gnome::Gio::Cancellable>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; a B<Gnome::Gio::Cancellable>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method read ( GCancellable $cancellable, $error is copy --> GFileInputStream ) {
@@ -3102,10 +3102,10 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method read-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method read-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3131,8 +3131,8 @@ Returns: a B<Gnome::Gio::FileInputStream> or C<undefined> on error. Free the ret
 
   method read-finish ( GAsyncResult $res, N-GError $error --> GFileInputStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method read-finish ( GAsyncResult $res, $error is copy --> GFileInputStream ) {
@@ -3173,11 +3173,11 @@ Returns: a B<Gnome::Gio::FileOutputStream> or C<undefined> on error. Free the re
 
   method replace ( Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, N-GError $error --> GFileOutputStream )
 
-=item Str $etag; an optional [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or B<NULL> to ignore
-=item Bool $make_backup; C<True> if a backup should be created
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $etag; an optional [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or B<NULL> to ignore
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace ( Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, $error is copy --> GFileOutputStream ) {
@@ -3206,13 +3206,13 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method replace-async ( Str $etag, Bool $make_backup, UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $etag; an [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or C<undefined> to ignore
-=item Bool $make_backup; C<True> if a backup should be created
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $etag; an [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or C<undefined> to ignore
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method replace-async ( Str $etag, Bool $make_backup, UInt $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3246,14 +3246,14 @@ Returns: C<True> if successful. If an error has occurred, this function will ret
 
   method replace-contents ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, CArray[Str] $new_etag, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $contents; (element-type guint8) (array length=length): a string containing the new contents for I<file>
-=item UInt $length; the length of I<contents> in bytes
-=item Str $etag; the old [entity-tag][gfile-etag] for the document, or C<undefined>
-=item Bool $make_backup; C<True> if a backup should be created
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item CArray[Str] $new_etag; a location to a new [entity tag][gfile-etag] for the document. This should be freed with C<g-free()> when no longer needed, or C<undefined>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $contents; (element-type guint8) (array length=length): a string containing the new contents for I<file>
+=item $length; the length of I<contents> in bytes
+=item $etag; the old [entity-tag][gfile-etag] for the document, or C<undefined>
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $new_etag; a location to a new [entity tag][gfile-etag] for the document. This should be freed with C<g-free()> when no longer needed, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace-contents ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, CArray[Str] $new_etag, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3286,14 +3286,14 @@ Note that no copy of I<content> will be made, so it must stay valid until I<call
 
   method replace-contents-async ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $contents; (element-type guint8) (array length=length): string of contents to replace the file with
-=item UInt $length; the length of I<contents> in bytes
-=item Str $etag; a new [entity tag][gfile-etag] for the I<file>, or C<undefined>
-=item Bool $make_backup; C<True> if a backup should be created
-=item UInt $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $contents; (element-type guint8) (array length=length): string of contents to replace the file with
+=item $length; the length of I<contents> in bytes
+=item $etag; a new [entity tag][gfile-etag] for the I<file>, or C<undefined>
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method replace-contents-async ( Str $contents, UInt $length, Str $etag, Bool $make_backup, UInt $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3319,13 +3319,13 @@ When this operation has completed, I<callback> will be called with I<user-user> 
 
   method replace-contents-bytes-async ( N-GObject $contents, Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item N-GObject $contents; a B<Gnome::Gio::Bytes>
-=item Str $etag; a new [entity tag][gfile-etag] for the I<file>, or C<undefined>
-=item Bool $make_backup; C<True> if a backup should be created
-=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $contents; a B<Gnome::Gio::Bytes>
+=item $etag; a new [entity tag][gfile-etag] for the I<file>, or C<undefined>
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method replace-contents-bytes-async ( $contents is copy, Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3352,9 +3352,9 @@ Returns: C<True> on success, C<False> on failure.
 
   method replace-contents-finish ( GAsyncResult $res, CArray[Str] $new_etag, N-GError $error --> Bool )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item CArray[Str] $new_etag; a location of a new [entity tag][gfile-etag] for the document. This should be freed with C<g-free()> when it is no longer needed, or C<undefined>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $new_etag; a location of a new [entity tag][gfile-etag] for the document. This should be freed with C<g-free()> when it is no longer needed, or C<undefined>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace-contents-finish ( GAsyncResult $res, CArray[Str] $new_etag, $error is copy --> Bool ) {
@@ -3383,8 +3383,8 @@ Returns: a B<Gnome::Gio::FileOutputStream>, or C<undefined> on error. Free the r
 
   method replace-finish ( GAsyncResult $res, N-GError $error --> GFileOutputStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace-finish ( GAsyncResult $res, $error is copy --> GFileOutputStream ) {
@@ -3417,11 +3417,11 @@ Returns: a B<Gnome::Gio::FileIOStream> or C<undefined> on error. Free the return
 
   method replace-readwrite ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, N-GError $error --> GFileIOStream )
 
-=item Str $etag; an optional [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or B<NULL> to ignore
-=item Bool $make_backup; C<True> if a backup should be created
-=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; return location for a B<Gnome::Gio::Error>, or C<undefined>
+=item $etag; an optional [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or B<NULL> to ignore
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; return location for a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace-readwrite ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, GCancellable $cancellable, $error is copy --> GFileIOStream ) {
@@ -3450,13 +3450,13 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method replace-readwrite-async ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $etag; an [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or C<undefined> to ignore
-=item Bool $make_backup; C<True> if a backup should be created
-=item self._get-native-object-no-reffing $flags; a set of B<Gnome::Gio::FileCreateFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $etag; an [entity tag][gfile-etag] for the current B<Gnome::Gio::File>, or C<undefined> to ignore
+=item $make_backup; C<True> if a backup should be created
+=item $flags; a set of B<Gnome::Gio::FileCreateFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method replace-readwrite-async ( Str $etag, Bool $make_backup, self._get-native-object-no-reffing $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3482,8 +3482,8 @@ Returns: a B<Gnome::Gio::FileIOStream>, or C<undefined> on error. Free the retur
 
   method replace-readwrite-finish ( GAsyncResult $res, N-GError $error --> GFileIOStream )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method replace-readwrite-finish ( GAsyncResult $res, $error is copy --> GFileIOStream ) {
@@ -3512,7 +3512,7 @@ Returns: B<Gnome::Gio::File> to the resolved path. C<undefined> if I<relative-pa
 
   method resolve-relative-path ( Str $relative_path --> N-GFile )
 
-=item Str $relative_path; (type filename): a given relative path string
+=item $relative_path; (type filename): a given relative path string
 =end pod
 
 method resolve-relative-path ( Str $relative_path --> N-GFile ) {
@@ -3542,12 +3542,12 @@ Returns: C<True> if the attribute was set, C<False> otherwise.
 
   method set-attribute ( Str $attribute, GFileAttributeType $type, Pointer $value_p, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item GFileAttributeType $type; The type of the attribute
-=item Pointer $value_p; a pointer to the value (or the pointer itself if the type is a pointer type)
-=item GFileQueryInfoFlags $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $type; The type of the attribute
+=item $value_p; a pointer to the value (or the pointer itself if the type is a pointer type)
+=item $flags; a set of B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute ( Str $attribute, GFileAttributeType $type, Pointer $value_p, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3576,11 +3576,11 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 
   method set-attribute-byte-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item Str $value; a string containing the attribute's new value
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a string containing the attribute's new value
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-byte-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3609,11 +3609,11 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 
   method set-attribute-int32 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item Int() $value; a B<gint32> containing the attribute's new value
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a B<gint32> containing the attribute's new value
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-int32 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3642,11 +3642,11 @@ Returns: C<True> if the I<attribute> was successfully set, C<False> otherwise.
 
   method set-attribute-int64 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item Int() $value; a B<guint64> containing the attribute's new value
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a B<guint64> containing the attribute's new value
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-int64 ( Str $attribute, Int() $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3675,11 +3675,11 @@ Returns: C<True> if the I<attribute> was successfully set, C<False> otherwise.
 
   method set-attribute-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item Str $value; a string containing the attribute's value
-=item GFileQueryInfoFlags $flags; B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a string containing the attribute's value
+=item $flags; B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-string ( Str $attribute, Str $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3708,11 +3708,11 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 
   method set-attribute-uint32 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item UInt $value; a B<guint32> containing the attribute's new value
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a B<guint32> containing the attribute's new value
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-uint32 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3741,11 +3741,11 @@ Returns: C<True> if the I<attribute> was successfully set to I<value> in the I<f
 
   method set-attribute-uint64 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item Str $attribute; a string containing the attribute's name
-=item UInt $value; a B<guint64> containing the attribute's new value
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $attribute; a string containing the attribute's name
+=item $value; a B<guint64> containing the attribute's new value
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attribute-uint64 ( Str $attribute, UInt $value, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3774,12 +3774,12 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method set-attributes-async ( GFileInfo $info, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GFileInfo $info; a B<Gnome::Gio::FileInfo>
-=item GFileQueryInfoFlags $flags; a B<Gnome::Gio::FileQueryInfoFlags>
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback>
-=item Pointer $user_data; (closure): a B<gpointer>
+=item $info; a B<Gnome::Gio::FileInfo>
+=item $flags; a B<Gnome::Gio::FileQueryInfoFlags>
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback>
+=item $user_data; (closure): a B<gpointer>
 =end pod
 
 method set-attributes-async ( GFileInfo $info, GFileQueryInfoFlags $flags, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3805,9 +3805,9 @@ Returns: C<True> if the attributes were set correctly, C<False> otherwise.
 
   method set-attributes-finish ( GAsyncResult $result, GFileInfo $info, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item GFileInfo $info; a B<Gnome::Gio::FileInfo>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $info; a B<Gnome::Gio::FileInfo>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attributes-finish ( GAsyncResult $result, GFileInfo $info, $error is copy --> Bool ) {
@@ -3838,10 +3838,10 @@ Returns: C<False> if there was any error, C<True> otherwise.
 
   method set-attributes-from-info ( GFileInfo $info, GFileQueryInfoFlags $flags, GCancellable $cancellable, N-GError $error --> Bool )
 
-=item GFileInfo $info; a B<Gnome::Gio::FileInfo>
-=item GFileQueryInfoFlags $flags; B<Gnome::Gio::FileQueryInfoFlags>
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $info; a B<Gnome::Gio::FileInfo>
+=item $flags; B<Gnome::Gio::FileQueryInfoFlags>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-attributes-from-info ( GFileInfo $info, GFileQueryInfoFlags $flags, GCancellable $cancellable, $error is copy --> Bool ) {
@@ -3878,9 +3878,9 @@ Returns: a B<Gnome::Gio::File> specifying what I<file> was renamed to, or C<unde
 
   method set-display-name ( Str $display_name, GCancellable $cancellable, N-GError $error --> N-GFile )
 
-=item Str $display_name; a string
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $display_name; a string
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-display-name ( Str $display_name, GCancellable $cancellable, $error is copy --> N-GFile ) {
@@ -3909,11 +3909,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method set-display-name-async ( Str $display_name, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Str $display_name; a string
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $display_name; a string
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async): a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method set-display-name-async ( Str $display_name, Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -3939,8 +3939,8 @@ Returns: a B<Gnome::Gio::File> or C<undefined> on error. Free the returned objec
 
   method set-display-name-finish ( GAsyncResult $res, N-GError $error --> N-GFile )
 
-=item GAsyncResult $res; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $res; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method set-display-name-finish ( GAsyncResult $res, $error is copy --> N-GFile ) {
@@ -3969,11 +3969,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method start-mountable ( GDriveStartFlags $flags, GMountOperation $start_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GDriveStartFlags $flags; flags affecting the operation
-=item GMountOperation $start_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $start_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; the data to pass to callback function
 =end pod
 
 method start-mountable ( GDriveStartFlags $flags, GMountOperation $start_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -4001,8 +4001,8 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 
   method start-mountable-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method start-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -4031,11 +4031,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method stop-mountable ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GMountUnmountFlags $flags; flags affecting the operation
-=item GMountOperation $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction.
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction.
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; the data to pass to callback function
 =end pod
 
 method stop-mountable ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -4063,8 +4063,8 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 
   method stop-mountable-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method stop-mountable-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -4120,8 +4120,8 @@ Returns: C<True> on successful trash, C<False> otherwise.
 
   method trash ( GCancellable $cancellable, N-GError $error --> Bool )
 
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method trash ( GCancellable $cancellable, $error is copy --> Bool ) {
@@ -4148,10 +4148,10 @@ Virtual: trash-async
 
   method trash-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item Int() $io_priority; the [I/O priority][io-priority] of the request
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
-=item Pointer $user_data; the data to pass to callback function
+=item $io_priority; the [I/O priority][io-priority] of the request
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied
+=item $user_data; the data to pass to callback function
 =end pod
 
 method trash-async ( Int() $io_priority, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -4179,8 +4179,8 @@ Returns: C<True> on successful trash, C<False> otherwise.
 
   method trash-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method trash-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -4209,11 +4209,11 @@ When the operation is finished, I<callback> will be called. You can then call C<
 
   method unmount-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data )
 
-=item GMountUnmountFlags $flags; flags affecting the operation
-=item GMountOperation $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
-=item GCancellable $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
-=item GAsyncReadyCallback $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
-=item Pointer $user_data; (closure): the data to pass to callback function
+=item $flags; flags affecting the operation
+=item $mount_operation; a B<Gnome::Gio::MountOperation>, or C<undefined> to avoid user interaction
+=item $cancellable; optional B<Gnome::Gio::Cancellable> object, C<undefined> to ignore
+=item $callback; (scope async) : a B<Gnome::Gio::AsyncReadyCallback> to call when the request is satisfied, or C<undefined>
+=item $user_data; (closure): the data to pass to callback function
 =end pod
 
 method unmount-mountable-with-operation ( GMountUnmountFlags $flags, GMountOperation $mount_operation, GCancellable $cancellable, GAsyncReadyCallback $callback, Pointer $user_data ) {
@@ -4241,8 +4241,8 @@ Returns: C<True> if the operation finished successfully. C<False> otherwise.
 
   method unmount-mountable-with-operation-finish ( GAsyncResult $result, N-GError $error --> Bool )
 
-=item GAsyncResult $result; a B<Gnome::Gio::AsyncResult>
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $result; a B<Gnome::Gio::AsyncResult>
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 
 method unmount-mountable-with-operation-finish ( GAsyncResult $result, $error is copy --> Bool ) {
@@ -4274,7 +4274,7 @@ Returns: a new B<Gnome::Gio::File>
 
   method _g_file_new_build_filename ( Str $first_element --> N-GFile )
 
-=item Str $first_element; (type filename): the first element in the path @...: remaining elements in path, terminated by C<undefined>
+=item $first_element; (type filename): the first element in the path @...: remaining elements in path, terminated by C<undefined>
 =end pod
 }}
 
@@ -4298,7 +4298,7 @@ Returns: a new B<Gnome::Gio::File>. Free the returned object with C<clear-object
 
   method _g_file_new_for_commandline_arg ( Str $arg --> N-GFile )
 
-=item Str $arg; (type filename): a command line string
+=item $arg; (type filename): a command line string
 =end pod
 }}
 
@@ -4325,8 +4325,8 @@ Returns: a new B<Gnome::Gio::File>
 
   method _g_file_new_for_commandline_arg_and_cwd ( Str $arg, Str $cwd --> N-GFile )
 
-=item Str $arg; a command line string
-=item Str $cwd; the current working directory of the commandline
+=item $arg; a command line string
+=item $cwd; the current working directory of the commandline
 =end pod
 }}
 
@@ -4347,7 +4347,7 @@ Returns: a new B<Gnome::Gio::File> for the given I<path>. Free the returned obje
 
   method _g_file_new_for_path ( Str $path --> N-GFile )
 
-=item Str $path; (type filename): a string containing a relative or absolute path. The string must be encoded in the glib filename encoding.
+=item $path; (type filename): a string containing a relative or absolute path. The string must be encoded in the glib filename encoding.
 =end pod
 }}
 
@@ -4368,7 +4368,7 @@ Returns: a new B<Gnome::Gio::File> for the given I<uri>. Free the returned objec
 
   method _g_file_new_for_uri ( Str $uri --> N-GFile )
 
-=item Str $uri; a UTF-8 string containing a URI
+=item $uri; a UTF-8 string containing a URI
 =end pod
 }}
 
@@ -4394,9 +4394,9 @@ Returns: a new B<Gnome::Gio::File>. Free the returned object with C<clear-object
 
   method _g_file_new_tmp ( Str $tmpl, GFileIOStream $iostream, N-GError $error --> N-GFile )
 
-=item Str $tmpl; (type filename) : Template for the file name, as in C<open-tmp()>, or C<undefined> for a default template
-=item GFileIOStream $iostream; on return, a B<Gnome::Gio::FileIOStream> for the created file
-=item N-GError $error; a B<Gnome::Gio::Error>, or C<undefined>
+=item $tmpl; (type filename) : Template for the file name, as in C<open-tmp()>, or C<undefined> for a default template
+=item $iostream; on return, a B<Gnome::Gio::FileIOStream> for the created file
+=item $error; a B<Gnome::Gio::Error>, or C<undefined>
 =end pod
 }}
 
