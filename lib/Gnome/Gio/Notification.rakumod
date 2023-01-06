@@ -71,7 +71,7 @@ use Gnome::GObject::Object;
 use Gnome::Gio::Enums;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Notification:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::Notification:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------

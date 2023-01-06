@@ -64,7 +64,7 @@ use Gnome::GObject::Object;
 use Gnome::Gio::ActionGroup;
 use Gnome::Gio::ActionMap;
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::SimpleActionGroup:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::SimpleActionGroup:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::ActionGroup;
 also does Gnome::Gio::ActionMap;

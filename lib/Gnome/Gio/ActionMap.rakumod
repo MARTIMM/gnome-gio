@@ -37,7 +37,7 @@ use Gnome::Gio::Action;
 use Gnome::Gio::SimpleAction;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>:ver<0.1.0>;
+unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>;
 
 #-------------------------------------------------------------------------------
 #`{{TODO

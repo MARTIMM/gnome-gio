@@ -63,7 +63,7 @@ use Gnome::N::GlibToRakuTypes;
 use Gnome::Gio::MenuModel;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Menu:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::Menu:auth<github:MARTIMM>;
 also is Gnome::Gio::MenuModel;
 
 #-------------------------------------------------------------------------------

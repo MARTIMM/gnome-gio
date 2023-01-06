@@ -48,7 +48,7 @@ use Gnome::Glib::Variant;
 use Gnome::Glib::VariantType;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::Action:auth<github:MARTIMM>:ver<0.1.0>;
+unit role Gnome::Gio::Action:auth<github:MARTIMM>;
 
 #-------------------------------------------------------------------------------
 =begin pod

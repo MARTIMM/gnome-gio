@@ -38,7 +38,7 @@ use Gnome::Glib::VariantType;
 use Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::MenuLinkIter:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::MenuLinkIter:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------

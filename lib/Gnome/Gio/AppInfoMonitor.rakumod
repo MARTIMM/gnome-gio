@@ -71,7 +71,7 @@ use Gnome::GObject::Object;
 
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::AppInfoMonitor:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::AppInfoMonitor:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #`{{

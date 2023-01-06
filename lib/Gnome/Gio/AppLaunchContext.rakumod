@@ -73,7 +73,7 @@ use Gnome::GObject::Object;
 use Gnome::Glib::List;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::AppLaunchContext:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::AppLaunchContext:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #`{{

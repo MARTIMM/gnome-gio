@@ -83,7 +83,7 @@ use Gnome::Gio::AppLaunchContext;
 use Gnome::Gio::File;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::AppInfo:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::AppInfo:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #`{{

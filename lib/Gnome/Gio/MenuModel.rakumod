@@ -105,7 +105,7 @@ use Gnome::GObject::Object;
 #-------------------------------------------------------------------------------
 # /usr/include/gtk-3.0/gtk/INCLUDE
 # https://developer.gnome.org/WWW
-unit class Gnome::Gio::MenuModel:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::MenuModel:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------

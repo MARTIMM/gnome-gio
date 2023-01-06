@@ -93,7 +93,7 @@ use Gnome::Gio::ActionGroup;
 use Gnome::Gio::Notification;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Application:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::Application:auth<github:MARTIMM>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::ActionMap;
 also does Gnome::Gio::ActionGroup;
