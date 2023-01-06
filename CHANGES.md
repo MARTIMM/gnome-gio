@@ -1,6 +1,7 @@
 ## Release notes
 * 2022-10-13 0.10.8
-  * Method get-file-rk() in module **Gnome::Gio::FileIcon** deprecated. And a few more deprecation messages in **Gnome::Gio::File**
+  * Method get-file-rk() in module **Gnome::Gio::FileIcon** deprecated. And a few more deprecation messages in **Gnome::Gio::File**.
+  * Updated documentation of modules.
   
 * 2022-10-13 0.10.7
   * File extensions renamed
