@@ -266,7 +266,7 @@ sub g_desktop_app_info_get_categories (
 
 When I<info> was created from a known filename, return it. In some situations such as the B<Gnome::Gio::DesktopAppInfo> returned from C<new_from_keyfile()>, this function will return C<undefined>.
 
-Returns:  (type filename): The full path to the file for I<info>, or C<undefined> if not known.
+Returns: The full path to the file for I<info>, or C<undefined> if not known.
 
   method get-filename ( --> Str )
 
