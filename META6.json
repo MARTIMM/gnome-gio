@@ -1,11 +1,15 @@
 {
   "description": "Raku Gnome GIO api, Please install Gnome::Gtk3",
   "name": "Gnome::Gio",
-  "version": "0.10.8",
+  "version": "0.11.0",
   "authors": [ "Marcel Timmerman"],
+  "auth": "cpan:MARTIMM",
   "tags": [ "gnome", "gio"],
+  "api": "1",
 
+  "meta-version": "1",
   "perl": "6",
+  "raku": "6.d",
   "license": "Artistic-2.0",
 
   "provides": {
@@ -42,7 +46,11 @@
 
   "source-url": "git://github.com/MARTIMM/gnome-gio.git",
 
-  "depends": [ "Gnome::N", "Gnome::Glib", "Gnome::GObject"],
+  "depends": [
+    "Gnome::N:ap1<1>",
+    "Gnome::Glib:ap1<1>",
+    "Gnome::GObject:ap1<1>"
+  ],
   "test-depends": [ ],
   "build-depends": [ ],
   "resources": [ ]
