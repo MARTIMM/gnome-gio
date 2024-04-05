@@ -2,7 +2,7 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::Gio::ActionGroup;
+use Gnome::Gio::ActionGroup:api<1>;
 ok 1, 'Gnome::Gio::ActionGroup loads ok';
 
 

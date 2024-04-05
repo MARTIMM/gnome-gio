@@ -2,13 +2,13 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::N::N-GObject;
+use Gnome::N::N-GObject:api<1>;
 
-use Gnome::Gio::File;
-use Gnome::Gio::AppInfo;
-use Gnome::Gio::Enums;
+use Gnome::Gio::File:api<1>;
+use Gnome::Gio::AppInfo:api<1>;
+use Gnome::Gio::Enums:api<1>;
 
-#use Gnome::N::X;
+#use Gnome::N::X:api<1>;
 #Gnome::N::debug(:on);
 
 #`{{
@@ -146,8 +146,8 @@ subtest 'Interface ...', {
 
 #-------------------------------------------------------------------------------
 subtest 'Properties ...', {
-  use Gnome::GObject::Value;
-  use Gnome::GObject::Type;
+  use Gnome::GObject::Value:api<1>;
+  use Gnome::GObject::Type:api<1>;
 
   #my Gnome::Gio::File $f .= new;
 
@@ -193,8 +193,8 @@ subtest 'Themes ...', {
 
 #-------------------------------------------------------------------------------
 subtest 'Signals ...', {
-  use Gnome::Gtk3::Main;
-  use Gnome::N::GlibToRakuTypes;
+  use Gnome::Gtk3::Main:api<1>;
+  use Gnome::N::GlibToRakuTypes:api<1>;
 
   my Gnome::Gtk3::Main $main .= new;
 

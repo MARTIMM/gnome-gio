@@ -28,16 +28,16 @@ One useful application of this interface is to map the names of actions from var
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+use Gnome::Gio::Action:api<1>;
+use Gnome::Gio::SimpleAction:api<1>;
 
-use Gnome::Gio::Action;
-use Gnome::Gio::SimpleAction;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>;
+unit role Gnome::Gio::ActionMap:auth<github:MARTIMM>:api<1>;
 
 #-------------------------------------------------------------------------------
 #`{{TODO

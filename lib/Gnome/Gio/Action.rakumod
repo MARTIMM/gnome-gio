@@ -38,17 +38,17 @@ Probably the only useful thing to do with a B<Gnome::Gio::Action> is to put it i
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Error;
-use Gnome::Glib::Variant;
-use Gnome::Glib::VariantType;
+use Gnome::Glib::Error:api<1>;
+use Gnome::Glib::Variant:api<1>;
+use Gnome::Glib::VariantType:api<1>;
 
 #-------------------------------------------------------------------------------
-unit role Gnome::Gio::Action:auth<github:MARTIMM>;
+unit role Gnome::Gio::Action:auth<github:MARTIMM>:api<1>;
 
 #-------------------------------------------------------------------------------
 =begin pod

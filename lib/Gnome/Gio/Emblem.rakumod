@@ -43,7 +43,7 @@ B<Gnome::Gio::Icon>, B<Gnome::Gio::EmblemedIcon>, B<Gnome::Gio::LoadableIcon>, B
 
 Inheriting is done in a special way in that it needs a call from new() to get the native object created by the class you are inheriting from.
 
-  use Gnome::Gio::Emblem;
+  use Gnome::Gio::Emblem:api<1>;
 
   unit class MyGuiClass;
   also is Gnome::Gio::Emblem;
@@ -66,18 +66,18 @@ Inheriting is done in a special way in that it needs a call from new() to get th
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
-use Gnome::Gio::Icon;
-use Gnome::Gio::Enums;
+use Gnome::Gio::Icon:api<1>;
+use Gnome::Gio::Enums:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Emblem:auth<github:MARTIMM>:ver<0.1.0>;
+unit class Gnome::Gio::Emblem:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::Icon;
 

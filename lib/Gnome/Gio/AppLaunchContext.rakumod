@@ -40,7 +40,7 @@ B<Gnome::Gio::AppInfo> and B<Gnome::Gio::AppInfoMonitor>
 
 Inheriting is done in a special way in that it needs a call from new() to get the native object created by the class you are inheriting from.
 
-  use Gnome::Gio::AppLaunchContext;
+  use Gnome::Gio::AppLaunchContext:api<1>;
 
   unit class MyGuiClass;
   also is Gnome::Gio::AppLaunchContext;
@@ -63,17 +63,17 @@ Inheriting is done in a special way in that it needs a call from new() to get th
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
-use Gnome::Glib::List;
+use Gnome::Glib::List:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::AppLaunchContext:auth<github:MARTIMM>;
+unit class Gnome::Gio::AppLaunchContext:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 
 #`{{

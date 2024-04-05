@@ -90,19 +90,19 @@ Substitutions must start with a slash, and must not contain a trailing slash bef
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Error;
+use Gnome::Glib::Error:api<1>;
 
-use Gnome::GObject::Boxed;
+use Gnome::GObject::Boxed:api<1>;
 
-use Gnome::Gio::Enums;
+use Gnome::Gio::Enums:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Resource:auth<github:MARTIMM>;
+unit class Gnome::Gio::Resource:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Boxed;
 
 #-------------------------------------------------------------------------------

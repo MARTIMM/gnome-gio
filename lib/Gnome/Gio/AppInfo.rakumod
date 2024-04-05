@@ -68,22 +68,22 @@ Below code will work when both `cdda://sr0/Track 1.wav` and `/home/user/.gvfs/cd
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Error;
-use Gnome::Glib::List;
+use Gnome::Glib::Error:api<1>;
+use Gnome::Glib::List:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
-use Gnome::Gio::Enums;
-use Gnome::Gio::AppLaunchContext;
-use Gnome::Gio::File;
+use Gnome::Gio::Enums:api<1>;
+use Gnome::Gio::AppLaunchContext:api<1>;
+use Gnome::Gio::File:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::AppInfo:auth<github:MARTIMM>;
+unit class Gnome::Gio::AppInfo:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 
 #`{{

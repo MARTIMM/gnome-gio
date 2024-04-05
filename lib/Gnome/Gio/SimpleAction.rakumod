@@ -35,18 +35,18 @@ See also B<Gnome::Gio::Action>.
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
-use Gnome::Gio::Action;
+use Gnome::Gio::Action:api<1>;
 
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::SimpleAction:auth<github:MARTIMM>;
+unit class Gnome::Gio::SimpleAction:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::Action;
 

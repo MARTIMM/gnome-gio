@@ -77,23 +77,23 @@ As the name indicates, the platform data may vary depending on the operating sys
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Error;
+use Gnome::Glib::Error:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
-use Gnome::Gio::Enums;
-use Gnome::Gio::File;
-use Gnome::Gio::ActionMap;
-use Gnome::Gio::ActionGroup;
-use Gnome::Gio::Notification;
+use Gnome::Gio::Enums:api<1>;
+use Gnome::Gio::File:api<1>;
+use Gnome::Gio::ActionMap:api<1>;
+use Gnome::Gio::ActionGroup:api<1>;
+use Gnome::Gio::Notification:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::Application:auth<github:MARTIMM>;
+unit class Gnome::Gio::Application:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 also does Gnome::Gio::ActionMap;
 also does Gnome::Gio::ActionGroup;

@@ -2,9 +2,9 @@ use v6;
 use NativeCall;
 use Test;
 
-use Gnome::Gio::MenuModel;
+use Gnome::Gio::MenuModel:api<1>;
 
-#use Gnome::N::X;
+#use Gnome::N::X:api<1>;
 #Gnome::N::debug(:on);
 
 #-------------------------------------------------------------------------------

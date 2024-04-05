@@ -79,7 +79,7 @@ B<Gnome::Gio::File> has many functions of which a large part will not be made av
 
 Inheriting is done in a special way in that it needs a call from new() to get the native object created by the class you are inheriting from.
 
-  use Gnome::Gio::File;
+  use Gnome::Gio::File:api<1>;
 
   unit class MyGuiClass;
   also is Gnome::Gio::File;
@@ -100,17 +100,17 @@ Inheriting is done in a special way in that it needs a call from new() to get th
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-#use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::TopLevelClassSupport;
-use Gnome::N::GlibToRakuTypes;
+#use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::TopLevelClassSupport:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Error;
-use Gnome::GObject::Object;
+use Gnome::Glib::Error:api<1>;
+use Gnome::GObject::Object:api<1>;
 
 #-------------------------------------------------------------------------------
-unit class Gnome::Gio::File:auth<github:MARTIMM>;
+unit class Gnome::Gio::File:auth<github:MARTIMM>:api<1>;
 also is Gnome::N::TopLevelClassSupport;
 
 has Gnome::Glib::Error $.last-error;

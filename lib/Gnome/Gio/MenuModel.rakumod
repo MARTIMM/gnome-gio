@@ -89,23 +89,23 @@ B<GActionGroup>
 #-------------------------------------------------------------------------------
 use NativeCall;
 
-use Gnome::N::X;
-use Gnome::N::NativeLib;
-use Gnome::N::N-GObject;
-use Gnome::N::GlibToRakuTypes;
+use Gnome::N::X:api<1>;
+use Gnome::N::NativeLib:api<1>;
+use Gnome::N::N-GObject:api<1>;
+use Gnome::N::GlibToRakuTypes:api<1>;
 
-use Gnome::Glib::Variant;
-use Gnome::Glib::VariantType;
+use Gnome::Glib::Variant:api<1>;
+use Gnome::Glib::VariantType:api<1>;
 
-use Gnome::Gio::MenuAttributeIter;
-use Gnome::Gio::MenuLinkIter;
+use Gnome::Gio::MenuAttributeIter:api<1>;
+use Gnome::Gio::MenuLinkIter:api<1>;
 
-use Gnome::GObject::Object;
+use Gnome::GObject::Object:api<1>;
 
 #-------------------------------------------------------------------------------
 # /usr/include/gtk-3.0/gtk/INCLUDE
 # https://developer.gnome.org/WWW
-unit class Gnome::Gio::MenuModel:auth<github:MARTIMM>;
+unit class Gnome::Gio::MenuModel:auth<github:MARTIMM>:api<1>;
 also is Gnome::GObject::Object;
 
 #-------------------------------------------------------------------------------
