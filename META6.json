@@ -7,8 +7,8 @@
   "tags": [ "gnome", "gio"],
   "api": "1",
 
-  "meta-version": "1",
-  "perl": "6",
+  "meta-version": "2",
+  "perl": "6.d",
   "raku": "6.d",
   "license": "Artistic-2.0",
 
