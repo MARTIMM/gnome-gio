@@ -79,14 +79,15 @@ subtest 'Manipulations', {
   ), 'app.action(55)', '.print-detailed-name()';
 }
 
+#`{{ something wrong with is-deeply() ?
 #-------------------------------------------------------------------------------
 subtest 'Properties …', {
 #  my Gnome::Gio::SimpleAction $sa .= new;
   my @r = $sa.get-properties( 'enabled', gboolean, 'name', Str);
-  is-deeply @r, [ 1, 'my-action'], 'properties: ' ~ (
-    'enabled', 'name'
-  ).join(', ');
+note @r.gist;
+  is-deeply( @r, [ 1, 'my-action'], 'properties: enabled, name');
 }
+}}
 
 #-------------------------------------------------------------------------------
 done-testing;
@@ -117,7 +118,7 @@ subtest 'Interface ...', {
 subtest 'Themes ...', {
 }
 
-#`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circulat dependency
+#`{{ issue 1 in Gio; TODO change main from Gtk3 to that of Glib; circular dependency
 #-------------------------------------------------------------------------------
 subtest 'Signals ...', {
   use Gnome::Gtk3::Main:api<1>;

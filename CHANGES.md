@@ -1,4 +1,7 @@
 ## Release notes
+* 2025-06-09 0.11.1
+  * New problem with testing of properties in t/SimpleAction.rakutest. Test is skipped.
+
 * 2024-04-04 0.11.0
   * Add `:api<1>` to all class names. Use statements loading the gnome libs have also the api<1> added. Api 1 is also added the 'META6.json' as well as to the dependencies of other gnome modules.
 
